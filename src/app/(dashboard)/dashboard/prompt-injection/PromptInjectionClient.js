@@ -514,9 +514,6 @@ export default function PromptInjectionClient() {
           subtitle="Custom name → model + prompt; a raw model without a prompt."
         >
           <div className="border-t border-border-subtle pt-4">
-            <p className="mb-3 text-sm font-semibold">
-              {variantName ? `Editing variant “${variantName}”` : "New variant"}
-            </p>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div>
                 <label className="mb-1 block font-mono text-[10px] uppercase tracking-wider text-text-subtle">
