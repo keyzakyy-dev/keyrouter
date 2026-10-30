@@ -1,69 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import { Button } from "@/shared/components";
 import { APP_CONFIG } from "@/shared/constants/config";
 import { cn } from "@/shared/utils/cn";
-import {
-  Boxes,
-  ChevronLeft,
-  Eye,
-  EyeOff,
-  Lock,
-  BadgeCheck,
-  Fingerprint,
-} from "lucide-react";
-
-/* ------------------------------------------------------------------ */
-/*  Animated floating paths (background art for the left panel)        */
-/* ------------------------------------------------------------------ */
-function FloatingPaths({ position }) {
-  const paths = Array.from({ length: 36 }, (_, i) => ({
-    id: i,
-    d: `M-${380 - i * 5 * position} -${189 + i * 6}C-${
-      380 - i * 5 * position
-    } -${189 + i * 6} -${312 - i * 5 * position} ${216 - i * 6} ${
-      152 - i * 5 * position
-    } ${343 - i * 6}C${616 - i * 5 * position} ${470 - i * 6} ${
-      684 - i * 5 * position
-    } ${875 - i * 6} ${684 - i * 5 * position} ${875 - i * 6}`,
-    color: `rgba(15,23,42,${0.1 + i * 0.03})`,
-    width: 0.5 + i * 0.03,
-  }));
-
-  return (
-    <div className="pointer-events-none absolute inset-0">
-      <svg
-        className="h-full w-full text-slate-400/70 dark:text-white/60"
-        viewBox="0 0 696 316"
-        fill="none"
-      >
-        <title>Background Paths</title>
-        {paths.map((path) => (
-          <motion.path
-            key={path.id}
-            d={path.d}
-            stroke="currentColor"
-            strokeWidth={path.width}
-            strokeOpacity={0.1 + path.id * 0.03}
-            initial={{ pathLength: 0.3, opacity: 0.6 }}
-            animate={{
-              pathLength: 1,
-              opacity: [0.3, 0.6, 0.3],
-              pathOffset: [0, 1, 0],
-            }}
-            transition={{
-              duration: 20 + Math.random() * 10,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "linear",
-            }}
-          />
-        ))}
-      </svg>
-    </div>
-  );
-}
 
 export default function LoginPage() {
   const [password, setPassword] = useState("");
@@ -202,239 +142,296 @@ export default function LoginPage() {
     activeSsoType === "saml" ? "SAML 2.0 Single Sign-On" : "OIDC Single Sign-On";
 
   const isSsoMode = samlAvailable || oidcAvailable;
-  const pageTitle = isSsoMode ? "Single sign-on" : "Sign in";
 
   if (hasPassword === null) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-bg p-4">
-        <div className="flex items-center gap-3 text-sm text-text-muted">
-          <span className="inline-block h-4 w-4 rounded-full border-2 border-brand-500/40 border-t-brand-500 animate-spin" />
-          Checking dashboard access…
+        <div className="flex items-center gap-3 font-mono text-sm text-text-muted">
+          <span className="inline-block h-4 w-4 rounded-full border-2 border-border border-t-text-main animate-spin" />
+          handshaking…
         </div>
       </div>
     );
   }
 
   return (
-    <main className="relative min-h-screen lg:h-screen lg:overflow-hidden lg:grid lg:grid-cols-2 bg-bg">
-      {/* ── Left brand panel (desktop) ── */}
-      <div className="relative hidden h-full flex-col border-r border-border-subtle p-10 lg:flex bg-gradient-to-b from-surface/80 to-surface/30">
-        <div className="relative z-10 flex items-center gap-2.5">
-          <div className="flex items-center justify-center size-9 rounded-[10px] bg-gradient-to-br from-brand-500 to-brand-700 shadow-[var(--shadow-warm)] text-white">
-            <Boxes className="size-5" />
-          </div>
-          <p className="text-lg font-bold tracking-tight text-text-main">
-            {APP_CONFIG.name}
-          </p>
-        </div>
-
-        <div className="absolute inset-0">
-          <FloatingPaths position={1} />
-          <FloatingPaths position={-1} />
-        </div>
-        <div className="from-background absolute inset-0 z-10 bg-gradient-to-t via-transparent to-transparent" />
-
-        <div className="relative z-10 mt-auto max-w-sm">
-          <blockquote className="space-y-3">
-            <p className="text-xl font-medium leading-snug text-text-main">
-              &ldquo;One local endpoint talking to forty-plus providers. I
-              stopped juggling API keys and quota pages entirely.&rdquo;
-            </p>
-            <footer className="font-mono text-xs text-text-muted">
-              — KeyRouter user
-            </footer>
-          </blockquote>
-        </div>
-      </div>
-
-      {/* ── Right form panel ── */}
-      <div className="relative flex min-h-screen flex-col justify-center p-4 sm:p-6 lg:p-10">
-        {/* Ambient radial glows */}
-        <div
-          aria-hidden
-          className="absolute inset-0 isolate contain-strict -z-10 opacity-70"
+    <main className="relative min-h-screen overflow-hidden bg-bg text-text-main">
+      {/* Background topology */}
+      <svg
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 size-full opacity-50"
+        viewBox="0 0 1200 800"
+        preserveAspectRatio="xMidYMid slice"
+      >
+        <g
+          className="topo-bg-edges"
+          fill="none"
+          stroke="var(--color-border-subtle)"
+          strokeWidth="1"
         >
-          <div className="absolute top-0 right-0 h-[320px] w-[560px] -translate-y-[87.5%] translate-x-[30%] rounded-full bg-[radial-gradient(68.54%_68.72%_at_55.02%_31.46%,rgba(99,102,241,0.14)_0,rgba(0,0,0,0)_80%)]" />
-          <div className="absolute top-0 right-0 h-[320px] w-[240px] translate-x-[5%] -translate-y-[50%] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(99,102,241,0.08)_0,rgba(0,0,0,0)_100%)]" />
-        </div>
+          <line x1="100" y1="150" x2="220" y2="80" />
+          <line x1="100" y1="150" x2="90" y2="320" />
+          <line x1="220" y1="80" x2="360" y2="60" />
+          <line x1="220" y1="80" x2="240" y2="260" />
+          <line x1="360" y1="60" x2="520" y2="90" />
+          <line x1="360" y1="60" x2="380" y2="210" />
+          <line x1="520" y1="90" x2="640" y2="50" />
+          <line x1="520" y1="90" x2="540" y2="200" />
+          <line x1="640" y1="50" x2="800" y2="110" />
+          <line x1="640" y1="50" x2="700" y2="180" />
+          <line x1="800" y1="110" x2="950" y2="70" />
+          <line x1="800" y1="110" x2="860" y2="230" />
+          <line x1="950" y1="70" x2="1100" y2="150" />
+          <line x1="950" y1="70" x2="1020" y2="300" />
+          <line x1="1100" y1="150" x2="1180" y2="260" />
+          <line x1="90" y1="320" x2="240" y2="260" />
+          <line x1="90" y1="320" x2="140" y2="480" />
+          <line x1="240" y1="260" x2="380" y2="210" />
+          <line x1="240" y1="260" x2="300" y2="420" />
+          <line x1="380" y1="210" x2="540" y2="200" />
+          <line x1="380" y1="210" x2="460" y2="380" />
+          <line x1="540" y1="200" x2="700" y2="180" />
+          <line x1="540" y1="200" x2="620" y2="360" />
+          <line x1="700" y1="180" x2="860" y2="230" />
+          <line x1="700" y1="180" x2="780" y2="400" />
+          <line x1="860" y1="230" x2="1020" y2="300" />
+          <line x1="860" y1="230" x2="940" y2="460" />
+          <line x1="1020" y1="300" x2="1180" y2="260" />
+          <line x1="1020" y1="300" x2="1100" y2="430" />
+          <line x1="1180" y1="260" x2="1180" y2="400" />
+          <line x1="140" y1="480" x2="300" y2="420" />
+          <line x1="140" y1="480" x2="120" y2="660" />
+          <line x1="300" y1="420" x2="460" y2="380" />
+          <line x1="300" y1="420" x2="280" y2="600" />
+          <line x1="460" y1="380" x2="620" y2="360" />
+          <line x1="460" y1="380" x2="440" y2="580" />
+          <line x1="620" y1="360" x2="780" y2="400" />
+          <line x1="620" y1="360" x2="600" y2="560" />
+          <line x1="780" y1="400" x2="940" y2="460" />
+          <line x1="780" y1="400" x2="760" y2="610" />
+          <line x1="940" y1="460" x2="1100" y2="430" />
+          <line x1="940" y1="460" x2="920" y2="660" />
+          <line x1="1100" y1="430" x2="1180" y2="400" />
+          <line x1="1100" y1="430" x2="1080" y2="640" />
+          <line x1="1180" y1="260" x2="1180" y2="400" />
+          <line x1="120" y1="660" x2="280" y2="600" />
+          <line x1="120" y1="660" x2="100" y2="800" />
+          <line x1="280" y1="600" x2="440" y2="580" />
+          <line x1="280" y1="600" x2="500" y2="720" />
+          <line x1="440" y1="580" x2="600" y2="560" />
+          <line x1="440" y1="580" x2="500" y2="720" />
+          <line x1="600" y1="560" x2="760" y2="610" />
+          <line x1="760" y1="610" x2="920" y2="660" />
+          <line x1="920" y1="660" x2="1080" y2="640" />
+          <line x1="1080" y1="640" x2="1160" y2="760" />
+          <line x1="500" y1="720" x2="1160" y2="760" />
+        </g>
+        <g className="topo-bg-nodes" fill="var(--color-text-subtle)">
+          <circle cx="100" cy="150" r="3" />
+          <circle cx="220" cy="80" r="3" />
+          <circle cx="360" cy="60" r="3" />
+          <circle cx="520" cy="90" r="3" />
+          <circle cx="640" cy="50" r="3" />
+          <circle cx="800" cy="110" r="3" />
+          <circle cx="950" cy="70" r="3" />
+          <circle cx="1100" cy="150" r="3" />
+          <circle cx="90" cy="320" r="4" />
+          <circle cx="240" cy="260" r="3" />
+          <circle cx="380" cy="210" r="3" />
+          <circle cx="540" cy="200" r="3" />
+          <circle cx="700" cy="180" r="3" />
+          <circle cx="860" cy="230" r="3" />
+          <circle cx="1020" cy="300" r="4" />
+          <circle cx="1180" cy="260" r="3" />
+          <circle cx="140" cy="480" r="3" />
+          <circle cx="300" cy="420" r="4" />
+          <circle cx="460" cy="380" r="3" />
+          <circle cx="620" cy="360" r="3" />
+          <circle cx="780" cy="400" r="4" />
+          <circle cx="940" cy="460" r="3" />
+          <circle cx="1100" cy="430" r="3" />
+          <circle cx="1180" cy="400" r="3" />
+          <circle cx="120" cy="660" r="3" />
+          <circle cx="280" cy="600" r="3" />
+          <circle cx="440" cy="580" r="3" />
+          <circle cx="600" cy="560" r="3" />
+          <circle cx="760" cy="610" r="3" />
+          <circle cx="920" cy="660" r="3" />
+          <circle cx="1080" cy="640" r="3" />
+          <circle cx="1160" cy="760" r="3" />
+          <circle cx="500" cy="720" r="4" />
+          <circle cx="100" cy="800" r="3" />
+          <circle cx="700" cy="450" r="5" />
+        </g>
+      </svg>
 
-        <Button
-          variant="ghost"
-          className="absolute top-7 left-5"
-          onClick={() => (window.location.href = "/")}
-        >
-          <ChevronLeft className="size-4 me-2" />
-          Home
-        </Button>
-
-        <div className="mx-auto w-full max-w-sm space-y-5">
-          {/* Mobile brand */}
-          <div className="flex items-center gap-2.5 lg:hidden">
-            <div className="flex items-center justify-center size-8 rounded-[10px] bg-gradient-to-br from-brand-500 to-brand-700 text-white">
-              <Boxes className="size-4" />
+      <div className="relative mx-auto flex min-h-screen w-full max-w-lg flex-col justify-center px-5 py-10 sm:px-7">
+        <div className="rounded-2xl border border-border-subtle bg-surface p-7 shadow-[var(--shadow-elev)] sm:p-10">
+          {/* Brand — centered */}
+          <div className="mb-8 flex flex-col items-center text-center">
+            <div className="grid size-14 place-items-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 text-white shadow-[var(--shadow-warm)]">
+              <span className="material-symbols-outlined text-[26px]">hub</span>
             </div>
-            <p className="text-lg font-bold tracking-tight text-text-main">
+            <h1 className="mt-4 font-display text-2xl font-semibold tracking-tight text-text-main">
               {APP_CONFIG.name}
-            </p>
-          </div>
-
-          <div className="flex flex-col space-y-1.5">
-            <h1 className="text-2xl font-bold tracking-tight text-text-main">
-              {pageTitle}
             </h1>
-            <p className="text-sm text-text-muted">
-              {isSsoMode
-                ? "Securely access your KeyRouter control room."
-                : "Enter your dashboard password to continue."}
+            <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.2em] text-text-subtle">
+              v{APP_CONFIG.versionLabel}
             </p>
           </div>
 
-          {/* SSO buttons */}
-          <div className="space-y-2.5">
-            {samlAvailable && (
-              <Button type="button" size="lg" variant="outline" className="w-full" onClick={handleSamlLogin}>
-                <Fingerprint className="size-4 me-2 text-brand-600" />
-                {samlLoginLabel}
-              </Button>
-            )}
-            {oidcAvailable && (
-              <Button type="button" size="lg" variant="outline" className="w-full" onClick={handleOidcLogin}>
-                <BadgeCheck className="size-4 me-2 text-brand-600" />
-                {oidcLoginLabel}
-              </Button>
-            )}
+          {/* Access header — left */}
+          <div className="mb-7 text-left">
+            <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-text-subtle">
+              {isSsoMode ? "Single sign-on" : "Access control"}
+            </p>
+            <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight text-text-main">
+              Sign in
+            </h2>
+
           </div>
+
+          {/* SSO options */}
+          {(samlAvailable || oidcAvailable) && (
+            <div className="mb-6 space-y-2.5">
+              {samlAvailable && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  fullWidth
+                  icon="key"
+                  onClick={handleSamlLogin}
+                >
+                  {samlLoginLabel}
+                </Button>
+              )}
+              {oidcAvailable && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  fullWidth
+                  icon="key"
+                  onClick={handleOidcLogin}
+                >
+                  {oidcLoginLabel}
+                </Button>
+              )}
+            </div>
+          )}
 
           {ssoAvailable && passwordAvailable && (
-            <div className="flex w-full items-center justify-center gap-3">
-              <div className="h-px w-full bg-border" />
-              <span className="px-2 text-xs text-text-subtle">OR</span>
-              <div className="h-px w-full bg-border" />
+            <div className="mb-6 flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-text-subtle">
+              <span className="h-px flex-1 bg-border-subtle" />
+              or
+              <span className="h-px flex-1 bg-border-subtle" />
             </div>
           )}
 
           {passwordAvailable && !mustChange && (
-            <form onSubmit={handleLogin} className="space-y-3.5">
+            <form onSubmit={handleLogin} className="space-y-5">
               {isSsoEnabled && !ssoAvailable && (
-                <p className="text-xs text-amber-700 dark:text-amber-300">
-                  {activeSsoType === "saml" ? "SAML SSO" : "OIDC"} is enabled, but the configuration
-                  is incomplete. Password login is still available for recovery.
-                </p>
-              )}
-              {authMode === "both" && ssoAvailable && (
-                <p className="text-xs text-text-muted">
-                  Password and {activeSsoType === "saml" ? "SAML SSO" : "OIDC"} login are both enabled.
+                <p className="rounded-lg border border-warning/40 bg-warning/10 px-3 py-2 font-mono text-[11px] text-warning">
+                  {activeSsoType === "saml" ? "SAML SSO" : "OIDC"} enabled but
+                  configuration incomplete - use password to recover.
                 </p>
               )}
 
-              <div className="flex items-center justify-between">
-                <label htmlFor="login-password" className="text-sm font-medium text-text-main">
+              <div>
+                <label
+                  htmlFor="login-password"
+                  className="mb-2 block font-mono text-[11px] uppercase tracking-[0.2em] text-text-main"
+                >
                   Password
                 </label>
-                <span className="text-xs text-text-subtle">
-                  default is <code className="bg-sidebar px-1.5 py-0.5 rounded-md text-[10px]">123456</code>
-                </span>
-              </div>
-
-              <div className="relative h-max">
-                <input
-                  id="login-password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Enter your dashboard password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  autoFocus={!oidcAvailable}
-                  disabled={retryAfter > 0}
-                  className={cn(
-                    "peer w-full h-11 rounded-[10px] border border-border bg-surface-2 px-3.5 text-sm text-text-main",
-                    "pl-10 pr-10 placeholder:text-text-muted/60",
-                    "focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500/50",
-                    "text-[16px] sm:text-sm transition-all duration-150 disabled:opacity-50"
-                  )}
-                />
-                <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3.5 text-text-muted peer-disabled:opacity-50">
-                  <Lock className="size-4" aria-hidden="true" />
+                <div className="relative">
+                  <input
+                    id="login-password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    autoComplete="current-password"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    disabled={retryAfter > 0}
+                    autoFocus={!oidcAvailable}
+                    className={cn(
+                      "w-full rounded-lg border border-border bg-bg px-3.5 py-3 font-mono text-sm",
+                      "focus:outline-none focus:border-text-main focus:ring-1 focus:ring-text-main",
+                      "disabled:opacity-50 transition-colors placeholder:text-text-subtle"
+                    )}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((v) => !v)}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    className="absolute inset-y-0 right-0 flex items-center px-3.5 font-mono text-[10px] uppercase tracking-wider text-text-subtle hover:text-text-main focus:text-text-main"
+                  >
+                    {showPassword ? "hide" : "show"}
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  tabIndex={-1}
-                  onClick={() => setShowPassword((v) => !v)}
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                  className="absolute inset-y-0 end-0 flex items-center justify-center pe-3.5 text-text-muted hover:text-text-main transition-colors"
-                >
-                  {showPassword ? (
-                    <EyeOff className="size-4" />
-                  ) : (
-                    <Eye className="size-4" />
-                  )}
-                </button>
+                <p className="mt-2 font-mono text-[10px] uppercase tracking-wider text-text-subtle">
+                  default password 123456
+                </p>
               </div>
 
-              {error && (
-                <p className="flex items-center gap-1.5 text-xs text-red-500">{error}</p>
-              )}
+              {error && <p className="font-mono text-[11px] text-danger">{error}</p>}
               {retryAfter > 0 && (
-                <p className="flex items-center gap-1.5 text-xs text-amber-700 dark:text-amber-300">
-                  Locked. Retry in <span className="font-mono">{retryAfter}s</span>.
+                <p className="font-mono text-[11px] text-warning">
+                  Locked · retry in {retryAfter}s
                 </p>
               )}
-              {resetHint && (
-                <p className="text-xs text-text-muted">
-                  Forgot password? Open <code className="bg-sidebar px-1.5 py-0.5 rounded-md">keyrouter</code>{" "}
-                  CLI on the host → <b>Settings</b> → <b>Reset Password to Default</b>.
-                </p>
-              )}
-              {hasPassword === false && (
-                <p className="flex items-center gap-1.5 text-xs text-amber-700 dark:text-amber-300">
-                  No password set yet — you'll set one when logging in remotely.
-                </p>
-              )}
+              {resetHint && <p className="font-mono text-[11px] text-text-muted">{resetHint}</p>}
 
               <Button
                 type="submit"
                 size="lg"
-                className="w-full"
+                fullWidth
                 loading={loading}
                 disabled={retryAfter > 0}
-                iconRight={retryAfter > 0 ? undefined : "arrow_forward"}
+                className="group rounded-xl font-mono uppercase tracking-[0.18em] shadow-sm hover:shadow-md"
               >
-                {retryAfter > 0 ? `Wait ${retryAfter}s` : "Sign in"}
+                {retryAfter > 0 ? `Wait ${retryAfter}s` : "Connect"}
+                {!loading && (
+                  <span className="material-symbols-outlined transition-transform duration-200 group-hover:translate-x-1">
+                    arrow_forward
+                  </span>
+                )}
               </Button>
             </form>
           )}
 
           {mustChange && (
-            <form onSubmit={handleSetNewPassword} className="space-y-3.5">
-              <div className="rounded-[10px] border border-amber-500/30 bg-amber-500/10 px-3.5 py-2.5 text-[13px] text-amber-700 dark:text-amber-300">
-                Set a new password before accessing the dashboard remotely.
-              </div>
-              <div className="relative h-max">
+            <form onSubmit={handleSetNewPassword} className="space-y-5">
+              <p className="rounded-lg border border-warning/40 bg-warning/10 px-3 py-2 font-mono text-[11px] text-warning">
+                Set a new password before remote access is allowed.
+              </p>
+              <div>
+                <label
+                  htmlFor="login-new-password"
+                  className="mb-2 block font-mono text-[11px] uppercase tracking-[0.2em] text-text-main"
+                >
+                  New password
+                </label>
                 <input
                   id="login-new-password"
                   type="password"
-                  placeholder="Enter a new password"
+                  placeholder="••••••••"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  required
                   autoFocus
+                  required
                   className={cn(
-                    "peer w-full h-11 rounded-[10px] border border-border bg-surface-2 px-3.5 text-sm text-text-main",
-                    "pl-10 placeholder:text-text-muted/60",
-                    "focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500/50",
-                    "text-[16px] sm:text-sm transition-all duration-150"
+                    "w-full rounded-lg border border-border bg-bg px-3.5 py-3 font-mono text-sm",
+                    "focus:outline-none focus:border-text-main focus:ring-1 focus:ring-text-main",
+                    "transition-colors placeholder:text-text-subtle"
                   )}
                 />
-                <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3.5 text-text-muted">
-                  <Lock className="size-4" aria-hidden="true" />
-                </div>
               </div>
-              {error && (
-                <p className="flex items-center gap-1.5 text-xs text-red-500">{error}</p>
-              )}
+              {error && <p className="font-mono text-[11px] text-danger">{error}</p>}
               <Button
                 type="submit"
                 size="lg"
-                className="w-full"
+                fullWidth
                 loading={loading}
                 disabled={!newPassword}
               >
@@ -443,10 +440,13 @@ export default function LoginPage() {
             </form>
           )}
 
-          {!passwordAvailable && error && <p className="text-xs text-red-500">{error}</p>}
+          {!passwordAvailable && error && (
+            <p className="font-mono text-[11px] text-danger">{error}</p>
+          )}
 
-          <p className="pt-1 text-center text-[11px] text-text-subtle">
-            {ssoTitle} · {APP_CONFIG.name} v{APP_CONFIG.version}
+          {/* Card footer */}
+          <p className="mt-8 border-t border-border-subtle pt-5 text-center font-mono text-[10px] uppercase tracking-[0.15em] text-text-subtle">
+            {ssoTitle} · secure local session
           </p>
         </div>
       </div>

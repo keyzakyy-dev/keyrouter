@@ -5,6 +5,9 @@ export const APP_CONFIG = {
   name: "KeyRouter Proxy",
   description: "AI Infrastructure Management",
   version: pkg.version,
+  // Display label for this build — first release, so we surface a friendly
+  // "early version" label instead of the raw semver bump.
+  versionLabel: "versi awal",
 };
 
 // GitHub configuration
