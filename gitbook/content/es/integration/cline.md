@@ -34,7 +34,7 @@ http://localhost:20131/v1
 
 **Para KeyRouter en la nube:**
 ```
-https://keyrouter.com
+http://localhost:20131
 ```
 
 **Pasos:**
@@ -150,7 +150,7 @@ Puedes usar cualquier modelo configurado en tu dashboard de KeyRouter. Ejemplos 
 
 Para usar el endpoint en la nube de KeyRouter en lugar de localhost:
 
-1. En la configuración de Cline, establece Base URL a: `https://keyrouter.com`
+1. En la configuración de Cline, establece Base URL a: `http://localhost:20131`
 2. Asegúrate de haber configurado tu API key en el dashboard en la nube de KeyRouter
 3. Asegúrate de que tu endpoint en la nube esté activo y accesible
 

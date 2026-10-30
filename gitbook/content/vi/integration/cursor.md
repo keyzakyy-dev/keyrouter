@@ -6,12 +6,12 @@ Tích hợp KeyRouter với Cursor IDE để định tuyến request AI qua hệ
 
 - Cursor IDE đã cài đặt
 - Tài khoản Cursor Pro (cần thiết cho custom API endpoint)
-- KeyRouter cloud endpoint đã cấu hình
+- Một URL HTTPS công khai trỏ tới instance KeyRouter của bạn (ví dụ qua tunnel ngrok hoặc cloudflared)
 - API key từ KeyRouter dashboard
 
 ## ⚠️ Lưu ý Quan trọng
 
-> **Yêu cầu Cloud Endpoint**: Cursor định tuyến request qua server của chính nó và không hỗ trợ endpoint localhost. Bạn phải dùng KeyRouter cloud endpoint: `https://keyrouter.com`
+> **Yêu cầu URL công khai**: Cursor định tuyến request qua server của chính nó và không hỗ trợ endpoint `localhost`. Bạn phải expose instance KeyRouter cục bộ ra internet bằng tunnel (ví dụ ngrok hoặc cloudflared) và dùng URL HTTPS công khai đó ở đây.
 
 > **Yêu cầu Cursor Pro**: Tính năng này yêu cầu tài khoản Cursor Pro để dùng custom API endpoint.
 
@@ -30,15 +30,15 @@ Tích hợp KeyRouter với Cursor IDE để định tuyến request AI qua hệ
 
 ### 3. Cấu hình Base URL
 
-Đặt base URL tới KeyRouter cloud endpoint:
+Đặt base URL tới URL công khai của instance KeyRouter:
 
 ```
-https://keyrouter.com
+https://<host-tunnel-cua-ban>
 ```
 
 **Các bước:**
 1. Trong cài đặt Models, tìm field **Base URL**
-2. Nhập: `https://keyrouter.com`
+2. Nhập URL công khai của tunnel (ví dụ: `https://abc123.ngrok.app`)
 3. Click **Save**
 
 ### 4. Thêm API Key
@@ -66,7 +66,7 @@ Cursor settings của bạn nên trông như sau:
 
 ```
 OpenAI API: ✓ Enabled
-Base URL: https://keyrouter.com
+Base URL: https://<host-tunnel-cua-ban>
 API Key: sk-keyrouter-xxxxxxxxxxxxx
 Custom Models: gpt-4, claude-opus-4-5, gemini-2.0-flash
 ```
@@ -123,23 +123,31 @@ Bạn có thể dùng bất kỳ model nào đã cấu hình trong KeyRouter das
 
 ### Lỗi Connection
 
-1. Xác minh bạn đang dùng cloud endpoint: `https://keyrouter.com`
+1. Xác minh bạn đang dùng URL công khai của tunnel (ví dụ: `https://abc123.ngrok.app`)
 2. Kiểm tra kết nối internet
-3. Đảm bảo dịch vụ KeyRouter cloud đang hoạt động
+3. Đảm bảo instance KeyRouter có thể truy cập tại URL công khai đó
 4. Thử tắt VPN hoặc proxy nếu đang bật
 
 ### Localhost không hoạt động
 
-> **Nhớ**: Cursor không hỗ trợ endpoint localhost. Bạn phải dùng cloud endpoint `https://keyrouter.com`. Nếu cần dùng KeyRouter cục bộ, hãy cân nhắc dùng dịch vụ tunneling như ngrok để expose endpoint cục bộ.
+> **Nhớ**: Cursor không hỗ trợ endpoint `localhost`. Expose instance KeyRouter cục bộ bằng tunnel (ví dụ ngrok hoặc cloudflared) và dùng URL HTTPS công khai tạo ra làm base URL.
 
-## Setup Cloud Endpoint
+## Setup Tunnel
 
 Nếu bạn chạy KeyRouter cục bộ và muốn dùng với Cursor:
 
-1. Bật cloud endpoint trong KeyRouter settings
-2. Cấu hình URL cloud endpoint trong KeyRouter dashboard
-3. Dùng URL cloud trong Cursor settings
-4. Đảm bảo KeyRouter instance cục bộ có thể truy cập từ internet
+1. Bắt đầu một tunnel expose cổng KeyRouter cục bộ ra internet:
+   ```bash
+   # ví dụ với ngrok
+   ngrok http 20131
+   ```
+   hoặc với cloudflared:
+   ```bash
+   cloudflared tunnel --url http://localhost:20131
+   ```
+2. Sao chép URL HTTPS công khai mà tunnel in ra (ví dụ: `https://abc123.ngrok.app`)
+3. Dùng URL công khai đó làm Base URL trong Cursor settings
+4. Giữ cả tunnel và KeyRouter chạy trong khi dùng Cursor
 
 ## Best Practices
 

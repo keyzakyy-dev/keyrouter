@@ -34,7 +34,7 @@ http://localhost:20131/v1
 
 **クラウドKeyRouter用:**
 ```
-https://keyrouter.com
+http://localhost:20131
 ```
 
 **手順:**
@@ -150,7 +150,7 @@ KeyRouterダッシュボードで設定されたモデルを使用できます�
 
 localhostの代わりにKeyRouterクラウドエンドポイントを使用:
 
-1. Cline設定で、Base URLを設定: `https://keyrouter.com`
+1. Cline設定で、Base URLを設定: `http://localhost:20131`
 2. KeyRouterクラウドダッシュボードでAPIキーが設定されていることを確認
 3. クラウドエンドポイントがアクティブでアクセス可能か確認
 

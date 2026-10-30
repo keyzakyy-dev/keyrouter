@@ -16,7 +16,7 @@ bill while you keep your subscriptions.
 [![License](https://img.shields.io/npm/l/keyrouter.svg)](https://github.com/keyzakyy-dev/keyrouter/blob/main/LICENSE)
 [![Stars](https://img.shields.io/github/stars/keyzakyy-dev/keyrouter?style=social)](https://github.com/keyzakyy-dev/keyrouter)
 
-**[⚡ Quick Start](#quick-start) · [🧠 How it works](#how-it-works) · [✨ Features](#features) · [📖 Documentation](#documentation) · [🌐 Website](https://keyrouter.com)**
+**[⚡ Quick Start](#quick-start) · [🧠 How it works](#how-it-works) · [✨ Features](#features) · [📖 Documentation](#documentation) · [🌐 Website](https://github.com/keyzakyy-dev/keyrouter)**
 
 </div>
 
@@ -220,7 +220,7 @@ keyrouter show claude --json  # machine-readable (key masked)
 | `PORT` | No | Server port, defaults to `20131` |
 | `API_KEY_SECRET` | No | Secret for API keys issued by the endpoint proxy |
 | `MACHINE_ID_SALT` | No | Salt for machine identity |
-| `CLOUD_URL` | No | Cloud sync endpoint, defaults to `https://keyrouter.com` |
+| `CLOUD_URL` | No | Cloud sync endpoint, defaults to off (set your own domain to enable) |
 | `BASE_URL` | No | Public base URL of this instance |
 | `HTTP_PROXY` / `HTTPS_PROXY` | No | Optional outbound proxy for upstream calls |
 
@@ -252,7 +252,7 @@ Stack: Next.js 16, React 19, Tailwind CSS 4, SQLite (sql.js + better-sqlite3).
 ## Documentation
 
 - Full Docker guide, image tags, and publishing: [`DOCKER.md`](DOCKER.md)
-- Project website: <https://keyrouter.com>
+- Project website: <https://github.com/keyzakyy-dev/keyrouter>
 - npm package: <https://www.npmjs.com/package/keyrouter>
 
 ---

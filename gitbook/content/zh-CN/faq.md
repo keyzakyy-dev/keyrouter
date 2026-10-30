@@ -164,7 +164,7 @@
 
 ```
 Cursor Settings → Models → Advanced:
-  OpenAI API Base URL: https://keyrouter.com/v1
+  OpenAI API Base URL: http://localhost:20131/v1
   OpenAI API Key: [从仪表盘获取]
   Model: cc/claude-opus-4-5-20251101
 ```
@@ -381,7 +381,7 @@ keyrouter --version
 
 ## 需要更多帮助?
 
-- **文档:** [keyrouter.com/docs](https://keyrouter.com/docs)
+- **文档:** [GitHub Docs](https://github.com/keyzakyy-dev/keyrouter)
 - **GitHub:** [github.com/keyzakyy-dev/keyrouter](https://github.com/keyzakyy-dev/keyrouter)
 - **Issues:** [github.com/keyzakyy-dev/keyrouter/issues](https://github.com/keyzakyy-dev/keyrouter/issues)
 - **故障排除:** [troubleshooting.md](troubleshooting.md)

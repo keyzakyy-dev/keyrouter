@@ -6,7 +6,7 @@ Tích hợp KeyRouter với extension Continue để mang trợ lý AI trực ti
 
 - Visual Studio Code đã cài đặt
 - Extension Continue đã cài đặt từ VSCode marketplace
-- KeyRouter API key từ [dashboard](https://keyrouter.com/dashboard)
+- KeyRouter API key từ [dashboard](http://localhost:20131/dashboard)
 - KeyRouter đang chạy (cục bộ hoặc cloud)
 
 ## Các bước Cấu hình
@@ -76,7 +76,7 @@ Thêm cấu hình sau vào `config.json`:
 **Cho Cloud KeyRouter:**
 Thay `apiBase` bằng:
 ```json
-"apiBase": "https://keyrouter.com/v1"
+"apiBase": "http://localhost:20131/v1"
 ```
 
 ### 3. Lưu và Reload

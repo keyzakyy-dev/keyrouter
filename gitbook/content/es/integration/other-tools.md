@@ -24,7 +24,7 @@ Model: cualquier modelo de KeyRouter (cc/*, cx/*, glm/*, etc.)
 
 **KeyRouter en la nube:**
 ```
-Base URL: https://keyrouter.com/v1
+Base URL: http://localhost:20131/v1
 API Key: your-api-key-from-dashboard
 Model: cualquier modelo de KeyRouter (cc/*, cx/*, glm/*, etc.)
 ```

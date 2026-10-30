@@ -24,7 +24,7 @@ Model: 任意のKeyRouterモデル (cc/*, cx/*, glm/*など)
 
 **クラウドKeyRouter:**
 ```
-Base URL: https://keyrouter.com/v1
+Base URL: http://localhost:20131/v1
 API Key: your-api-key-from-dashboard
 Model: 任意のKeyRouterモデル (cc/*, cx/*, glm/*など)
 ```

@@ -6,7 +6,7 @@ KeyRouterをContinue拡張機能と統合し、Visual Studio Codeに直接AIア�
 
 - Visual Studio Codeがインストール済み
 - VSCodeマーケットプレイスからContinue拡張機能がインストール済み
-- [ダッシュボード](https://keyrouter.com/dashboard)からのKeyRouter APIキー
+- [ダッシュボード](http://localhost:20131/dashboard)からのKeyRouter APIキー
 - KeyRouterが動作中 (ローカルまたはクラウド)
 
 ## 設定手順
@@ -76,7 +76,7 @@ KeyRouterをContinue拡張機能と統合し、Visual Studio Codeに直接AIア�
 **クラウドKeyRouter用:**
 `apiBase` を以下に置き換え:
 ```json
-"apiBase": "https://keyrouter.com/v1"
+"apiBase": "http://localhost:20131/v1"
 ```
 
 ### 3. 保存してリロード

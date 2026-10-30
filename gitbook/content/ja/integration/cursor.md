@@ -6,12 +6,12 @@ KeyRouterをCursor IDEと統合し、AIリクエストをKeyRouterのインテ�
 
 - Cursor IDEがインストール済み
 - Cursor Proアカウント (カスタムAPIエンドポイントに必要)
-- KeyRouterクラウドエンドポイントが設定済み
+- KeyRouterインスタンスを指す公開HTTPS URL (例: ngrokまたはcloudflaredトンネル)
 - KeyRouterダッシュボードからのAPIキー
 
 ## ⚠️ 重要な注意点
 
-> **クラウドエンドポイントが必要**: Cursorは独自のサーバー経由でリクエストをルーティングし、localhostエンドポイントをサポートしません。KeyRouterクラウドエンドポイント `https://keyrouter.com` を使用する必要があります。
+> **公開URLが必要**: Cursorは独自のサーバー経由でリクエストをルーティングし、`localhost`エンドポイントをサポートしません。ローカルKeyRouterインスタンスをトンネル (例: ngrokまたはcloudflared) でインターネットに公開し、その公開HTTPS URLを使用してください。
 
 > **Cursor Proが必要**: この機能はカスタムAPIエンドポイントを使用するためにCursor Proアカウントが必要です。
 
@@ -30,15 +30,15 @@ KeyRouterをCursor IDEと統合し、AIリクエストをKeyRouterのインテ�
 
 ### 3. Base URLを設定
 
-Base URLをKeyRouterクラウドエンドポイントに設定:
+Base URLをKeyRouterインスタンスの公開URLに設定:
 
 ```
-https://keyrouter.com
+https://<トンネルホスト>
 ```
 
 **手順:**
 1. Models設定で **Base URL** フィールドを見つける
-2. 入力: `https://keyrouter.com`
+2. トンネルの公開URLを入力 (例: `https://abc123.ngrok.app`)
 3. **Save** をクリック
 
 ### 4. APIキーを追加
@@ -66,7 +66,7 @@ Cursor設定は次のようになります:
 
 ```
 OpenAI API: ✓ Enabled
-Base URL: https://keyrouter.com
+Base URL: https://<トンネルホスト>
 API Key: sk-keyrouter-xxxxxxxxxxxxx
 Custom Models: gpt-4, claude-opus-4-5, gemini-2.0-flash
 ```
@@ -123,23 +123,31 @@ KeyRouterダッシュボードで設定されたモデルを使用できます�
 
 ### 接続の問題
 
-1. クラウドエンドポイントを使用しているか確認: `https://keyrouter.com`
+1. トンネルの公開URLを使用しているか確認 (例: `https://abc123.ngrok.app`)
 2. インターネット接続を確認
-3. KeyRouterクラウドサービスが運用中か確認
+3. KeyRouterインスタンスがその公開URLで到達可能か確認
 4. VPNまたはプロキシが有効な場合は無効化してみる
 
 ### Localhostが動作しない
 
-> **覚えておいてください**: Cursorはlocalhostエンドポイントをサポートしません。クラウドエンドポイント `https://keyrouter.com` を使用する必要があります。ローカルKeyRouterインスタンスを使用したい場合は、ngrokなどのトンネリングサービスを検討してローカルエンドポイントを公開してください。
+> **覚えておいてください**: Cursorは`localhost`エンドポイントをサポートしません。ローカルKeyRouterインスタンスをトンネル (例: ngrokまたはcloudflared) で公開し、その公開HTTPS URLをBase URLとして使用してください。
 
-## クラウドエンドポイントのセットアップ
+## トンネルのセットアップ
 
 ローカルでKeyRouterを実行し、Cursorで使用したい場合:
 
-1. KeyRouter設定でクラウドエンドポイントを有効化
-2. KeyRouterダッシュボードでクラウドエンドポイントURLを設定
-3. Cursor設定でクラウドURLを使用
-4. ローカルKeyRouterインスタンスがインターネットからアクセス可能か確認
+1. ローカルKeyRouterポートをインターネットに公開するトンネルを開始:
+   ```bash
+   # ngrokの例
+   ngrok http 20131
+   ```
+   またはcloudflared:
+   ```bash
+   cloudflared tunnel --url http://localhost:20131
+   ```
+2. トンネルが表示する公開HTTPS URLをコピー (例: `https://abc123.ngrok.app`)
+3. その公開URLをCursor設定のBase URLとして使用
+4. Cursorを使用している間、トンネルとKeyRouterの両方を実行したままにする
 
 ## ベストプラクティス
 

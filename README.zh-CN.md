@@ -15,7 +15,7 @@
   [![Stars](https://img.shields.io/github/stars/keyzakyy-dev/keyrouter?style=social)](https://github.com/keyzakyy-dev/keyrouter)
   [![Forks](https://img.shields.io/github/forks/keyzakyy-dev/keyrouter?style=social)](https://github.com/keyzakyy-dev/keyrouter/network/members)
   
-  [🚀 快速开始](#-快速开始) • [💡 功能特点](#-主要功能) • [📖 设置指南](#-设置指南) • [🌐 网站](https://keyrouter.com)
+  [🚀 快速开始](#-快速开始) • [💡 功能特点](#-主要功能) • [📖 设置指南](#-设置指南) • [🌐 网站](https://github.com/keyzakyy-dev/keyrouter)
 
   [🇻🇳 Tiếng Việt](./i18n/README.vi.md) • [🇨🇳 中文](./i18n/README.zh-CN.md) • [🇯🇵 日本語](./i18n/README.ja-JP.md)
 </div>
@@ -1036,7 +1036,7 @@ export PORT="20131"
 export HOSTNAME="0.0.0.0"
 export NODE_ENV="production"
 export NEXT_PUBLIC_BASE_URL="http://localhost:20131"
-export NEXT_PUBLIC_CLOUD_URL="https://keyrouter.com"
+export NEXT_PUBLIC_CLOUD_URL="http://localhost:20131"
 export API_KEY_SECRET="keyrouter-api-key-secret"
 export MACHINE_ID_SALT="keyrouter-salt"
 
@@ -1101,9 +1101,9 @@ docker stop keyrouter && docker rm keyrouter
 | `HOSTNAME` | 框架默认值 | 绑定主机（Docker 默认为 `0.0.0.0`） |
 | `NODE_ENV` | 运行时默认值 | 设置 `production` 用于部署 |
 | `BASE_URL` | `http://localhost:20131` | 云同步任务使用的服务端内部基础 URL |
-| `CLOUD_URL` | `https://keyrouter.com` | 服务端云同步端点基础 URL |
+| `CLOUD_URL` | `http://localhost:20131` | 服务端云同步端点基础 URL |
 | `NEXT_PUBLIC_BASE_URL` | `http://localhost:3000` | 向后兼容/公开基础 URL（服务端运行时优先使用 `BASE_URL`） |
-| `NEXT_PUBLIC_CLOUD_URL` | `https://keyrouter.com` | 向后兼容/公开云 URL（服务端运行时优先使用 `CLOUD_URL`） |
+| `NEXT_PUBLIC_CLOUD_URL` | `http://localhost:20131` | 向后兼容/公开云 URL（服务端运行时优先使用 `CLOUD_URL`） |
 | `API_KEY_SECRET` | `keyrouter-api-key-secret` | 生成 API key 的 HMAC 密钥 |
 | `MACHINE_ID_SALT` | `keyrouter-salt` | 稳定机器 ID 哈希的盐值 |
 | `ENABLE_REQUEST_LOGS` | `false` | 在 `logs/` 下启用请求/响应日志 |
@@ -1267,7 +1267,7 @@ Authorization: Bearer your-api-key
 
 ## 📧 支持
 
-- **网站**：[keyrouter.com](https://keyrouter.com)
+- **网站**：[GitHub](https://github.com/keyzakyy-dev/keyrouter)
 - **GitHub**：[github.com/keyzakyy-dev/keyrouter](https://github.com/keyzakyy-dev/keyrouter)
 - **问题**：[github.com/keyzakyy-dev/keyrouter/issues](https://github.com/keyzakyy-dev/keyrouter/issues)
 

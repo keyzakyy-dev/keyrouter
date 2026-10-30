@@ -164,7 +164,7 @@ Các vấn đề và giải pháp phổ biến khi dùng KeyRouter.
 4. **Dùng cloud endpoint:**
    Nếu localhost không hoạt động (ví dụ: Cursor IDE):
    ```
-   Endpoint: https://keyrouter.com/v1
+   Endpoint: http://localhost:20131/v1
    ```
 
 ---
@@ -347,5 +347,5 @@ Các vấn đề và giải pháp phổ biến khi dùng KeyRouter.
 ## Cần trợ giúp thêm?
 
 - **GitHub Issues:** [github.com/keyzakyy-dev/keyrouter/issues](https://github.com/keyzakyy-dev/keyrouter/issues)
-- **Documentation:** [keyrouter.com/docs](https://keyrouter.com/docs)
+- **Documentation:** [GitHub Docs](https://github.com/keyzakyy-dev/keyrouter)
 - **FAQ:** [faq.md](faq.md)

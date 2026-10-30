@@ -5,7 +5,7 @@ Integrate KeyRouter with Roo AI Assistant to access multiple AI models through a
 ## Prerequisites
 
 - Roo AI Assistant installed
-- KeyRouter API key from [dashboard](https://keyrouter.com/dashboard)
+- KeyRouter API key from [dashboard](http://localhost:20131/dashboard)
 - KeyRouter running (local or cloud)
 
 ## Configuration Steps
@@ -28,7 +28,7 @@ API Key: your-api-key-from-dashboard
 
 **For Cloud KeyRouter:**
 ```
-Base URL: https://keyrouter.com/v1
+Base URL: http://localhost:20131/v1
 API Key: your-api-key-from-dashboard
 ```
 

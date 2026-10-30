@@ -113,7 +113,7 @@ Nếu gặp lỗi "model not available":
 Để dùng KeyRouter cloud endpoint thay vì localhost:
 
 ```bash
-export OPENAI_BASE_URL="https://keyrouter.com"
+export OPENAI_BASE_URL="http://localhost:20131"
 ```
 
 Đảm bảo bạn đã cấu hình API key trong KeyRouter cloud dashboard.

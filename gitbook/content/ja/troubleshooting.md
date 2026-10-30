@@ -164,7 +164,7 @@ KeyRouter利用時の一般的な問題と解決策。
 4. **クラウドエンドポイントを使用:**
    localhostが動作しない場合(例: Cursor IDE):
    ```
-   Endpoint: https://keyrouter.com/v1
+   Endpoint: http://localhost:20131/v1
    ```
 
 ---
@@ -347,5 +347,5 @@ KeyRouter利用時の一般的な問題と解決策。
 ## さらにヘルプが必要?
 
 - **GitHub Issues:** [github.com/keyzakyy-dev/keyrouter/issues](https://github.com/keyzakyy-dev/keyrouter/issues)
-- **ドキュメント:** [keyrouter.com/docs](https://keyrouter.com/docs)
+- **ドキュメント:** [GitHub Docs](https://github.com/keyzakyy-dev/keyrouter)
 - **FAQ:** [faq.md](faq.md)

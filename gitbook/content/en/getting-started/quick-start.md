@@ -242,6 +242,6 @@ Daily routine:
 
 ## Need Help?
 
-- **Website**: [keyrouter.com](https://keyrouter.com)
+- **Website**: [GitHub](https://github.com/keyzakyy-dev/keyrouter)
 - **GitHub**: [github.com/keyzakyy-dev/keyrouter](https://github.com/keyzakyy-dev/keyrouter)
 - **Issues**: [github.com/keyzakyy-dev/keyrouter/issues](https://github.com/keyzakyy-dev/keyrouter/issues)

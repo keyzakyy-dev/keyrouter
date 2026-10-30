@@ -236,7 +236,7 @@ export const DOCS_CONFIG = {
   title: "KeyRouter Documentation",
   description: "Smart AI model router - Maximize subscriptions, minimize costs",
   logo: "KeyRouter",
-  appUrl: "https://keyrouter.com",
+  appUrl: "https://github.com/keyzakyy-dev/keyrouter",
   githubUrl: "https://github.com/keyzakyy-dev/keyrouter",
   navigation: getNavigation(DEFAULT_LANG)
 };

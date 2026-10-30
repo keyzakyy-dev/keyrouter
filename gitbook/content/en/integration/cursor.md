@@ -6,12 +6,12 @@ Integrate KeyRouter with Cursor IDE to route your AI requests through KeyRouter'
 
 - Cursor IDE installed
 - Cursor Pro account (required for custom API endpoints)
-- KeyRouter cloud endpoint configured
+- A public HTTPS URL pointing to your KeyRouter instance (for example via ngrok or cloudflared tunnel)
 - API key from KeyRouter dashboard
 
 ## ⚠️ Important Notes
 
-> **Cloud Endpoint Required**: Cursor routes requests through its own server and does not support localhost endpoints. You must use the KeyRouter cloud endpoint: `https://keyrouter.com`
+> **Public URL Required**: Cursor routes requests through its own server and does not support `localhost` endpoints. You must expose your local KeyRouter instance to the internet with a tunnel (for example ngrok or cloudflared) and use that public HTTPS URL here.
 
 > **Cursor Pro Required**: This feature requires a Cursor Pro account to use custom API endpoints.
 
@@ -30,15 +30,15 @@ Integrate KeyRouter with Cursor IDE to route your AI requests through KeyRouter'
 
 ### 3. Configure Base URL
 
-Set the base URL to KeyRouter cloud endpoint:
+Set the base URL to the public URL of your KeyRouter instance:
 
 ```
-https://keyrouter.com
+https://<your-tunnel-host>
 ```
 
 **Steps:**
 1. In the Models settings, locate the **Base URL** field
-2. Enter: `https://keyrouter.com`
+2. Enter your public tunnel URL (for example `https://abc123.ngrok.app`)
 3. Click **Save**
 
 ### 4. Add API Key
@@ -66,7 +66,7 @@ Your Cursor settings should look like this:
 
 ```
 OpenAI API: ✓ Enabled
-Base URL: https://keyrouter.com
+Base URL: https://<your-tunnel-host>
 API Key: sk-keyrouter-xxxxxxxxxxxxx
 Custom Models: gpt-4, claude-opus-4-5, gemini-2.0-flash
 ```
@@ -123,23 +123,31 @@ You can use any model configured in your KeyRouter dashboard. Common examples:
 
 ### Connection Issues
 
-1. Verify you are using the cloud endpoint: `https://keyrouter.com`
+1. Verify you are using your public tunnel URL (for example `https://abc123.ngrok.app`)
 2. Check your internet connection
-3. Ensure KeyRouter cloud service is operational
+3. Ensure your KeyRouter instance is reachable at that public URL
 4. Try disabling VPN or proxy if enabled
 
 ### Localhost Not Working
 
-> **Remember**: Cursor does not support localhost endpoints. You must use the cloud endpoint `https://keyrouter.com`. If you need to use a local KeyRouter instance, consider using a tunneling service like ngrok to expose your local endpoint.
+> **Remember**: Cursor does not support `localhost` endpoints. Expose your local KeyRouter instance with a tunnel (for example ngrok or cloudflared) and use the resulting public HTTPS URL as the base URL.
 
-## Cloud Endpoint Setup
+## Tunnel Setup
 
 If you're running KeyRouter locally and want to use it with Cursor:
 
-1. Enable cloud endpoint in KeyRouter settings
-2. Configure your cloud endpoint URL in KeyRouter dashboard
-3. Use the cloud URL in Cursor settings
-4. Ensure your local KeyRouter instance is accessible from the internet
+1. Start a tunnel that exposes your local KeyRouter port to the internet:
+   ```bash
+   # example with ngrok
+   ngrok http 20131
+   ```
+   or with cloudflared:
+   ```bash
+   cloudflared tunnel --url http://localhost:20131
+   ```
+2. Copy the public HTTPS URL the tunnel prints (for example `https://abc123.ngrok.app`)
+3. Use that public URL as the Base URL in Cursor settings
+4. Keep both the tunnel and KeyRouter running while you use Cursor
 
 ## Best Practices
 

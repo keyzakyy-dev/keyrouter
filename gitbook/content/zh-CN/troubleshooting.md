@@ -164,7 +164,7 @@
 4. **使用云端 endpoint:**
    如果 localhost 不行(例如 Cursor IDE):
    ```
-   Endpoint: https://keyrouter.com/v1
+   Endpoint: http://localhost:20131/v1
    ```
 
 ---
@@ -347,5 +347,5 @@
 ## 需要更多帮助?
 
 - **GitHub Issues:** [github.com/keyzakyy-dev/keyrouter/issues](https://github.com/keyzakyy-dev/keyrouter/issues)
-- **文档:** [keyrouter.com/docs](https://keyrouter.com/docs)
+- **文档:** [GitHub Docs](https://github.com/keyzakyy-dev/keyrouter)
 - **常见问题:** [faq.md](faq.md)

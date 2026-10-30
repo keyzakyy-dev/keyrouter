@@ -113,7 +113,7 @@ codex --model cx/gpt-5.1-codex-max "Explain what this code does: $(cat myfile.js
 localhostの代わりにKeyRouterクラウドエンドポイントを使用するには:
 
 ```bash
-export OPENAI_BASE_URL="https://keyrouter.com"
+export OPENAI_BASE_URL="http://localhost:20131"
 ```
 
 KeyRouterクラウドダッシュボードでAPIキーが設定されていることを確認してください。

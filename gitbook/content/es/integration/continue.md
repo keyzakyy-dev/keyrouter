@@ -6,7 +6,7 @@ Integra KeyRouter con la extensión Continue para llevar la asistencia de IA dir
 
 - Visual Studio Code instalado
 - Extensión Continue instalada desde el marketplace de VSCode
-- API key de KeyRouter desde el [dashboard](https://keyrouter.com/dashboard)
+- API key de KeyRouter desde el [dashboard](http://localhost:20131/dashboard)
 - KeyRouter ejecutándose (local o en la nube)
 
 ## Pasos de configuración
@@ -76,7 +76,7 @@ Agrega la siguiente configuración a tu `config.json`:
 **Para KeyRouter en la nube:**
 Reemplaza `apiBase` con:
 ```json
-"apiBase": "https://keyrouter.com/v1"
+"apiBase": "http://localhost:20131/v1"
 ```
 
 ### 3. Guardar y recargar

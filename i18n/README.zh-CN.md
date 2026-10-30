@@ -15,7 +15,7 @@
   [![Downloads](https://img.shields.io/npm/dm/keyrouter.svg)](https://www.npmjs.com/package/keyrouter)
   [![License](https://img.shields.io/npm/l/keyrouter.svg)](https://github.com/keyzakyy-dev/keyrouter/blob/main/LICENSE)
   
-  [🚀 快速开始](#-quick-start) • [💡 特性](#-key-features) • [📖 设置](#-setup) • [🌐 网站](https://keyrouter.com)
+  [🚀 快速开始](#-quick-start) • [💡 特性](#-key-features) • [📖 设置](#-setup) • [🌐 网站](https://github.com/keyzakyy-dev/keyrouter)
 </div>
 
 ---
@@ -959,7 +959,7 @@ export PORT="20131"
 export HOSTNAME="0.0.0.0"
 export NODE_ENV="production"
 export NEXT_PUBLIC_BASE_URLhttp://localhost:20131"
-export NEXT_PUBLIC_CLOUD_URL="https://keyrouter.com"
+export NEXT_PUBLIC_CLOUD_URL="http://localhost:20131"
 export API_KEY_SECRET="keyrouter-api-key-secret"
 export MACHINE_ID_SALT="keyrouter-salt"
 
@@ -1023,9 +1023,9 @@ docker stop keyrouter && docker rm keyrouter
 | `HOSTNAME` | 框架默认值 | 绑定主机（Docker 默认为 `0.0.0.0`） |
 | `NODE_ENV` | 运行时默认值 | 部署时设置 `production` |
 | `BASE_URL` |http://localhost:20131` | 云同步作业使用的服务器端内部基础 URL |
-| `CLOUD_URL` | `https://keyrouter.com` | 服务器端云同步端点基础 URL |
+| `CLOUD_URL` | `http://localhost:20131` | 服务器端云同步端点基础 URL |
 | `NEXT_PUBLIC_BASE_URL` | `http://localhost:3000` | 向后兼容/公共基础 URL（服务器运行时优先使用 `BASE_URL`） |
-| `NEXT_PUBLIC_CLOUD_URL` | `https://keyrouter.com` | 向后兼容/公共云 URL（服务器运行时优先使用 `CLOUD_URL`） |
+| `NEXT_PUBLIC_CLOUD_URL` | `http://localhost:20131` | 向后兼容/公共云 URL（服务器运行时优先使用 `CLOUD_URL`） |
 | `API_KEY_SECRET` | `keyrouter-api-key-secret` | 生成的 API Key 的 HMAC 密钥 |
 | `MACHINE_ID_SALT` | `keyrouter-salt` | 稳定机器 ID 哈希的盐值 |
 | `ENABLE_REQUEST_LOGS` | `false` | 在 `logs/` 下启用请求/响应日志 |
@@ -1118,11 +1118,11 @@ docker stop keyrouter && docker rm keyrouter
 
 **云端同步错误**
 - 验证 `BASE_URL` 指向您正在运行的实例（例如：`http://localhost:20131`）
-- 验证 `CLOUD_URL` 指向您预期的云端端点（例如：`https://keyrouter.com`）
+- 验证 `CLOUD_URL` 指向您预期的云端端点（例如：`http://localhost:20131`）
 - 尽可能保持 `NEXT_PUBLIC_*` 值与服务器端值一致。
 
 **云端端点 `stream=false` 返回 500（`Unexpected token 'd'...`）**
-- 症状通常出现在公共云端端点（`https://keyrouter.com/v1`）的非流式调用上。
+- 症状通常出现在公共云端端点（`http://localhost:20131/v1`）的非流式调用上。
 - 根本原因：上游返回 SSE 负载（`data: ...`）而客户端期望 JSON。
 - 变通方法：对云端直接调用使用 `stream=true`。
 - 当上游返回 `text/event-stream` 时，本地 KeyRouter 运行时包含 SSE→JSON 回退用于非流式调用。
@@ -1196,7 +1196,7 @@ Authorization: Bearer your-api-key
 - `tester/security/test-docker-hardening.sh`
   - 构建 Docker 镜像并验证加固检查（`/api/cloud/auth` 认证保护、`REQUIRE_API_KEY`、安全认证 cookie 行为）。
 - `tester/security/test-cloud-openai-compatible.sh`
-  - 使用提供的模型/密钥向云端端点（`https://keyrouter.com/v1/chat/completions`）发送直接的 OpenAI 兼容请求。
+  - 使用提供的模型/密钥向云端端点（`http://localhost:20131/v1/chat/completions`）发送直接的 OpenAI 兼容请求。
 - `tester/security/test-cloud-sync-and-call.sh`
   - 端到端流程：创建本地密钥 -> 启用/同步云端 -> 带重试调用云端端点。
   - 包含使用 `stream` 的回退检查，以区分认证错误和非流式解析问题。
@@ -1216,7 +1216,7 @@ OPENAI_API_KEY="your-cloud-key" bash tester/security/test-cloud-openai-compatibl
 
 - 本地运行时（`http://127.0.0.1:20131/v1/chat/completions`）：使用 `stream=false` 和 `stream=true` 都可以工作。
 - Docker 运行时（容器暴露的相同 API 路径）：加固检查通过，云端认证保护工作，启用时严格 API 密钥模式工作。
-- 公共云端端点（`https://keyrouter.com/v1/chat/completions`）：
+- 公共云端端点（`http://localhost:20131/v1/chat/completions`）：
   - `stream=true`：预期成功（返回 SSE 块）。
   - `stream=false`：当上游向非流式客户端路径返回 SSE 内容时，可能失败并显示 `500` + 解析错误（`Unexpected token 'd'`）。
 
@@ -1254,7 +1254,7 @@ OPENAI_API_KEY="your-cloud-key" bash tester/security/test-cloud-openai-compatibl
 
 ## 📧 支持
 
-- **网站**：[keyrouter.com](https://keyrouter.com)
+- **网站**：[GitHub](https://github.com/keyzakyy-dev/keyrouter)
 - **GitHub**：[github.com/keyzakyy-dev/keyrouter](https://github.com/keyzakyy-dev/keyrouter)
 - **问题**：[github.com/keyzakyy-dev/keyrouter/issues](https://github.com/keyzakyy-dev/keyrouter/issues)
 

@@ -5,7 +5,7 @@ KeyRouterをRoo AIアシスタントと統合し、統一インターフェイ�
 ## 前提条件
 
 - Roo AIアシスタントがインストール済み
-- [ダッシュボード](https://keyrouter.com/dashboard)からのKeyRouter APIキー
+- [ダッシュボード](http://localhost:20131/dashboard)からのKeyRouter APIキー
 - KeyRouterが動作中 (ローカルまたはクラウド)
 
 ## 設定手順
@@ -28,7 +28,7 @@ API Key: your-api-key-from-dashboard
 
 **クラウドKeyRouter用:**
 ```
-Base URL: https://keyrouter.com/v1
+Base URL: http://localhost:20131/v1
 API Key: your-api-key-from-dashboard
 ```
 

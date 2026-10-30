@@ -164,7 +164,7 @@ Consulta la [documentación de seguimiento de cuota](features/quota-tracking.md)
 
 ```
 Cursor Settings → Models → Advanced:
-  OpenAI API Base URL: https://keyrouter.com/v1
+  OpenAI API Base URL: http://localhost:20131/v1
   OpenAI API Key: [desde el dashboard]
   Model: cc/claude-opus-4-5-20251101
 ```
@@ -381,7 +381,7 @@ Consulta [CONTRIBUTING.md](https://github.com/keyzakyy-dev/keyrouter/blob/main/C
 
 ## ¿Necesitas más ayuda?
 
-- **Documentación:** [keyrouter.com/docs](https://keyrouter.com/docs)
+- **Documentación:** [GitHub Docs](https://github.com/keyzakyy-dev/keyrouter)
 - **GitHub:** [github.com/keyzakyy-dev/keyrouter](https://github.com/keyzakyy-dev/keyrouter)
 - **Issues:** [github.com/keyzakyy-dev/keyrouter/issues](https://github.com/keyzakyy-dev/keyrouter/issues)
 - **Troubleshooting:** [troubleshooting.md](troubleshooting.md)

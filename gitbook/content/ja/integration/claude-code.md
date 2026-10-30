@@ -103,7 +103,7 @@ Claude Codeは設定を `~/.claude/settings.json` に保存します。必要に
 localhostの代わりにKeyRouterクラウドエンドポイントを使用するには:
 
 ```bash
-export ANTHROPIC_BASE_URL="https://keyrouter.com"
+export ANTHROPIC_BASE_URL="http://localhost:20131"
 ```
 
 KeyRouterクラウドダッシュボードでAPIキーが設定されていることを確認してください。

@@ -40,4 +40,4 @@ Verify: `curl $KEYROUTER_URL/api/health` → `{"ok":true}`.
 ## Links
 
 - Source: https://github.com/keyzakyy-dev/keyrouter
-- Dashboard: https://keyrouter.com
+- Dashboard: http://localhost:20131

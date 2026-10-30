@@ -164,7 +164,7 @@ Problemas comunes y soluciones al usar KeyRouter.
 4. **Usa el endpoint en la nube:**
    Si localhost no funciona (ej. Cursor IDE):
    ```
-   Endpoint: https://keyrouter.com/v1
+   Endpoint: http://localhost:20131/v1
    ```
 
 ---
@@ -347,5 +347,5 @@ Problemas comunes y soluciones al usar KeyRouter.
 ## ¿Necesitas más ayuda?
 
 - **GitHub Issues:** [github.com/keyzakyy-dev/keyrouter/issues](https://github.com/keyzakyy-dev/keyrouter/issues)
-- **Documentación:** [keyrouter.com/docs](https://keyrouter.com/docs)
+- **Documentación:** [GitHub Docs](https://github.com/keyzakyy-dev/keyrouter)
 - **FAQ:** [faq.md](faq.md)

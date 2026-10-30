@@ -16,7 +16,7 @@
 [![Stars](https://img.shields.io/github/stars/keyzakyy-dev/keyrouter?style=social)](https://github.com/keyzakyy-dev/keyrouter)
 [![Forks](https://img.shields.io/github/forks/keyzakyy-dev/keyrouter?style=social)](https://github.com/keyzakyy-dev/keyrouter/network/members)
 
-[🌐 Website](https://keyrouter.com) • [📖 Full Docs](https://github.com/keyzakyy-dev/keyrouter)
+[🌐 Website](https://github.com/keyzakyy-dev/keyrouter) • [📖 Full Docs](https://github.com/keyzakyy-dev/keyrouter)
 
 ---
 
@@ -206,7 +206,7 @@ Full docs, advanced setup, video tutorials & development guide:
 
 - **GitHub**: https://github.com/keyzakyy-dev/keyrouter
 - **Full README**: https://github.com/keyzakyy-dev/keyrouter/blob/master/README.md
-- **Website**: https://keyrouter.com
+- **Website**: https://github.com/keyzakyy-dev/keyrouter
 
 ---
 

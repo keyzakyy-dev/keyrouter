@@ -164,7 +164,7 @@ Dashboard → Providers → Quota Tracking
 
 ```
 Cursor Settings → Models → Advanced:
-  OpenAI API Base URL: https://keyrouter.com/v1
+  OpenAI API Base URL: http://localhost:20131/v1
   OpenAI API Key: [ダッシュボードから取得]
   Model: cc/claude-opus-4-5-20251101
 ```
@@ -381,7 +381,7 @@ keyrouter --version
 
 ## さらにヘルプが必要?
 
-- **ドキュメント:** [keyrouter.com/docs](https://keyrouter.com/docs)
+- **ドキュメント:** [GitHub Docs](https://github.com/keyzakyy-dev/keyrouter)
 - **GitHub:** [github.com/keyzakyy-dev/keyrouter](https://github.com/keyzakyy-dev/keyrouter)
 - **Issues:** [github.com/keyzakyy-dev/keyrouter/issues](https://github.com/keyzakyy-dev/keyrouter/issues)
 - **トラブルシューティング:** [troubleshooting.md](troubleshooting.md)

@@ -113,7 +113,7 @@ codex --model cx/gpt-5.1-codex-max "Explain what this code does: $(cat myfile.js
 使用 KeyRouter 云端 endpoint 而非 localhost:
 
 ```bash
-export OPENAI_BASE_URL="https://keyrouter.com"
+export OPENAI_BASE_URL="http://localhost:20131"
 ```
 
 确保已在 KeyRouter 云端仪表盘中配置 API key。

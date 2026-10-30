@@ -34,7 +34,7 @@ http://localhost:20131/v1
 
 **Cho KeyRouter cloud:**
 ```
-https://keyrouter.com
+http://localhost:20131
 ```
 
 **Các bước:**
@@ -150,7 +150,7 @@ Bạn có thể dùng bất kỳ model nào đã cấu hình trong KeyRouter das
 
 Để dùng KeyRouter cloud endpoint thay vì localhost:
 
-1. Trong Cline settings, đặt Base URL: `https://keyrouter.com`
+1. Trong Cline settings, đặt Base URL: `http://localhost:20131`
 2. Đảm bảo bạn đã cấu hình API key trong KeyRouter cloud dashboard
 3. Đảm bảo cloud endpoint đang hoạt động và truy cập được
 

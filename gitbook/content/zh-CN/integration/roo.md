@@ -5,7 +5,7 @@
 ## 前置要求
 
 - 已安装 Roo AI 助手
-- 来自 [仪表盘](https://keyrouter.com/dashboard) 的 KeyRouter API key
+- 来自 [仪表盘](http://localhost:20131/dashboard) 的 KeyRouter API key
 - KeyRouter 正在运行(本地或云端)
 
 ## 配置步骤
@@ -28,7 +28,7 @@ API Key: your-api-key-from-dashboard
 
 **云端 KeyRouter:**
 ```
-Base URL: https://keyrouter.com/v1
+Base URL: http://localhost:20131/v1
 API Key: your-api-key-from-dashboard
 ```
 

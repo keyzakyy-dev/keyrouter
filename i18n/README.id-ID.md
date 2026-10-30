@@ -11,7 +11,7 @@
   [![Downloads](https://img.shields.io/npm/dm/keyrouter.svg)](https://www.npmjs.com/package/keyrouter)
   [![License](https://img.shields.io/npm/l/keyrouter.svg)](https://github.com/keyzakyy-dev/keyrouter/blob/main/LICENSE)
 
-  [🚀 Mulai Cepat](#-mulai-cepat) • [💡 Fitur](#-fitur-utama) • [📖 Setup](#-panduan-setup) • [🌐 Website](https://keyrouter.com)
+  [🚀 Mulai Cepat](#-mulai-cepat) • [💡 Fitur](#-fitur-utama) • [📖 Setup](#-panduan-setup) • [🌐 Website](https://github.com/keyzakyy-dev/keyrouter)
 
   [🇻🇳 Tiếng Việt](./README.vi.md) • [🇨🇳 中文](./README.zh-CN.md) • [🇯🇵 日本語](./README.ja-JP.md) • [🇮🇩 Bahasa Indonesia](./README.id-ID.md)
 </div>
@@ -946,6 +946,6 @@ MIT License — lihat [LICENSE](https://github.com/keyzakyy-dev/keyrouter/blob/m
 
 **Kalau KeyRouter membantumu, kasih ⭐ di [GitHub](https://github.com/keyzakyy-dev/keyrouter)!**
 
-[🌐 Website](https://keyrouter.com) • [📦 npm](https://www.npmjs.com/package/keyrouter) • [🐛 Laporkan Bug](https://github.com/keyzakyy-dev/keyrouter/issues)
+[🌐 Website](https://github.com/keyzakyy-dev/keyrouter) • [📦 npm](https://www.npmjs.com/package/keyrouter) • [🐛 Laporkan Bug](https://github.com/keyzakyy-dev/keyrouter/issues)
 
 </div>

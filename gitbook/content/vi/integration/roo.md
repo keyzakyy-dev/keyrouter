@@ -5,7 +5,7 @@ Tích hợp KeyRouter với Roo AI Assistant để truy cập nhiều model AI q
 ## Yêu cầu
 
 - Roo AI Assistant đã cài đặt
-- KeyRouter API key từ [dashboard](https://keyrouter.com/dashboard)
+- KeyRouter API key từ [dashboard](http://localhost:20131/dashboard)
 - KeyRouter đang chạy (cục bộ hoặc cloud)
 
 ## Các bước Cấu hình
@@ -28,7 +28,7 @@ API Key: your-api-key-from-dashboard
 
 **Cho KeyRouter cloud:**
 ```
-Base URL: https://keyrouter.com/v1
+Base URL: http://localhost:20131/v1
 API Key: your-api-key-from-dashboard
 ```
 

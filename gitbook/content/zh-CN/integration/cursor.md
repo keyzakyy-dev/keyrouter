@@ -6,12 +6,12 @@
 
 - 已安装 Cursor IDE
 - Cursor Pro 账户(使用自定义 API endpoint 必需)
-- 已配置 KeyRouter 云端 endpoint
+- 一个指向你 KeyRouter 实例的公网 HTTPS URL(例如通过 ngrok 或 cloudflared 隧道)
 - 来自 KeyRouter 仪表盘的 API key
 
 ## ⚠️ 重要说明
 
-> **必须使用云端 Endpoint**:Cursor 会通过自己的服务器转发请求,不支持 localhost endpoint。你必须使用 KeyRouter 云端 endpoint:`https://keyrouter.com`
+> **必须使用公网 URL**:Cursor 会通过自己的服务器转发请求,不支持 `localhost` endpoint。你必须用隧道(例如 ngrok 或 cloudflared)把本地 KeyRouter 实例暴露到互联网,并在此使用该公网 HTTPS URL。
 
 > **必须有 Cursor Pro**:此功能需要 Cursor Pro 账户才能使用自定义 API endpoint。
 
@@ -30,15 +30,15 @@
 
 ### 3. 配置 Base URL
 
-将 base URL 设为 KeyRouter 云端 endpoint:
+将 base URL 设为 KeyRouter 实例的公网 URL:
 
 ```
-https://keyrouter.com
+https://<隧道主机>
 ```
 
 **步骤:**
 1. 在 Models 设置中找到 **Base URL** 字段
-2. 输入:`https://keyrouter.com`
+2. 输入隧道的公网 URL(例如 `https://abc123.ngrok.app`)
 3. 点击 **Save**
 
 ### 4. 添加 API Key
@@ -66,7 +66,7 @@ https://keyrouter.com
 
 ```
 OpenAI API: ✓ 已启用
-Base URL: https://keyrouter.com
+Base URL: https://<隧道主机>
 API Key: sk-keyrouter-xxxxxxxxxxxxx
 Custom Models: gpt-4, claude-opus-4-5, gemini-2.0-flash
 ```
@@ -123,23 +123,31 @@ Custom Models: gpt-4, claude-opus-4-5, gemini-2.0-flash
 
 ### 连接问题
 
-1. 确认使用的是云端 endpoint:`https://keyrouter.com`
+1. 确认使用的是隧道的公网 URL(例如 `https://abc123.ngrok.app`)
 2. 检查网络连接
-3. 确认 KeyRouter 云端服务运行正常
+3. 确认 KeyRouter 实例可通过该公网 URL 访问
 4. 若启用了 VPN 或代理,尝试关闭
 
 ### Localhost 无法使用
 
-> **请记住**:Cursor 不支持 localhost endpoint。你必须使用云端 endpoint `https://keyrouter.com`。如果需要使用本地 KeyRouter 实例,可以考虑使用 ngrok 之类的隧道服务把本地 endpoint 暴露到公网。
+> **请记住**:Cursor 不支持 `localhost` endpoint。请用隧道(例如 ngrok 或 cloudflared)暴露本地 KeyRouter 实例,并将生成公网 HTTPS URL作为 Base URL。
 
-## 云端 Endpoint 设置
+## 隧道设置
 
 如果你在本地运行 KeyRouter 并希望搭配 Cursor 使用:
 
-1. 在 KeyRouter 设置中启用云端 endpoint
-2. 在 KeyRouter 仪表盘中配置云端 endpoint URL
-3. 在 Cursor 设置中使用该云端 URL
-4. 确保本地 KeyRouter 实例可从互联网访问
+1. 启动一个隧道,把本地 KeyRouter 端口暴露到互联网:
+   ```bash
+   # 以 ngrok 为例
+   ngrok http 20131
+   ```
+   或者使用 cloudflared:
+   ```bash
+   cloudflared tunnel --url http://localhost:20131
+   ```
+2. 复制隧道打印的公网 HTTPS URL(例如 `https://abc123.ngrok.app`)
+3. 在 Cursor 设置中将该公网 URL 用作 Base URL
+4. 使用 Cursor 时保持隧道和 KeyRouter 都在运行
 
 ## 最佳实践
 

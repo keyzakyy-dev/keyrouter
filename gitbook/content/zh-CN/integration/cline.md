@@ -34,7 +34,7 @@ http://localhost:20131/v1
 
 **云端 KeyRouter:**
 ```
-https://keyrouter.com
+http://localhost:20131
 ```
 
 **步骤:**
@@ -150,7 +150,7 @@ Model: gpt-4
 
 使用 KeyRouter 云端 endpoint 而非 localhost:
 
-1. 在 Cline 设置中将 Base URL 设为:`https://keyrouter.com`
+1. 在 Cline 设置中将 Base URL 设为:`http://localhost:20131`
 2. 确保已在 KeyRouter 云端仪表盘中配置 API key
 3. 确保云端 endpoint 已激活且可访问
 
