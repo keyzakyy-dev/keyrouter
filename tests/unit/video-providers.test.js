@@ -67,7 +67,7 @@ describe("openrouter video adapter", () => {
     expect(init.method).toBe("POST");
     expect(init.body).toBe(raw); // verbatim
     expect(init.headers.Authorization).toBe("Bearer sk-or-key");
-    expect(init.headers["HTTP-Referer"]).toBe("https://keyrouter.com");
+    expect(init.headers["HTTP-Referer"]).toBe("https://endpoint-proxy.local");
     expect(await result.response.json()).toEqual({ id: "job-1", status: "pending" });
   });
 

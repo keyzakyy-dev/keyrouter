@@ -257,8 +257,8 @@ describe("handleImageGenerationCore", () => {
       "https://openrouter.ai/api/v1/images/generations",
       expect.objectContaining({
         headers: expect.objectContaining({
-          "HTTP-Referer": "https://keyrouter.com",
-          "X-Title": "KeyRouter",
+          "HTTP-Referer": "https://endpoint-proxy.local",
+          "X-Title": "Endpoint Proxy",
         }),
       })
     );

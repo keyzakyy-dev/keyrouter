@@ -855,8 +855,8 @@
     "baseUrl": "https://openrouter.ai/api/v1/chat/completions",
     "thinkingFormat": "openai",
     "headers": {
-      "HTTP-Referer": "https://keyrouter.com",
-      "X-Title": "KeyRouter"
+      "HTTP-Referer": "https://endpoint-proxy.local",
+      "X-Title": "Endpoint Proxy"
     },
     "format": "openai"
   },
@@ -1048,8 +1048,8 @@
     "baseUrl": "https://api.airforce/v1/chat/completions",
     "validateUrl": "https://api.airforce/v1/models",
     "headers": {
-      "HTTP-Referer": "https://keyrouter.com",
-      "X-Title": "KeyRouter"
+      "HTTP-Referer": "https://endpoint-proxy.local",
+      "X-Title": "Endpoint Proxy"
     },
     "forceStream": true,
     "format": "openai"
