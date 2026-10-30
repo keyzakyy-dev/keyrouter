@@ -254,7 +254,7 @@ function InjSelect({ label, value, onChange, options = [], placeholder = "Select
 }
 
 // ─── section shell ──────────────────────────────────────────────────────
-function SectionCard({ kicker, title, subtitle, icon, children }) {
+function SectionCard({ title, subtitle, icon, children }) {
   return (
     <Card padding="sm">
       <div className="mb-4 flex items-center gap-3">
@@ -262,7 +262,6 @@ function SectionCard({ kicker, title, subtitle, icon, children }) {
           <span className="material-symbols-outlined text-[20px]">{icon}</span>
         </div>
         <div className="min-w-0">
-          <p className={MONO_KICKER}>{kicker}</p>
           <h2 className="font-display text-base font-semibold text-text-main">{title}</h2>
           {subtitle && <p className="mt-0.5 font-mono text-[11px] leading-relaxed text-text-muted">{subtitle}</p>}
         </div>
@@ -471,7 +470,7 @@ export default function PromptInjectionClient() {
       )}
 
       {/* Global */}
-      <SectionCard kicker="Global" title="Global" icon="public" subtitle="Disuntikkan ke setiap request chat.">
+      <SectionCard title="Global" icon="public" subtitle="Disuntikkan ke setiap request chat.">
         <InjectEditor
           initial={globalEntry}
           onSave={(p, empty) => saveInjection(p, empty, { global: p })}
@@ -565,7 +564,6 @@ export default function PromptInjectionClient() {
 
       {/* Daftar model varian — section terpisah */}
       <SectionCard
-        kicker="Model"
         title="Variant list"
         icon="badge"
         subtitle="Custom name → backing model; select to edit or delete."
@@ -615,7 +613,6 @@ export default function PromptInjectionClient() {
 
       {/* Injection tester — Single / VS */}
       <SectionCard
-        kicker="Test"
         title="Injection tester"
         icon="science"
         subtitle="Send a real request through the router and read the verdict — the injection is applied."
