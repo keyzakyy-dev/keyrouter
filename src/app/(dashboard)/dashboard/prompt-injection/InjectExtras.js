@@ -200,7 +200,7 @@ export function InjectionTester() {
     }`;
   const modelField = (label, value, setValue, which) => (
     <label className="flex flex-col gap-1 text-sm">
-      <span className="text-text-muted">{label}</span>
+      <span className="font-display text-text-muted">{label}</span>
       <span className="flex gap-2">
         <input
           value={value}
@@ -234,7 +234,7 @@ export function InjectionTester() {
           </div>
         </div>
         <label className="flex flex-col gap-1 text-sm">
-          <span className="text-text-muted">Client key</span>
+          <span className="font-display text-text-muted">Client key</span>
           <Dropdown
             value={keyId}
             onChange={setKeyId}
