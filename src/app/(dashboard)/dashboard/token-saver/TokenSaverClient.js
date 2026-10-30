@@ -533,7 +533,7 @@ export default function TokenSaverClient() {
                     docs
                   </a>
                 </div>
-                <p className="font-mono text-sm uppercase text-text-muted">Tool output compressor</p>
+                <p className="font-mono text-xs uppercase text-text-subtle">Tool output compressor</p>
               </div>
             </div>
             <Toggle
@@ -572,7 +572,7 @@ export default function TokenSaverClient() {
                     docs
                   </a>
                 </div>
-                <p className="font-mono text-sm uppercase text-text-muted">Context compressor</p>
+                <p className="font-mono text-xs uppercase text-text-subtle">Context compressor</p>
               </div>
             </div>
             <Toggle
@@ -725,7 +725,7 @@ export default function TokenSaverClient() {
                     docs
                   </a>
                 </div>
-                <p className="font-mono text-sm uppercase text-text-muted">LLM output compressor</p>
+                <p className="font-mono text-xs uppercase text-text-subtle">LLM output compressor</p>
               </div>
             </div>
             <Toggle
@@ -784,7 +784,7 @@ export default function TokenSaverClient() {
                     docs
                   </a>
                 </div>
-                <p className="font-mono text-sm uppercase text-text-muted">Minimal-code bias</p>
+                <p className="font-mono text-xs uppercase text-text-subtle">Minimal-code bias</p>
               </div>
             </div>
             <Toggle
