@@ -499,7 +499,7 @@ export default function TokenSaverClient() {
               <h2 className="font-display text-lg font-semibold text-text-main">
                 Token Saver
               </h2>
-              <p className="mt-0.5 font-mono text-sm text-text-muted">
+              <p className="mt-0.5 font-display text-sm text-text-muted">
                 Reduce token spend by compressing prompts and model output
               </p>
             </div>
@@ -542,7 +542,7 @@ export default function TokenSaverClient() {
             />
           </div>
           <div className="rounded-lg bg-bg-subtle p-3">
-            <p className="font-mono text-sm text-text-muted">
+            <p className="font-display text-sm text-text-muted">
               git/grep/ls/tree/logs → 60-90% fewer input tokens
             </p>
           </div>
@@ -601,7 +601,7 @@ export default function TokenSaverClient() {
           </div>
 
           <div className="rounded-lg bg-bg-subtle p-3">
-            <p className="font-mono text-sm text-text-muted">
+            <p className="font-display text-sm text-text-muted">
               Compress prompts via /v1/compress before routing to the model
             </p>
           </div>
@@ -735,7 +735,7 @@ export default function TokenSaverClient() {
           </div>
 
           <div className="rounded-lg bg-bg-subtle p-3">
-            <p className="font-mono text-sm text-text-muted">
+            <p className="font-display text-sm text-text-muted">
               Terse-style system prompt → ~65% fewer output tokens (up to 87%)
             </p>
           </div>
@@ -794,7 +794,7 @@ export default function TokenSaverClient() {
           </div>
 
           <div className="rounded-lg bg-bg-subtle p-3">
-            <p className="font-mono text-sm text-text-muted">
+            <p className="font-display text-sm text-text-muted">
               Bias the model toward minimal code: YAGNI, reuse stdlib,
               deletion over addition
             </p>
@@ -834,7 +834,7 @@ export default function TokenSaverClient() {
               </div>
               <div>
                 <h3 className="font-display text-base font-semibold text-text-main">Custom system prompt</h3>
-                <p className="font-mono text-sm text-text-muted">
+                <p className="font-display text-sm text-text-muted">
                   Appends your own instruction to every request, independently of
                   the savers above
                 </p>
@@ -994,7 +994,7 @@ export default function TokenSaverClient() {
         onClose={() => setShowPxpipeModal(false)}
       >
         <div className="flex flex-col gap-4">
-          <p className="font-mono text-sm text-text-muted">
+          <p className="font-display text-sm text-text-muted">
             Compress prompts using multimodal encoding. Runs in-process - no
             extra server or environment variables required.
           </p>
