@@ -594,7 +594,7 @@ export default function PromptInjectionClient() {
                   >
                     <div className="flex items-center gap-2">
                       <div className="min-w-0 flex-1">
-                        <p className="break-all text-sm font-semibold text-text-main">{name}</p>
+                        <p className="break-all font-display text-sm font-semibold text-text-main">{name}</p>
                         <p className="break-all font-display text-[12px] text-primary">
                           {displayBacking(v?.model || "", nodePrefixes)}
                         </p>
