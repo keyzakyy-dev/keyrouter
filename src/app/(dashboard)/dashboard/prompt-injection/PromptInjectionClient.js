@@ -12,6 +12,13 @@ import { InjectionTester } from "./InjectExtras";
 
 const API = "/api/prompt-injection";
 
+// Display-only: turn a hyphenated custom variant name into spaced text (e.g.
+// "test-close-form" → "test close form"). The stored key is still used for
+// matching/routing — this only affects how it is shown to the user.
+function friendlyVariantName(name) {
+  return String(name || "").replace(/-/g, " ");
+}
+
 function estimateTokens(text) {
   if (!text) return 0;
   return Math.ceil(text.length / 4);
@@ -424,7 +431,7 @@ export default function PromptInjectionClient() {
   const deleteVariant = async (name = variantName) => {
     const target = String(name || "").trim();
     if (!target) return;
-    if (!window.confirm(translate(`Delete variant "${target}" and its prompt?`))) return;
+    if (!window.confirm(translate(`Delete variant "${friendlyVariantName(target)}" and its prompt?`))) return;
     setSaving(true);
     try {
       await fetch(`${API}?variant=${encodeURIComponent(target)}`, { method: "DELETE" });
@@ -516,7 +523,7 @@ export default function PromptInjectionClient() {
         >
           <div className="border-t border-border-subtle pt-4">
             <p className="mb-3 text-sm font-semibold">
-              {variantName ? `Editing variant “${variantName}”` : "New variant"}
+              {variantName ? `Editing variant “${friendlyVariantName(variantName)}”` : "New variant"}
             </p>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div>
@@ -594,7 +601,7 @@ export default function PromptInjectionClient() {
                   >
                     <div className="flex items-center gap-2">
                       <div className="min-w-0 flex-1">
-                        <p className="break-all text-sm font-semibold text-text-main">{name}</p>
+                        <p className="break-all text-sm font-semibold text-text-main">{friendlyVariantName(name)}</p>
                         <p className="break-all font-mono text-[12px] text-primary">
                           {displayBacking(v?.model || "", nodePrefixes)}
                         </p>
