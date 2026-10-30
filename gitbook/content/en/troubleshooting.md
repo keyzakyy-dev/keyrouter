@@ -346,6 +346,6 @@ Common issues and solutions when using KeyRouter.
 
 ## Need More Help?
 
-- **GitHub Issues:** [github.com/decolua/keyrouter/issues](https://github.com/decolua/keyrouter/issues)
+- **GitHub Issues:** [github.com/keyzakyy-dev/keyrouter/issues](https://github.com/keyzakyy-dev/keyrouter/issues)
 - **Documentation:** [keyrouter.com/docs](https://keyrouter.com/docs)
 - **FAQ:** [faq.md](faq.md)

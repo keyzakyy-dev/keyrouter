@@ -21,8 +21,8 @@ export default {
     baseUrl: "https://openrouter.ai/api/v1/chat/completions",
     thinkingFormat: "openai",
     headers: {
-      "HTTP-Referer": "https://endpoint-proxy.local",
-      "X-Title": "Endpoint Proxy",
+      "HTTP-Referer": "https://keyrouter.com",
+      "X-Title": "KeyRouter",
     },
   },
   models: [
@@ -49,28 +49,28 @@ export default {
   // System One decision API (TypeSafe-compatible): https://openrouter.ai/docs/guides/community/typesafe-sdk
   systemoneConfig: {
     baseUrl: "https://openrouter.ai/api/v1/systemone",
-    headers: {"HTTP-Referer":"https://endpoint-proxy.local","X-Title":"Endpoint Proxy"},
+    headers: {"HTTP-Referer":"https://keyrouter.com","X-Title":"KeyRouter"},
   },
   ttsConfig: {
     baseUrl: "https://openrouter.ai/api/v1/chat/completions",
     defaultModel: "openai/gpt-4o-mini-tts",
-    headers: {"HTTP-Referer":"https://endpoint-proxy.local","X-Title":"Endpoint Proxy"},
+    headers: {"HTTP-Referer":"https://keyrouter.com","X-Title":"KeyRouter"},
   },
   embeddingConfig: {
     baseUrl: "https://openrouter.ai/api/v1/embeddings",
     authType: "apikey",
     authHeader: "bearer",
-    headers: {"HTTP-Referer":"https://endpoint-proxy.local","X-Title":"Endpoint Proxy"},
+    headers: {"HTTP-Referer":"https://keyrouter.com","X-Title":"KeyRouter"},
   },
   imageConfig: {
     baseUrl: "https://openrouter.ai/api/v1/images/generations",
-    headers: {"HTTP-Referer":"https://endpoint-proxy.local","X-Title":"Endpoint Proxy"},
+    headers: {"HTTP-Referer":"https://keyrouter.com","X-Title":"KeyRouter"},
   },
   // Async video jobs (POST /videos → { id, status }, GET /videos/{id} polls).
   // Docs: https://openrouter.ai/docs/api/api-reference/videos
   videoConfig: {
     baseUrl: "https://openrouter.ai/api/v1/videos",
-    headers: {"HTTP-Referer":"https://endpoint-proxy.local","X-Title":"Endpoint Proxy"},
+    headers: {"HTTP-Referer":"https://keyrouter.com","X-Title":"KeyRouter"},
   },
   modelsFetcher: { url: "https://openrouter.ai/api/v1/models", type: "openrouter-free" },
   passthroughModels: true,

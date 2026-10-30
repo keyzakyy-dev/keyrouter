@@ -16,7 +16,7 @@ Triển khai KeyRouter trên VPS hoặc Docker để truy cập từ xa và dùn
 ### Bước 1: Clone Repository
 
 ```bash
-git clone https://github.com/decolua/keyrouter.git
+git clone https://github.com/keyzakyy-dev/keyrouter.git
 cd keyrouter/app
 ```
 

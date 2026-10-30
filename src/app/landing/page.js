@@ -63,7 +63,7 @@ export default function LandingPage() {
                 Start Free
               </button>
               <button 
-                onClick={() => window.open("https://github.com/decolua/keyrouter#readme", "_blank")}
+                onClick={() => window.open("https://github.com/keyzakyy-dev/keyrouter#readme", "_blank")}
                 className="w-full sm:w-auto h-14 px-10 rounded-lg border border-[#2f2f3c] hover:bg-[#1e1e28] text-white text-lg font-bold transition-all"
               >
                 Read Documentation

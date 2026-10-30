@@ -12,7 +12,7 @@ export const APP_CONFIG = {
 
 // GitHub configuration
 export const GITHUB_CONFIG = {
-  changelogUrl: "https://raw.githubusercontent.com/decolua/keyrouter/refs/heads/master/CHANGELOG.md",
+  changelogUrl: "https://raw.githubusercontent.com/keyzakyy-dev/keyrouter/refs/heads/master/CHANGELOG.md",
   donateUrl: "https://keyrouter.com/api/donate",
 };
 

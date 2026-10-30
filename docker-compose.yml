@@ -1,6 +1,6 @@
 services:
   keyrouter:
-    image: decolua/keyrouter:latest
+    image: keyzakyy-dev/keyrouter:latest
     container_name: keyrouter
     restart: always
     ports:

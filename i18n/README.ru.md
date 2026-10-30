@@ -962,8 +962,8 @@ export HOSTNAME="0.0.0.0"
 export NODE_ENV="production"
 export NEXT_PUBLIC_BASE_URL="http://localhost:20131"
 export NEXT_PUBLIC_CLOUD_URL="https://keyrouter.com"
-export API_KEY_SECRET="endpoint-proxy-api-key-secret"
-export MACHINE_ID_SALT="endpoint-proxy-salt"
+export API_KEY_SECRET="keyrouter-api-key-secret"
+export MACHINE_ID_SALT="keyrouter-salt"
 
 # Start
 npm run start
@@ -1029,8 +1029,8 @@ docker stop keyrouter && docker rm keyrouter
 | `CLOUD_URL` | `https://keyrouter.com` | Серверный базовый URL эндпоинта облачной синхронизации |
 | `NEXT_PUBLIC_BASE_URL` | `http://localhost:3000` | Обратно совместимый/публичный базовый URL (приоритет `BASE_URL` для серверного рантайма) |
 | `NEXT_PUBLIC_CLOUD_URL` | `https://keyrouter.com` | Обратно совместимый/публичный облачный URL (приоритет `CLOUD_URL` для серверного рантайма) |
-| `API_KEY_SECRET` | `endpoint-proxy-api-key-secret` | HMAC-секрет для генерируемых API-ключей |
-| `MACHINE_ID_SALT` | `endpoint-proxy-salt` | Соль для стабильного хеширования ID машины |
+| `API_KEY_SECRET` | `keyrouter-api-key-secret` | HMAC-секрет для генерируемых API-ключей |
+| `MACHINE_ID_SALT` | `keyrouter-salt` | Соль для стабильного хеширования ID машины |
 | `ENABLE_REQUEST_LOGS` | `false` | Включить лог запросов/ответов в `logs/` |
 | `AUTH_COOKIE_SECURE` | `false` | Принудительный `Secure` cookie аутентификации (задайте `true` за HTTPS reverse proxy) |
 | `REQUIRE_API_KEY` | `false` | Требовать Bearer API key на маршрутах `/v1/*` (рекомендуется для развёртываний с выходом в интернет) |

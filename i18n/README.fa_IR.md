@@ -1140,8 +1140,8 @@ export HOSTNAME="0.0.0.0"
 export NODE_ENV="production"
 export NEXT_PUBLIC_BASE_URL="http://localhost:20131"
 export NEXT_PUBLIC_CLOUD_URL="https://keyrouter.com"
-export API_KEY_SECRET="endpoint-proxy-api-key-secret"
-export MACHINE_ID_SALT="endpoint-proxy-salt"
+export API_KEY_SECRET="keyrouter-api-key-secret"
+export MACHINE_ID_SALT="keyrouter-salt"
 
 # شروع
 npm run start
@@ -1213,8 +1213,8 @@ docker pull keyzakyy-dev/keyrouter:latest   # به‌روزرسانی به آخ�
 | `CLOUD_URL`                                          | `https://keyrouter.com`                    | آدرس پایه نقطه پایانی همگام‌سازی ابری سمت سرور                                            |
 | `NEXT_PUBLIC_BASE_URL`                               | `http://localhost:3000`                  | آدرس پایه عمومی/سازگار با گذشته (برای زمان اجرای سرور `BASE_URL` را ترجیح دهید)          |
 | `NEXT_PUBLIC_CLOUD_URL`                              | `https://keyrouter.com`                    | آدرس ابری عمومی/سازگار با گذشته (برای زمان اجرای سرور `CLOUD_URL` را ترجیح دهید)        |
-| `API_KEY_SECRET`                                     | `endpoint-proxy-api-key-secret`          | راز HMAC برای کلیدهای API تولید شده                                                  |
-| `MACHINE_ID_SALT`                                    | `endpoint-proxy-salt`                    | نمک برای هش کردن شناسه ماشین پایدار                                                  |
+| `API_KEY_SECRET`                                     | `keyrouter-api-key-secret`          | راز HMAC برای کلیدهای API تولید شده                                                  |
+| `MACHINE_ID_SALT`                                    | `keyrouter-salt`                    | نمک برای هش کردن شناسه ماشین پایدار                                                  |
 | `ENABLE_REQUEST_LOGS`                                | `false`                                  | لاگ‌های درخواست/پاسخ را در `logs/` فعال می‌کند                                         |
 | `AUTH_COOKIE_SECURE`                                 | `false`                                  | کوکی احراز هویت `Secure` را اعمال می‌کند (در پشت پروکسی معکوس HTTPS `true` تنظیم کنید)                  |
 | `REQUIRE_API_KEY`                                    | `false`                                  | اعمال کلید API Bearer در مسیرهای `/v1/*` (برای استقرارهای در معرض اینترنت توصیه می‌شود) |

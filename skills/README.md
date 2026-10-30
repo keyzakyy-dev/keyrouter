@@ -8,22 +8,22 @@ Drop-in skills for any AI agent (Claude, Cursor, ChatGPT, custom SDK). Just **co
 
 | Capability | Copy link below and paste to your AI |
 |---|---|
-| **Entry / Setup** (start here) | https://raw.githubusercontent.com/decolua/keyrouter/refs/heads/master/skills/keyrouter/SKILL.md |
-| Chat / code-gen | https://raw.githubusercontent.com/decolua/keyrouter/refs/heads/master/skills/keyrouter-chat/SKILL.md |
-| Image generation | https://raw.githubusercontent.com/decolua/keyrouter/refs/heads/master/skills/keyrouter-image/SKILL.md |
-| Video generation (xAI Grok Imagine) | https://raw.githubusercontent.com/decolua/keyrouter/refs/heads/master/skills/keyrouter-video/SKILL.md |
-| Text-to-speech | https://raw.githubusercontent.com/decolua/keyrouter/refs/heads/master/skills/keyrouter-tts/SKILL.md |
-| Speech-to-text | https://raw.githubusercontent.com/decolua/keyrouter/refs/heads/master/skills/keyrouter-stt/SKILL.md |
-| Embeddings | https://raw.githubusercontent.com/decolua/keyrouter/refs/heads/master/skills/keyrouter-embeddings/SKILL.md |
-| Web search | https://raw.githubusercontent.com/decolua/keyrouter/refs/heads/master/skills/keyrouter-web-search/SKILL.md |
-| Web fetch (URL → markdown) | https://raw.githubusercontent.com/decolua/keyrouter/refs/heads/master/skills/keyrouter-web-fetch/SKILL.md |
+| **Entry / Setup** (start here) | https://raw.githubusercontent.com/keyzakyy-dev/keyrouter/refs/heads/master/skills/keyrouter/SKILL.md |
+| Chat / code-gen | https://raw.githubusercontent.com/keyzakyy-dev/keyrouter/refs/heads/master/skills/keyrouter-chat/SKILL.md |
+| Image generation | https://raw.githubusercontent.com/keyzakyy-dev/keyrouter/refs/heads/master/skills/keyrouter-image/SKILL.md |
+| Video generation (xAI Grok Imagine) | https://raw.githubusercontent.com/keyzakyy-dev/keyrouter/refs/heads/master/skills/keyrouter-video/SKILL.md |
+| Text-to-speech | https://raw.githubusercontent.com/keyzakyy-dev/keyrouter/refs/heads/master/skills/keyrouter-tts/SKILL.md |
+| Speech-to-text | https://raw.githubusercontent.com/keyzakyy-dev/keyrouter/refs/heads/master/skills/keyrouter-stt/SKILL.md |
+| Embeddings | https://raw.githubusercontent.com/keyzakyy-dev/keyrouter/refs/heads/master/skills/keyrouter-embeddings/SKILL.md |
+| Web search | https://raw.githubusercontent.com/keyzakyy-dev/keyrouter/refs/heads/master/skills/keyrouter-web-search/SKILL.md |
+| Web fetch (URL → markdown) | https://raw.githubusercontent.com/keyzakyy-dev/keyrouter/refs/heads/master/skills/keyrouter-web-fetch/SKILL.md |
 
 ## How to use
 
 Paste to your AI (Claude, Cursor, ChatGPT, …):
 
 ```
-Read this skill and use it: https://raw.githubusercontent.com/decolua/keyrouter/refs/heads/master/skills/keyrouter/SKILL.md
+Read this skill and use it: https://raw.githubusercontent.com/keyzakyy-dev/keyrouter/refs/heads/master/skills/keyrouter/SKILL.md
 ```
 
 Then ask normally — *"generate an image of a cat"*, *"transcribe this URL"*, etc.
@@ -39,5 +39,5 @@ Verify: `curl $KEYROUTER_URL/api/health` → `{"ok":true}`.
 
 ## Links
 
-- Source: https://github.com/decolua/keyrouter
+- Source: https://github.com/keyzakyy-dev/keyrouter
 - Dashboard: https://keyrouter.com

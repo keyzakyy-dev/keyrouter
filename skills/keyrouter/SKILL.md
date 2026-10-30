@@ -46,13 +46,13 @@ When the user needs a specific capability, fetch that skill's `SKILL.md` from it
 
 | Capability | Raw URL |
 |---|---|
-| Chat / code-gen | https://raw.githubusercontent.com/decolua/keyrouter/refs/heads/master/skills/keyrouter-chat/SKILL.md |
-| Image generation | https://raw.githubusercontent.com/decolua/keyrouter/refs/heads/master/skills/keyrouter-image/SKILL.md |
-| Text-to-speech | https://raw.githubusercontent.com/decolua/keyrouter/refs/heads/master/skills/keyrouter-tts/SKILL.md |
-| Speech-to-text | https://raw.githubusercontent.com/decolua/keyrouter/refs/heads/master/skills/keyrouter-stt/SKILL.md |
-| Embeddings | https://raw.githubusercontent.com/decolua/keyrouter/refs/heads/master/skills/keyrouter-embeddings/SKILL.md |
-| Web search | https://raw.githubusercontent.com/decolua/keyrouter/refs/heads/master/skills/keyrouter-web-search/SKILL.md |
-| Web fetch (URL → markdown) | https://raw.githubusercontent.com/decolua/keyrouter/refs/heads/master/skills/keyrouter-web-fetch/SKILL.md |
+| Chat / code-gen | https://raw.githubusercontent.com/keyzakyy-dev/keyrouter/refs/heads/master/skills/keyrouter-chat/SKILL.md |
+| Image generation | https://raw.githubusercontent.com/keyzakyy-dev/keyrouter/refs/heads/master/skills/keyrouter-image/SKILL.md |
+| Text-to-speech | https://raw.githubusercontent.com/keyzakyy-dev/keyrouter/refs/heads/master/skills/keyrouter-tts/SKILL.md |
+| Speech-to-text | https://raw.githubusercontent.com/keyzakyy-dev/keyrouter/refs/heads/master/skills/keyrouter-stt/SKILL.md |
+| Embeddings | https://raw.githubusercontent.com/keyzakyy-dev/keyrouter/refs/heads/master/skills/keyrouter-embeddings/SKILL.md |
+| Web search | https://raw.githubusercontent.com/keyzakyy-dev/keyrouter/refs/heads/master/skills/keyrouter-web-search/SKILL.md |
+| Web fetch (URL → markdown) | https://raw.githubusercontent.com/keyzakyy-dev/keyrouter/refs/heads/master/skills/keyrouter-web-fetch/SKILL.md |
 
 ## Errors
 

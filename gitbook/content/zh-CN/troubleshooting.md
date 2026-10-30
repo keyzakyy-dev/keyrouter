@@ -346,6 +346,6 @@
 
 ## 需要更多帮助?
 
-- **GitHub Issues:** [github.com/decolua/keyrouter/issues](https://github.com/decolua/keyrouter/issues)
+- **GitHub Issues:** [github.com/keyzakyy-dev/keyrouter/issues](https://github.com/keyzakyy-dev/keyrouter/issues)
 - **文档:** [keyrouter.com/docs](https://keyrouter.com/docs)
 - **常见问题:** [faq.md](faq.md)

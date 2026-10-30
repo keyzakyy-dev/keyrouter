@@ -1037,8 +1037,8 @@ export HOSTNAME="0.0.0.0"
 export NODE_ENV="production"
 export NEXT_PUBLIC_BASE_URL="http://localhost:20131"
 export NEXT_PUBLIC_CLOUD_URL="https://keyrouter.com"
-export API_KEY_SECRET="endpoint-proxy-api-key-secret"
-export MACHINE_ID_SALT="endpoint-proxy-salt"
+export API_KEY_SECRET="keyrouter-api-key-secret"
+export MACHINE_ID_SALT="keyrouter-salt"
 
 # 启动
 npm run start
@@ -1104,8 +1104,8 @@ docker stop keyrouter && docker rm keyrouter
 | `CLOUD_URL` | `https://keyrouter.com` | 服务端云同步端点基础 URL |
 | `NEXT_PUBLIC_BASE_URL` | `http://localhost:3000` | 向后兼容/公开基础 URL（服务端运行时优先使用 `BASE_URL`） |
 | `NEXT_PUBLIC_CLOUD_URL` | `https://keyrouter.com` | 向后兼容/公开云 URL（服务端运行时优先使用 `CLOUD_URL`） |
-| `API_KEY_SECRET` | `endpoint-proxy-api-key-secret` | 生成 API key 的 HMAC 密钥 |
-| `MACHINE_ID_SALT` | `endpoint-proxy-salt` | 稳定机器 ID 哈希的盐值 |
+| `API_KEY_SECRET` | `keyrouter-api-key-secret` | 生成 API key 的 HMAC 密钥 |
+| `MACHINE_ID_SALT` | `keyrouter-salt` | 稳定机器 ID 哈希的盐值 |
 | `ENABLE_REQUEST_LOGS` | `false` | 在 `logs/` 下启用请求/响应日志 |
 | `AUTH_COOKIE_SECURE` | `false` | 强制 `Secure` auth cookie（在 HTTPS 反向代理后面设置为 `true`） |
 | `REQUIRE_API_KEY` | `false` | 在 `/v1/*` 路由上强制使用 Bearer API key（面向互联网部署时推荐） |

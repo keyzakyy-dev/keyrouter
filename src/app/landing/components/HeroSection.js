@@ -31,7 +31,7 @@ export default function HeroSection() {
             Get Started
           </button>
           <a 
-            href="https://github.com/decolua/keyrouter" 
+            href="https://github.com/keyzakyy-dev/keyrouter" 
             target="_blank" 
             rel="noopener noreferrer"
             className="h-12 px-8 rounded-lg border border-[#2f2f3c] bg-[#1e1e28] hover:bg-[#2f2f3c] text-white text-base font-bold transition-all flex items-center gap-2"

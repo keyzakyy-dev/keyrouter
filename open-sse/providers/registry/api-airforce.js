@@ -26,8 +26,8 @@ export default {
     baseUrl: "https://api.airforce/v1/chat/completions",
     validateUrl: "https://api.airforce/v1/models",
     headers: {
-      "HTTP-Referer": "https://endpoint-proxy.local",
-      "X-Title": "Endpoint Proxy",
+      "HTTP-Referer": "https://keyrouter.com",
+      "X-Title": "KeyRouter",
     },
     forceStream: true,
   },

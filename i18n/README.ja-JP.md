@@ -959,8 +959,8 @@ export HOSTNAME="0.0.0.0"
 export NODE_ENV="production"
 export NEXT_PUBLIC_BASE_URL="http://localhost:20131"
 export NEXT_PUBLIC_CLOUD_URL="https://keyrouter.com"
-export API_KEY_SECRET="endpoint-proxy-api-key-secret"
-export MACHINE_ID_SALT="endpoint-proxy-salt"
+export API_KEY_SECRET="keyrouter-api-key-secret"
+export MACHINE_ID_SALT="keyrouter-salt"
 
 # 起動
 npm run start
@@ -1026,8 +1026,8 @@ docker stop keyrouter && docker rm keyrouter
 | `CLOUD_URL` | `https://keyrouter.com` | サーバーサイドのクラウド同期エンドポイントベースURL |
 | `NEXT_PUBLIC_BASE_URL` | `http://localhost:3000` | 後方互換/公開ベースURL（サーバーランタイムには`BASE_URL`を推奨） |
 | `NEXT_PUBLIC_CLOUD_URL` | `https://keyrouter.com` | 後方互換/公開クラウドURL（サーバーランタイムには`CLOUD_URL`を推奨） |
-| `API_KEY_SECRET` | `endpoint-proxy-api-key-secret` | 生成されたAPIキーのHMACシークレット |
-| `MACHINE_ID_SALT` | `endpoint-proxy-salt` | 安定したマシンIDハッシュのソルト |
+| `API_KEY_SECRET` | `keyrouter-api-key-secret` | 生成されたAPIキーのHMACシークレット |
+| `MACHINE_ID_SALT` | `keyrouter-salt` | 安定したマシンIDハッシュのソルト |
 | `ENABLE_REQUEST_LOGS` | `false` | `logs/` 配下のリクエスト/レスポンスログを有効化 |
 | `AUTH_COOKIE_SECURE` | `false` | 認証クッキーに`Secure`を強制（HTTPSリバースプロキシの背後では`true`に設定） |
 | `REQUIRE_API_KEY` | `false` | `/v1/*` ルートでBearer APIキーを必須にする（インターネット公開デプロイで推奨） |

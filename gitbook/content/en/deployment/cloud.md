@@ -16,7 +16,7 @@ Deploy KeyRouter on VPS or Docker for remote access and production use.
 ### Step 1: Clone Repository
 
 ```bash
-git clone https://github.com/decolua/keyrouter.git
+git clone https://github.com/keyzakyy-dev/keyrouter.git
 cd keyrouter/app
 ```
 

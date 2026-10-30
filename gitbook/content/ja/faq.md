@@ -172,7 +172,7 @@ Cursor Settings → Models → Advanced:
 **代替案:** パブリックドメインでVPSにセルフホスト:
 ```bash
 # VPSへデプロイ
-git clone https://github.com/decolua/keyrouter.git
+git clone https://github.com/keyzakyy-dev/keyrouter.git
 cd keyrouter/app
 npm install && npm run build
 npm start
@@ -206,7 +206,7 @@ keyrouter
 
 ### VPS/クラウド
 ```bash
-git clone https://github.com/decolua/keyrouter.git
+git clone https://github.com/keyzakyy-dev/keyrouter.git
 cd keyrouter/app
 npm install && npm run build
 
@@ -316,7 +316,7 @@ keyrouter --version
 ```
 
 **破壊的変更:**
-- [CHANGELOG.md](https://github.com/decolua/keyrouter/blob/main/CHANGELOG.md)を確認
+- [CHANGELOG.md](https://github.com/keyzakyy-dev/keyrouter/blob/main/CHANGELOG.md)を確認
 - メジャー更新前に`~/.keyrouter`をバックアップ
 - メジャーバージョンの移行ガイドを確認
 
@@ -329,11 +329,11 @@ keyrouter --version
 ### 貢献方法:
 
 1. **バグを報告:**
-   - [GitHub Issues](https://github.com/decolua/keyrouter/issues)
+   - [GitHub Issues](https://github.com/keyzakyy-dev/keyrouter/issues)
    - エラーログ、再現手順を含める
 
 2. **機能をリクエスト:**
-   - [GitHub Discussions](https://github.com/decolua/keyrouter/discussions)
+   - [GitHub Discussions](https://github.com/keyzakyy-dev/keyrouter/discussions)
    - ユースケースと利点を説明
 
 3. **コードを提出:**
@@ -375,13 +375,13 @@ keyrouter --version
 - ドキュメントを更新
 - コミットは小さく、わかりやすく
 
-詳細は[CONTRIBUTING.md](https://github.com/decolua/keyrouter/blob/main/CONTRIBUTING.md)を参照。
+詳細は[CONTRIBUTING.md](https://github.com/keyzakyy-dev/keyrouter/blob/main/CONTRIBUTING.md)を参照。
 
 ---
 
 ## さらにヘルプが必要?
 
 - **ドキュメント:** [keyrouter.com/docs](https://keyrouter.com/docs)
-- **GitHub:** [github.com/decolua/keyrouter](https://github.com/decolua/keyrouter)
-- **Issues:** [github.com/decolua/keyrouter/issues](https://github.com/decolua/keyrouter/issues)
+- **GitHub:** [github.com/keyzakyy-dev/keyrouter](https://github.com/keyzakyy-dev/keyrouter)
+- **Issues:** [github.com/keyzakyy-dev/keyrouter/issues](https://github.com/keyzakyy-dev/keyrouter/issues)
 - **トラブルシューティング:** [troubleshooting.md](troubleshooting.md)

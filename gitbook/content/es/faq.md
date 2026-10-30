@@ -172,7 +172,7 @@ Cursor Settings → Models → Advanced:
 **Alternativa:** Auto-hospéda en VPS con dominio público:
 ```bash
 # Despliega en VPS
-git clone https://github.com/decolua/keyrouter.git
+git clone https://github.com/keyzakyy-dev/keyrouter.git
 cd keyrouter/app
 npm install && npm run build
 npm start
@@ -206,7 +206,7 @@ keyrouter
 
 ### VPS/Cloud
 ```bash
-git clone https://github.com/decolua/keyrouter.git
+git clone https://github.com/keyzakyy-dev/keyrouter.git
 cd keyrouter/app
 npm install && npm run build
 
@@ -316,7 +316,7 @@ keyrouter --version
 ```
 
 **Cambios disruptivos:**
-- Revisa [CHANGELOG.md](https://github.com/decolua/keyrouter/blob/main/CHANGELOG.md)
+- Revisa [CHANGELOG.md](https://github.com/keyzakyy-dev/keyrouter/blob/main/CHANGELOG.md)
 - Respalda `~/.keyrouter` antes de actualizaciones mayores
 - Revisa las guías de migración para versiones mayores
 
@@ -329,11 +329,11 @@ keyrouter --version
 ### Formas de contribuir:
 
 1. **Reportar bugs:**
-   - [GitHub Issues](https://github.com/decolua/keyrouter/issues)
+   - [GitHub Issues](https://github.com/keyzakyy-dev/keyrouter/issues)
    - Incluye logs de error, pasos para reproducir
 
 2. **Solicitar características:**
-   - [GitHub Discussions](https://github.com/decolua/keyrouter/discussions)
+   - [GitHub Discussions](https://github.com/keyzakyy-dev/keyrouter/discussions)
    - Describe el caso de uso y los beneficios
 
 3. **Enviar código:**
@@ -375,13 +375,13 @@ keyrouter --version
 - Actualiza la documentación
 - Mantén los commits atómicos y descriptivos
 
-Consulta [CONTRIBUTING.md](https://github.com/decolua/keyrouter/blob/main/CONTRIBUTING.md) para detalles.
+Consulta [CONTRIBUTING.md](https://github.com/keyzakyy-dev/keyrouter/blob/main/CONTRIBUTING.md) para detalles.
 
 ---
 
 ## ¿Necesitas más ayuda?
 
 - **Documentación:** [keyrouter.com/docs](https://keyrouter.com/docs)
-- **GitHub:** [github.com/decolua/keyrouter](https://github.com/decolua/keyrouter)
-- **Issues:** [github.com/decolua/keyrouter/issues](https://github.com/decolua/keyrouter/issues)
+- **GitHub:** [github.com/keyzakyy-dev/keyrouter](https://github.com/keyzakyy-dev/keyrouter)
+- **Issues:** [github.com/keyzakyy-dev/keyrouter/issues](https://github.com/keyzakyy-dev/keyrouter/issues)
 - **Troubleshooting:** [troubleshooting.md](troubleshooting.md)

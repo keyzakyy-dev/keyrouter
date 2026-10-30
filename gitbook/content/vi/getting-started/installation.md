@@ -74,7 +74,7 @@ npx keyrouter
 Clone và build từ GitHub:
 
 ```bash
-git clone https://github.com/decolua/keyrouter.git
+git clone https://github.com/keyzakyy-dev/keyrouter.git
 cd keyrouter/app
 npm install
 npm run build
@@ -474,5 +474,5 @@ nano ~/.bashrc  # or ~/.zshrc
 ## Cần trợ giúp?
 
 - **Website**: [keyrouter.com](https://keyrouter.com)
-- **GitHub**: [github.com/decolua/keyrouter](https://github.com/decolua/keyrouter)
-- **Issues**: [github.com/decolua/keyrouter/issues](https://github.com/decolua/keyrouter/issues)
+- **GitHub**: [github.com/keyzakyy-dev/keyrouter](https://github.com/keyzakyy-dev/keyrouter)
+- **Issues**: [github.com/keyzakyy-dev/keyrouter/issues](https://github.com/keyzakyy-dev/keyrouter/issues)

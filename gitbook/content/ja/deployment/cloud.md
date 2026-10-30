@@ -16,7 +16,7 @@
 ### ステップ1: リポジトリをクローン
 
 ```bash
-git clone https://github.com/decolua/keyrouter.git
+git clone https://github.com/keyzakyy-dev/keyrouter.git
 cd keyrouter/app
 ```
 
