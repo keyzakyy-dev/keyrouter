@@ -25,7 +25,7 @@ Options:
   --tools <list>         Comma-separated tools to configure (prompted if omitted
                          in a terminal; default: claude). Supported:
                          ${TOOL_IDS.join(", ")}, all
-  --password <pw>        Dashboard password (or env NINE_ROUTER_PASSWORD;
+  --password <pw>        Dashboard password (or env KEY_ROUTER_PASSWORD;
                          prompted if omitted — preferred, keeps it out of shell history)
   --save                 After a successful login, save the password for this server
                          to ~/.keyrouter/connect.env (plain text, mode 600) so later
@@ -51,7 +51,7 @@ and a non-Claude tool with no model anywhere is skipped. Flags override:
 
 function parseArgs(argv) {
   const opts = {
-    password: process.env.NINE_ROUTER_PASSWORD || null,
+    password: process.env.KEY_ROUTER_PASSWORD || null,
     keyName: `cli-${os.hostname()}`.slice(0, 64),
     apiKey: null,
     models: {},
@@ -113,13 +113,13 @@ function loadSavedPassword(server) {
     // rather than crashing the whole command on JSON.parse.
     try { env[m[1]] = JSON.parse(m[2]); } catch { env[m[1]] = m[2]; }
   }
-  return env.NINE_ROUTER_SERVER === server && env.NINE_ROUTER_PASSWORD ? env.NINE_ROUTER_PASSWORD : null;
+  return env.KEY_ROUTER_SERVER === server && env.KEY_ROUTER_PASSWORD ? env.KEY_ROUTER_PASSWORD : null;
 }
 
 function savePassword(server, password) {
   const file = savedEnvPath();
   fs.mkdirSync(path.dirname(file), { recursive: true });
-  const body = `NINE_ROUTER_SERVER=${JSON.stringify(server)}\nNINE_ROUTER_PASSWORD=${JSON.stringify(password)}\n`;
+  const body = `KEY_ROUTER_SERVER=${JSON.stringify(server)}\nKEY_ROUTER_PASSWORD=${JSON.stringify(password)}\n`;
   fs.writeFileSync(file, body, { mode: 0o600 });
   fs.chmodSync(file, 0o600); // mode only applies on create; tighten a pre-existing file too
   return file;
@@ -130,7 +130,7 @@ class Cancelled extends Error {}
 const prompt = (p) => p.run().catch((err) => { throw err || new Cancelled("Cancelled"); });
 
 async function promptPassword() {
-  if (!process.stdin.isTTY) throw new Error("Password required: pass --password or set NINE_ROUTER_PASSWORD");
+  if (!process.stdin.isTTY) throw new Error("Password required: pass --password or set KEY_ROUTER_PASSWORD");
   const { Password } = require("enquirer");
   return prompt(new Password({ message: "keyrouter dashboard password" }));
 }

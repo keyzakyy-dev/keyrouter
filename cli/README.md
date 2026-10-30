@@ -167,7 +167,7 @@ Tools not pointed at keyrouter are listed as `not configured`. For Codex, OpenCo
 
 | Option | Purpose |
 |---|---|
-| `--password <pw>` | Dashboard password (or `NINE_ROUTER_PASSWORD`); prompted if omitted — preferred, keeps it out of shell history |
+| `--password <pw>` | Dashboard password (or `KEY_ROUTER_PASSWORD`); prompted if omitted — preferred, keeps it out of shell history |
 | `--save` | After a successful login, save the password for this server to `~/.keyrouter/connect.env` (plain text, mode 600) so later runs skip the prompt. Delete the file to forget it |
 | `--api-key <key>` | Use this key and skip login. The server's models can't be read without a login, so pass model flags |
 | `--key-name <name>` | API key name to reuse/create (default `cli-<hostname>`) |

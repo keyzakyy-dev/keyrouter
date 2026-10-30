@@ -24,7 +24,7 @@ export function isMissingBrowserExecutable(message) {
 export function resolveSystemChromeExecutable() {
   const env = process.env;
   const candidates = [
-    env.NINEROUTER_BROWSER_BIN,
+    env.KEYROUTER_BROWSER_BIN,
     env.CHROME_PATH,
     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
     "/usr/bin/google-chrome",

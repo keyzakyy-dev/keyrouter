@@ -11,7 +11,7 @@ import {
 } from "../../src/app/api/cli-tools/hermes-settings/hermesProfiles.js";
 
 const BASE = "http://127.0.0.1:20128/v1";
-const NINE_ROUTER_MODEL = `model:\n  default: "anthropic/claude-sonnet-4-6"\n  provider: "custom"\n  base_url: "${BASE}"\n  api_key: \${OPENAI_API_KEY}\n`;
+const KEY_ROUTER_MODEL = `model:\n  default: "anthropic/claude-sonnet-4-6"\n  provider: "custom"\n  base_url: "${BASE}"\n  api_key: \${OPENAI_API_KEY}\n`;
 
 let tmpRoot;
 
@@ -106,7 +106,7 @@ describe("hermes profile resolution", () => {
     });
 
     it("lists recognised profiles and skips bare/invalid directories", async () => {
-      await write(tmpRoot, "config.yaml", NINE_ROUTER_MODEL);
+      await write(tmpRoot, "config.yaml", KEY_ROUTER_MODEL);
 
       const coder = path.join(tmpRoot, "profiles", "coder");
       await fs.mkdir(coder, { recursive: true });
@@ -123,7 +123,7 @@ describe("hermes profile resolution", () => {
 
       const invalid = path.join(tmpRoot, "profiles", "Bad.Name");
       await fs.mkdir(invalid, { recursive: true });
-      await write(invalid, "config.yaml", NINE_ROUTER_MODEL);
+      await write(invalid, "config.yaml", KEY_ROUTER_MODEL);
 
       const profiles = await listProfiles(tmpRoot);
       const names = profiles.map((p) => p.name);
@@ -149,7 +149,7 @@ describe("hermes profile resolution", () => {
     it("reports keyrouter config in a named profile", async () => {
       const coder = path.join(tmpRoot, "profiles", "coder");
       await fs.mkdir(coder, { recursive: true });
-      await write(coder, "config.yaml", NINE_ROUTER_MODEL);
+      await write(coder, "config.yaml", KEY_ROUTER_MODEL);
 
       const profiles = await listProfiles(tmpRoot);
       const coderEntry = profiles.find((p) => p.name === "coder");

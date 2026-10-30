@@ -376,7 +376,7 @@ describe("connect run()", () => {
 
   it("--save stores the password (mode 600) bound to the server, and later runs reuse it", async () => {
     isolateDataDir();
-    vi.stubEnv("NINE_ROUTER_PASSWORD", "");
+    vi.stubEnv("KEY_ROUTER_PASSWORD", "");
     const fetchSpy = mockServer();
     expect(await connect.run(["http://gw.test", "--password", "s3cr\"et", "--save", "--tools", "claude"])).toBe(0);
     const file = connect.__test__.savedEnvPath();
@@ -406,7 +406,7 @@ describe("connect run()", () => {
     isolateDataDir();
     const file = expectedEnvPath();
     fs.mkdirSync(path.dirname(file), { recursive: true });
-    fs.writeFileSync(file, "NINE_ROUTER_SERVER=http://gw.test\nNINE_ROUTER_PASSWORD=bare-value\n");
+    fs.writeFileSync(file, "KEY_ROUTER_SERVER=http://gw.test\nKEY_ROUTER_PASSWORD=bare-value\n");
     expect(connect.__test__.loadSavedPassword("http://gw.test")).toBe("bare-value");
     vi.unstubAllEnvs();
   });
