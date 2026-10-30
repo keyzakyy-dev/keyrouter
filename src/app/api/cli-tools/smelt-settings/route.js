@@ -33,7 +33,7 @@ const hasKeyRouterConfig = (settings) => {
   if (!settings) return false;
   return (
     settings._managedBy === "keyrouter" ||
-    (typeof settings.baseUrl === "string" && settings.baseUrl.length > 0 && settings.baseUrl.includes("20128"))
+    (typeof settings.baseUrl === "string" && settings.baseUrl.length > 0 && settings.baseUrl.includes("20131"))
   );
 };
 

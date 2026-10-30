@@ -10,7 +10,7 @@ Local/remote AI gateway exposing OpenAI-compatible REST. One key, many providers
 ## Setup
 
 ```bash
-export KEYROUTER_URL="http://localhost:20128"      # or VPS / tunnel URL
+export KEYROUTER_URL="http://localhost:20131"      # or VPS / tunnel URL
 export KEYROUTER_KEY="sk-..."                      # from Dashboard → Keys (only if requireApiKey=true)
 ```
 

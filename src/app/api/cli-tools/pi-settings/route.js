@@ -43,7 +43,7 @@ const hasKeyRouterConfig = (settings) => {
   const p = settings.providers["keyrouter"];
   if (p && p.baseUrl) return true;
   for (const prov of Object.values(settings.providers)) {
-    if (prov.baseUrl && prov.baseUrl.includes("20128")) return true;
+    if (prov.baseUrl && prov.baseUrl.includes("20131")) return true;
   }
   return false;
 };

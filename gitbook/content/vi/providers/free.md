@@ -199,7 +199,7 @@ Model: kr/claude-sonnet-4.5
 
 ```
 Settings → Models → Advanced:
-  OpenAI API Base URL: http://localhost:20128/v1
+  OpenAI API Base URL: http://localhost:20131/v1
   OpenAI API Key: [from keyrouter dashboard]
   Model: if/kimi-k2-thinking
 ```

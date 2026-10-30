@@ -11,7 +11,7 @@ const tools = require("../../cli/src/cli/commands/connectTools.js");
 
 const KEY = "sk-show-test-key-123456789";
 const CTX = {
-  baseUrl: "http://gw.test:20128",
+  baseUrl: "http://gw.test:20131",
   apiKey: KEY,
   model: "srv/main",
   claudeModels: { ANTHROPIC_DEFAULT_OPUS_MODEL: "srv/opus", ANTHROPIC_DEFAULT_SONNET_MODEL: "srv/sonnet" },
@@ -59,7 +59,7 @@ describe("keyrouter show", () => {
     await tools.TOOLS.find((t) => t.id === "claude").apply(CTX);
     await show.run(["claude"]);
     const text = out.join("\n");
-    expect(text).toContain("http://gw.test:20128/v1");
+    expect(text).toContain("http://gw.test:20131/v1");
     expect(text).toMatch(/opus\s+srv\/opus/);
     expect(text).toMatch(/sonnet\s+srv\/sonnet/);
     expect(text).not.toMatch(/haiku/); // unset tier is not invented

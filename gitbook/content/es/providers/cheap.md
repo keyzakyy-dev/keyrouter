@@ -254,7 +254,7 @@ Total: 10M tokens = $9 plano
 
 ```
 Settings → Models → Advanced:
-  OpenAI API Base URL: http://localhost:20128/v1
+  OpenAI API Base URL: http://localhost:20131/v1
   OpenAI API Key: [desde el dashboard de keyrouter]
   Model: glm/glm-4.7
 ```

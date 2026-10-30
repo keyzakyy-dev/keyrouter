@@ -46,7 +46,7 @@ const readModelsYml = async () => {
 
 const hasKeyRouterInYml = (content) => {
   if (!content) return false;
-  return content.includes("keyrouter:") || content.includes("localhost:20128");
+  return content.includes("keyrouter:") || content.includes("localhost:20131");
 };
 
 // Build standard KeyRouter provider block for models.yml

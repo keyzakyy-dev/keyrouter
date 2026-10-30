@@ -51,7 +51,7 @@
 │  Your CLI   │  (Claude Code, Codex, OpenClaw, Cursor, Cline...)
 │   Tool      │
 └──────┬──────┘
-       │ http://localhost:20128/v1
+       │ http://localhost:20131/v1
        ↓
 ┌─────────────────────────────────────────────┐
 │           KeyRouter (Smart Router)            │
@@ -81,7 +81,7 @@ npm install -g keyrouter
 keyrouter
 ```
 
-🎉 Le tableau de bord s'ouvre sur `http://localhost:20128`
+🎉 Le tableau de bord s'ouvre sur `http://localhost:20131`
 
 **2. Connectez un fournisseur GRATUIT (aucune inscription requise) :**
 
@@ -91,7 +91,7 @@ Tableau de bord → Providers → Connectez **Kiro AI** (Claude gratuit et illim
 
 ```
 Paramètres de Claude Code/Codex/OpenClaw/Cursor/Cline :
-  Endpoint : http://localhost:20128/v1
+  Endpoint : http://localhost:20131/v1
   API Key : [copiez depuis le tableau de bord]
   Model : kr/claude-sonnet-4.5
 ```
@@ -105,20 +105,20 @@ Le paquet de ce dépôt est privé (`keyrouter-app`), donc l'exécution depuis l
 ```bash
 cp .env.example .env
 npm install
-PORT=20128 NEXT_PUBLIC_BASE_URL=http://localhost:20128 npm run dev
+PORT=20131 NEXT_PUBLIC_BASE_URL=http://localhost:20131 npm run dev
 ```
 
 Mode production :
 
 ```bash
 npm run build
-PORT=20128 HOSTNAME=0.0.0.0 NEXT_PUBLIC_BASE_URL=http://localhost:20128 npm run start
+PORT=20131 HOSTNAME=0.0.0.0 NEXT_PUBLIC_BASE_URL=http://localhost:20131 npm run start
 ```
 
 URL par défaut :
 
-- Tableau de bord : `http://localhost:20128/dashboard`
-- API compatible OpenAI : `http://localhost:20128/v1`
+- Tableau de bord : `http://localhost:20131/dashboard`
+- API compatible OpenAI : `http://localhost:20131/v1`
 
 ---
 
@@ -1044,7 +1044,7 @@ Coût : 0 $ pour toujours (+ 20 à 40 % d'économie de tokens via RTK) !
 
 ```
 Settings → Models → Advanced :
-  OpenAI API Base URL : http://localhost:20128/v1
+  OpenAI API Base URL : http://localhost:20131/v1
   OpenAI API Key : [depuis le tableau de bord keyrouter]
   Model : cc/claude-opus-4-7
 ```
@@ -1057,7 +1057,7 @@ Modifiez `~/.claude/config.json` :
 
 ```json
 {
-  "anthropic_api_base": "http://localhost:20128/v1",
+  "anthropic_api_base": "http://localhost:20131/v1",
   "anthropic_api_key": "votre-clé-api-keyrouter"
 }
 ```
@@ -1065,7 +1065,7 @@ Modifiez `~/.claude/config.json` :
 ### Codex CLI
 
 ```bash
-export OPENAI_BASE_URL="http://localhost:20128"
+export OPENAI_BASE_URL="http://localhost:20131"
 export OPENAI_API_KEY="votre-clé-api-keyrouter"
 
 codex "votre prompt"
@@ -1093,7 +1093,7 @@ Tableau de bord → CLI Tools → OpenClaw → Sélectionnez le modèle → Appl
   "models": {
     "providers": {
       "keyrouter": {
-        "baseUrl": "http://127.0.0.1:20128/v1",
+        "baseUrl": "http://127.0.0.1:20131/v1",
         "apiKey": "sk_keyrouter",
         "api": "openai-completions",
         "models": [
@@ -1114,7 +1114,7 @@ Tableau de bord → CLI Tools → OpenClaw → Sélectionnez le modèle → Appl
 
 ```
 Provider : OpenAI Compatible
-Base URL : http://localhost:20128/v1
+Base URL : http://localhost:20131/v1
 API Key : [depuis le tableau de bord]
 Model : cc/claude-opus-4-7
 ```
@@ -1137,10 +1137,10 @@ npm run build
 export JWT_SECRET="votre-secret-sécurisé-changez-le"
 export INITIAL_PASSWORD="votre-mot-de-passe"
 export DATA_DIR="/var/lib/keyrouter"
-export PORT="20128"
+export PORT="20131"
 export HOSTNAME="0.0.0.0"
 export NODE_ENV="production"
-export NEXT_PUBLIC_BASE_URL="http://localhost:20128"
+export NEXT_PUBLIC_BASE_URL="http://localhost:20131"
 export NEXT_PUBLIC_CLOUD_URL="https://keyrouter.com"
 export API_KEY_SECRET="endpoint-proxy-api-key-secret"
 export MACHINE_ID_SALT="endpoint-proxy-salt"
@@ -1167,13 +1167,13 @@ Images publiées (multi-plateformes `linux/amd64` + `linux/arm64`) :
 ```bash
 docker run -d \
   --name keyrouter \
-  -p 20128:20128 \
+  -p 20131:20131 \
   -v "$HOME/.keyrouter:/app/data" \
   -e DATA_DIR=/app/data \
   keyzakyy-dev/keyrouter:latest
 ```
 
-→ Ouvrez http://localhost:20128
+→ Ouvrez http://localhost:20131
 
 **Compiler depuis le code source (dev) :**
 
@@ -1181,13 +1181,13 @@ docker run -d \
 git clone https://github.com/keyzakyy-dev/keyrouter.git
 cd keyrouter/app
 docker build -t keyrouter .
-docker run -d --name keyrouter -p 20128:20128 \
+docker run -d --name keyrouter -p 20131:20131 \
   -v "$HOME/.keyrouter:/app/data" -e DATA_DIR=/app/data keyrouter
 ```
 
 **Valeurs par défaut du conteneur :**
 
-- `PORT=20128`
+- `PORT=20131`
 - `HOSTNAME=0.0.0.0`
 
 **Commandes utiles :**
@@ -1208,10 +1208,10 @@ docker pull keyzakyy-dev/keyrouter:latest   # mise à jour vers la dernière ver
 | `JWT_SECRET`                                         | Généré automatiquement (`~/.keyrouter/jwt-secret`) | Secret de signature JWT pour le cookie d'authentification du tableau de bord (remplacez-le pour partager entre instances) |
 | `INITIAL_PASSWORD`                                   | `123456`                                    | Mot de passe de première connexion quand aucun hash n'est enregistré                          |
 | `DATA_DIR`                                           | `~/.keyrouter`                                | Emplacement principal des données de l'app (SQLite dans `$DATA_DIR/db/data.sqlite`)          |
-| `PORT`                                               | défaut du framework                         | Port du service (`20128` dans les exemples)                                                   |
+| `PORT`                                               | défaut du framework                         | Port du service (`20131` dans les exemples)                                                   |
 | `HOSTNAME`                                           | défaut du framework                         | Hôte de liaison (Docker utilise `0.0.0.0` par défaut)                                         |
 | `NODE_ENV`                                           | défaut du runtime                           | Définissez `production` pour le déploiement                                                   |
-| `BASE_URL`                                           | `http://localhost:20128`                    | URL de base interne côté serveur utilisée par les tâches de synchronisation cloud             |
+| `BASE_URL`                                           | `http://localhost:20131`                    | URL de base interne côté serveur utilisée par les tâches de synchronisation cloud             |
 | `CLOUD_URL`                                          | `https://keyrouter.com`                       | URL de base de l'endpoint de synchronisation cloud côté serveur                               |
 | `NEXT_PUBLIC_BASE_URL`                               | `http://localhost:3000`                     | URL de base publique/rétrocompatible (préférez `BASE_URL` pour le runtime serveur)            |
 | `NEXT_PUBLIC_CLOUD_URL`                              | `https://keyrouter.com`                       | URL cloud publique/rétrocompatible (préférez `CLOUD_URL` pour le runtime serveur)             |
@@ -1344,7 +1344,7 @@ Remarques :
 
 **Le tableau de bord s'ouvre sur le mauvais port**
 
-- Définissez `PORT=20128` et `NEXT_PUBLIC_BASE_URL=http://localhost:20128`
+- Définissez `PORT=20131` et `NEXT_PUBLIC_BASE_URL=http://localhost:20131`
 
 **La première connexion ne fonctionne pas**
 
@@ -1373,7 +1373,7 @@ Remarques :
 ### Chat Completions
 
 ```bash
-POST http://localhost:20128/v1/chat/completions
+POST http://localhost:20131/v1/chat/completions
 Authorization: Bearer votre-clé-api
 Content-Type: application/json
 
@@ -1389,7 +1389,7 @@ Content-Type: application/json
 ### Lister les modèles
 
 ```bash
-GET http://localhost:20128/v1/models
+GET http://localhost:20131/v1/models
 Authorization: Bearer votre-clé-api
 
 → Renvoie tous les modèles et combos au format OpenAI

@@ -53,14 +53,14 @@ Or run directly without installing anything:
 npx keyrouter
 ```
 
-The dashboard opens at <http://localhost:20128>. Log in with the password you set
+The dashboard opens at <http://localhost:20131>. Log in with the password you set
 (the default is `123456`; change it after first login).
 
 ### Option 2: Docker (server / VPS)
 
 ```bash
 docker run -d --name keyrouter \
-  -p 20128:20128 \
+  -p 20131:20131 \
   -v "$HOME/.keyrouter:/app/data" \
   -e DATA_DIR=/app/data \
   keyzakyy-dev/keyrouter:latest
@@ -92,7 +92,7 @@ npm run start
 
 ```text
 Claude Code / Codex / OpenClaw / Cursor / Cline settings:
-  Endpoint : http://localhost:20128/v1
+  Endpoint : http://localhost:20131/v1
   API Key  : [copy from dashboard]
   Model    : kr/claude-sonnet-4.5
 ```
@@ -132,7 +132,7 @@ All tools that speak the OpenAI or Claude API work out of the box.
 │   Your CLI tool  │   Claude Code, Codex, OpenClaw, Cursor, Cline…
 │                  │
 └────────┬─────────┘
-         │  http://localhost:20128/v1
+         │  http://localhost:20131/v1
          ▼
 ┌──────────────────────────────────────────────┐
 │              KeyRouter (router)               │
@@ -189,8 +189,8 @@ Already have KeyRouter on a team server? Point your local CLI tools at it withou
 starting a local server:
 
 ```bash
-npx keyrouter connect http://<server>:20128                       # pick tools interactively
-npx keyrouter connect http://<server>:20128 --tools claude,codex  # choose in advance
+npx keyrouter connect http://<server>:20131                       # pick tools interactively
+npx keyrouter connect http://<server>:20131 --tools claude,codex  # choose in advance
 npx keyrouter connect --reset --tools claude,codex                # undo
 ```
 
@@ -217,7 +217,7 @@ keyrouter show claude --json  # machine-readable (key masked)
 | `JWT_SECRET` | Yes | Long random secret for session signing |
 | `INITIAL_PASSWORD` | Yes | Initial dashboard password, change after first login |
 | `DATA_DIR` | Yes | Data directory, defaults to `~/.keyrouter` |
-| `PORT` | No | Server port, defaults to `20128` |
+| `PORT` | No | Server port, defaults to `20131` |
 | `API_KEY_SECRET` | No | Secret for API keys issued by the endpoint proxy |
 | `MACHINE_ID_SALT` | No | Salt for machine identity |
 | `CLOUD_URL` | No | Cloud sync endpoint, defaults to `https://keyrouter.com` |

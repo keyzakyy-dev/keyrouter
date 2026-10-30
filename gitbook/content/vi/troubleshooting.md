@@ -132,11 +132,11 @@ Các vấn đề và giải pháp phổ biến khi dùng KeyRouter.
 
 ## Connection Refused
 
-**Vấn đề:** Lỗi "ECONNREFUSED" hoặc "Cannot connect to localhost:20128".
+**Vấn đề:** Lỗi "ECONNREFUSED" hoặc "Cannot connect to localhost:20131".
 
 **Nguyên nhân:**
 - KeyRouter không chạy
-- Port 20128 bị chặn
+- Port 20131 bị chặn
 - Firewall chặn kết nối
 
 **Giải pháp:**
@@ -147,19 +147,19 @@ Các vấn đề và giải pháp phổ biến khi dùng KeyRouter.
    ```
    Dashboard sẽ mở tại http://localhost:3000
 
-2. **Xác minh port 20128:**
+2. **Xác minh port 20131:**
    ```bash
    # Check if port is listening
-   lsof -i :20128
+   lsof -i :20131
    
    # Or on Windows
-   netstat -ano | findstr :20128
+   netstat -ano | findstr :20131
    ```
 
 3. **Kiểm tra firewall:**
    - macOS: System Settings → Network → Firewall
    - Windows: Windows Defender Firewall → Allow app
-   - Linux: `sudo ufw allow 20128`
+   - Linux: `sudo ufw allow 20131`
 
 4. **Dùng cloud endpoint:**
    Nếu localhost không hoạt động (ví dụ: Cursor IDE):
@@ -243,7 +243,7 @@ Các vấn đề và giải pháp phổ biến khi dùng KeyRouter.
 
 3. **Liệt kê model khả dụng:**
    ```bash
-   curl http://localhost:20128/v1/models \
+   curl http://localhost:20131/v1/models \
      -H "Authorization: Bearer your-api-key"
    ```
 
@@ -338,7 +338,7 @@ Các vấn đề và giải pháp phổ biến khi dùng KeyRouter.
 
 4. **Test API key:**
    ```bash
-   curl http://localhost:20128/v1/models \
+   curl http://localhost:20131/v1/models \
      -H "Authorization: Bearer kr_your_key"
    ```
 

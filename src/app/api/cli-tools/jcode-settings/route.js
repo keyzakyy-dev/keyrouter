@@ -52,7 +52,7 @@ const hasKeyRouterConfig = (config) => {
   if (providers["keyrouter"]) return true;
 
   for (const [name, provider] of Object.entries(providers)) {
-    if (provider.base_url && provider.base_url.includes("localhost:20128")) {
+    if (provider.base_url && provider.base_url.includes("localhost:20131")) {
       return true;
     }
   }

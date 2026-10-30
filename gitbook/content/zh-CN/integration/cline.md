@@ -29,7 +29,7 @@
 
 **本地 KeyRouter:**
 ```
-http://localhost:20128/v1
+http://localhost:20131/v1
 ```
 
 **云端 KeyRouter:**
@@ -70,7 +70,7 @@ https://keyrouter.com
 
 ```
 API Provider: Ollama
-Base URL: http://localhost:20128/v1
+Base URL: http://localhost:20131/v1
 API Key: sk-keyrouter-xxxxxxxxxxxxx
 Model: gpt-4
 ```
@@ -118,9 +118,9 @@ Model: gpt-4
 
 ### "Connection Failed" 错误
 
-1. 确认 KeyRouter 正在运行:`curl http://localhost:20128/health`
+1. 确认 KeyRouter 正在运行:`curl http://localhost:20131/health`
 2. 确认 base URL 正确且包含 `/v1`
-3. 确保防火墙没有阻止 20128 端口
+3. 确保防火墙没有阻止 20131 端口
 4. 尝试重启 VSCode
 
 ### "Invalid API Key" 错误

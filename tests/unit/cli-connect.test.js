@@ -12,7 +12,7 @@ const { parseArgs, normalizeServerUrl, extractAuthCookie, maskKey } = connect.__
 const { stripTrailingCommas } = tools.__test__;
 
 const CTX = {
-  baseUrl: "http://gw.test:20128",
+  baseUrl: "http://gw.test:20131",
   apiKey: "sk-unit-test-key-0000",
   model: "cc/claude-opus-5",
   claudeModels: { ANTHROPIC_DEFAULT_OPUS_MODEL: "cc/claude-opus-5" },
@@ -36,8 +36,8 @@ describe("connect helpers", () => {
   });
 
   it("normalizeServerUrl keeps only the origin and defaults to http", () => {
-    expect(normalizeServerUrl("http://h:20128/dashboard/cli-tools")).toBe("http://h:20128");
-    expect(normalizeServerUrl("h:20128")).toBe("http://h:20128");
+    expect(normalizeServerUrl("http://h:20131/dashboard/cli-tools")).toBe("http://h:20131");
+    expect(normalizeServerUrl("h:20131")).toBe("http://h:20131");
     expect(normalizeServerUrl("https://h/v1/")).toBe("https://h");
   });
 
@@ -100,7 +100,7 @@ describe("connect tool writers", () => {
     await tool("claude").apply(CTX);
     const cfg = readJson(f);
     expect(cfg.theme).toBe("dark");
-    expect(cfg.env).toMatchObject({ KEEP: "1", ANTHROPIC_BASE_URL: "http://gw.test:20128/v1", ANTHROPIC_AUTH_TOKEN: CTX.apiKey });
+    expect(cfg.env).toMatchObject({ KEEP: "1", ANTHROPIC_BASE_URL: "http://gw.test:20131/v1", ANTHROPIC_AUTH_TOKEN: CTX.apiKey });
     expect(fs.existsSync(`${f}.bak-keyrouter`)).toBe(true);
     await tool("claude").reset();
     expect(readJson(f)).toEqual({ theme: "dark", hasCompletedOnboarding: true, env: { KEEP: "1" } });
@@ -152,7 +152,7 @@ describe("connect tool writers", () => {
     await tool("pi").apply(CTX);
     const p = readJson(f).providers;
     expect(p.mine).toEqual({ baseUrl: "http://x" });
-    expect(p["keyrouter"]).toMatchObject({ baseUrl: "http://gw.test:20128/v1", apiKey: CTX.apiKey, api: "openai-completions" });
+    expect(p["keyrouter"]).toMatchObject({ baseUrl: "http://gw.test:20131/v1", apiKey: CTX.apiKey, api: "openai-completions" });
     expect(p["keyrouter"].models.map((m) => m.id)).toEqual([CTX.model]);
     await tool("pi").reset();
     expect(readJson(f)).toEqual({ providers: { mine: { baseUrl: "http://x" } } });
@@ -172,7 +172,7 @@ describe("connect tool writers", () => {
     await tool("omp").apply(CTX);
     const text = fs.readFileSync(f, "utf8");
     expect(text).toContain("theme: dark");
-    expect(text).toMatch(/keyrouter:\n\s+baseUrl: http:\/\/gw\.test:20128\/v1/);
+    expect(text).toMatch(/keyrouter:\n\s+baseUrl: http:\/\/gw\.test:20131\/v1/);
     expect(text).toMatch(/discovery:\n\s+type: proxy/);
     await tool("omp").reset();
     const after = fs.readFileSync(f, "utf8");
@@ -184,7 +184,7 @@ describe("connect tool writers", () => {
   it("cline uses base URL without /v1 and reset reports both files", async () => {
     await tool("cline").apply(CTX);
     const state = readJson(path.join(home, ".cline", "data", "globalState.json"));
-    expect(state.openAiBaseUrl).toBe("http://gw.test:20128");
+    expect(state.openAiBaseUrl).toBe("http://gw.test:20131");
     expect((await tool("cline").reset()).length).toBe(2);
   });
 });
@@ -221,7 +221,7 @@ describe("connect run()", () => {
       if (u.endsWith("/api/keys")) return json({ keys: [{ name: `cli-${os.hostname()}`, key: MY_KEY, isActive: true }] });
       if (u.endsWith("/api/cli-tools/claude-settings")) {
         return json({ installed: true, settings: { env: {
-          ANTHROPIC_BASE_URL: "http://127.0.0.1:20128/v1",
+          ANTHROPIC_BASE_URL: "http://127.0.0.1:20131/v1",
           ANTHROPIC_AUTH_TOKEN: SERVER_KEY,
           ANTHROPIC_DEFAULT_OPUS_MODEL: "srv/opus",
           ANTHROPIC_DEFAULT_SONNET_MODEL: "srv/sonnet[1m]",

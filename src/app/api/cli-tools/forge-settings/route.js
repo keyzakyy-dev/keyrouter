@@ -32,7 +32,7 @@ const checkForgeInstalled = async () => {
 
 const hasKeyRouterConfig = (content) => {
   if (!content) return false;
-  return content.includes("managed by KeyRouter") || content.includes("localhost:20128");
+  return content.includes("managed by KeyRouter") || content.includes("localhost:20131");
 };
 
 const readConfig = async () => {

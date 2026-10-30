@@ -16,7 +16,7 @@ KeyRouterをOpenAI Codex CLIと統合し、OpenAI APIリクエストをKeyRouter
 
 ```bash
 # KeyRouter用Base URL
-export OPENAI_BASE_URL="http://localhost:20128/v1"
+export OPENAI_BASE_URL="http://localhost:20131/v1"
 
 # KeyRouterダッシュボードからのAPIキー
 export OPENAI_API_KEY="your-keyrouter-api-key"
@@ -76,7 +76,7 @@ codex --model cx/gpt-5.1-codex-max "Explain what this code does: $(cat myfile.js
 
 ```json
 {
-  "baseUrl": "http://localhost:20128/v1",
+  "baseUrl": "http://localhost:20131/v1",
   "apiKey": "your-keyrouter-api-key",
   "defaultModel": "cx/gpt-5.2-codex"
 }
@@ -96,9 +96,9 @@ codex --model cx/gpt-5.1-codex-max "Explain what this code does: $(cat myfile.js
 
 接続エラーが発生した場合:
 
-1. KeyRouterが動作中か確認: `curl http://localhost:20128/health`
+1. KeyRouterが動作中か確認: `curl http://localhost:20131/health`
 2. 環境変数が正しく設定されているか確認
-3. ファイアウォールがポート20128をブロックしていないか確認
+3. ファイアウォールがポート20131をブロックしていないか確認
 
 ### モデルが利用不可
 

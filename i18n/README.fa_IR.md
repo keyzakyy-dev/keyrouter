@@ -51,7 +51,7 @@
 │  ابزار خط   │  (Claude Code, Codex, OpenClaw, Cursor, Cline...)
 │  فرمان شما  │
 └──────┬──────┘
-       │ http://localhost:20128/v1
+       │ http://localhost:20131/v1
        ↓
 ┌─────────────────────────────────────────────┐
 │           KeyRouter (مسیریاب هوشمند)          │
@@ -81,7 +81,7 @@ npm install -g keyrouter
 keyrouter
 ```
 
-🎉 داشبورد در آدرس `http://localhost:20128` باز می‌شود
+🎉 داشبورد در آدرس `http://localhost:20131` باز می‌شود
 
 **۲. اتصال یک ارائه‌دهنده رایگان (بدون نیاز به ثبت‌نام):**
 
@@ -91,7 +91,7 @@ keyrouter
 
 ```
 تنظیمات Claude Code/Codex/OpenClaw/Cursor/Cline:
-  آدرس端点: http://localhost:20128/v1
+  آدرس端点: http://localhost:20131/v1
   کلید API: [کپی از داشبورد]
   مدل: kr/claude-sonnet-4.5
 ```
@@ -105,20 +105,20 @@ keyrouter
 ```bash
 cp .env.example .env
 npm install
-PORT=20128 NEXT_PUBLIC_BASE_URL=http://localhost:20128 npm run dev
+PORT=20131 NEXT_PUBLIC_BASE_URL=http://localhost:20131 npm run dev
 ```
 
 حالت تولید:
 
 ```bash
 npm run build
-PORT=20128 HOSTNAME=0.0.0.0 NEXT_PUBLIC_BASE_URL=http://localhost:20128 npm run start
+PORT=20131 HOSTNAME=0.0.0.0 NEXT_PUBLIC_BASE_URL=http://localhost:20131 npm run start
 ```
 
 آدرس‌های پیش‌فرض:
 
-- داشبورد: `http://localhost:20128/dashboard`
-- API سازگار با OpenAI: `http://localhost:20128/v1`
+- داشبورد: `http://localhost:20131/dashboard`
+- API سازگار با OpenAI: `http://localhost:20131/v1`
 
 ---
 
@@ -1042,7 +1042,7 @@ Vertex Partner (Anthropic / DeepSeek / GLM / Qwen از طریق Vertex):
 
 ```
 تنظیمات → مدل‌ها → پیشرفته:
-  آدرس پایه API OpenAI: http://localhost:20128/v1
+  آدرس پایه API OpenAI: http://localhost:20131/v1
   کلید API OpenAI: [از داشبورد keyrouter]
   مدل: cc/claude-opus-4-7
 ```
@@ -1055,7 +1055,7 @@ Vertex Partner (Anthropic / DeepSeek / GLM / Qwen از طریق Vertex):
 
 ```json
 {
-  "anthropic_api_base": "http://localhost:20128/v1",
+  "anthropic_api_base": "http://localhost:20131/v1",
   "anthropic_api_key": "your-keyrouter-api-key"
 }
 ```
@@ -1063,7 +1063,7 @@ Vertex Partner (Anthropic / DeepSeek / GLM / Qwen از طریق Vertex):
 ### Codex CLI
 
 ```bash
-export OPENAI_BASE_URL="http://localhost:20128"
+export OPENAI_BASE_URL="http://localhost:20131"
 export OPENAI_API_KEY="your-keyrouter-api-key"
 
 codex "your prompt"
@@ -1091,7 +1091,7 @@ codex "your prompt"
   "models": {
     "providers": {
       "keyrouter": {
-        "baseUrl": "http://127.0.0.1:20128/v1",
+        "baseUrl": "http://127.0.0.1:20131/v1",
         "apiKey": "sk_keyrouter",
         "api": "openai-completions",
         "models": [
@@ -1112,7 +1112,7 @@ codex "your prompt"
 
 ```
 ارائه‌دهنده: سازگار با OpenAI
-آدرس پایه: http://localhost:20128/v1
+آدرس پایه: http://localhost:20131/v1
 کلید API: [از داشبورد]
 مدل: cc/claude-opus-4-7
 ```
@@ -1135,10 +1135,10 @@ npm run build
 export JWT_SECRET="your-secure-secret-change-this"
 export INITIAL_PASSWORD="your-password"
 export DATA_DIR="/var/lib/keyrouter"
-export PORT="20128"
+export PORT="20131"
 export HOSTNAME="0.0.0.0"
 export NODE_ENV="production"
-export NEXT_PUBLIC_BASE_URL="http://localhost:20128"
+export NEXT_PUBLIC_BASE_URL="http://localhost:20131"
 export NEXT_PUBLIC_CLOUD_URL="https://keyrouter.com"
 export API_KEY_SECRET="endpoint-proxy-api-key-secret"
 export MACHINE_ID_SALT="endpoint-proxy-salt"
@@ -1165,13 +1165,13 @@ pm2 startup
 ```bash
 docker run -d \
   --name keyrouter \
-  -p 20128:20128 \
+  -p 20131:20131 \
   -v "$HOME/.keyrouter:/app/data" \
   -e DATA_DIR=/app/data \
   keyzakyy-dev/keyrouter:latest
 ```
 
-→ باز کردن http://localhost:20128
+→ باز کردن http://localhost:20131
 
 **ساخت از سورس (توسعه):**
 
@@ -1179,13 +1179,13 @@ docker run -d \
 git clone https://github.com/keyzakyy-dev/keyrouter.git
 cd keyrouter/app
 docker build -t keyrouter .
-docker run -d --name keyrouter -p 20128:20128 \
+docker run -d --name keyrouter -p 20131:20131 \
   -v "$HOME/.keyrouter:/app/data" -e DATA_DIR=/app/data keyrouter
 ```
 
 **پیش‌فرض‌های کانتینر:**
 
-- `PORT=20128`
+- `PORT=20131`
 - `HOSTNAME=0.0.0.0`
 
 **دستورات مفید:**
@@ -1209,7 +1209,7 @@ docker pull keyzakyy-dev/keyrouter:latest   # به‌روزرسانی به آخ�
 | `PORT`                                               | پیش‌فرض فریم‌ورک                        | پورت سرویس (`۲۰۱۲۸` در مثال‌ها)                                                  |
 | `HOSTNAME`                                           | پیش‌فرض فریم‌ورک                        | هاست بایند (داکر پیش‌فرض `۰.۰.۰.۰` است)                                            |
 | `NODE_ENV`                                           | پیش‌فرض زمان اجرا                          | برای استقرار `production` را تنظیم کنید                                                         |
-| `BASE_URL`                                           | `http://localhost:20128`                 | آدرس پایه داخلی سمت سرور که توسط کارهای همگام‌سازی ابری استفاده می‌شود                               |
+| `BASE_URL`                                           | `http://localhost:20131`                 | آدرس پایه داخلی سمت سرور که توسط کارهای همگام‌سازی ابری استفاده می‌شود                               |
 | `CLOUD_URL`                                          | `https://keyrouter.com`                    | آدرس پایه نقطه پایانی همگام‌سازی ابری سمت سرور                                            |
 | `NEXT_PUBLIC_BASE_URL`                               | `http://localhost:3000`                  | آدرس پایه عمومی/سازگار با گذشته (برای زمان اجرای سرور `BASE_URL` را ترجیح دهید)          |
 | `NEXT_PUBLIC_CLOUD_URL`                              | `https://keyrouter.com`                    | آدرس ابری عمومی/سازگار با گذشته (برای زمان اجرای سرور `CLOUD_URL` را ترجیح دهید)        |
@@ -1342,7 +1342,7 @@ docker pull keyzakyy-dev/keyrouter:latest   # به‌روزرسانی به آخ�
 
 **داشبورد در پورت اشتباه باز می‌شود**
 
-- `PORT=20128` و `NEXT_PUBLIC_BASE_URL=http://localhost:20128` را تنظیم کنید
+- `PORT=20131` و `NEXT_PUBLIC_BASE_URL=http://localhost:20131` را تنظیم کنید
 
 **اولین ورود کار نمی‌کند**
 
@@ -1371,7 +1371,7 @@ docker pull keyzakyy-dev/keyrouter:latest   # به‌روزرسانی به آخ�
 ### تکمیل‌های چت
 
 ```bash
-POST http://localhost:20128/v1/chat/completions
+POST http://localhost:20131/v1/chat/completions
 Authorization: Bearer your-api-key
 Content-Type: application/json
 
@@ -1387,7 +1387,7 @@ Content-Type: application/json
 ### لیست مدل‌ها
 
 ```bash
-GET http://localhost:20128/v1/models
+GET http://localhost:20131/v1/models
 Authorization: Bearer your-api-key
 
 → همه مدل‌ها + ترکیب‌ها را در قالب OpenAI برمی‌گرداند

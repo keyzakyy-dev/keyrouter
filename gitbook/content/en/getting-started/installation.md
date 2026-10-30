@@ -97,7 +97,7 @@ keyrouter
 ```
 
 **What happens:**
-1. Server starts on `http://localhost:20128`
+1. Server starts on `http://localhost:20131`
 2. Dashboard opens automatically in browser
 3. Data directory created at `~/.keyrouter`
 4. API key generated automatically
@@ -132,7 +132,7 @@ kr_1234567890abcdef1234567890abcdef
 ### Check Server Status
 
 ```bash
-curl http://localhost:20128/health
+curl http://localhost:20131/health
 ```
 
 **Expected response:**
@@ -146,7 +146,7 @@ curl http://localhost:20128/health
 ### List Available Models
 
 ```bash
-curl http://localhost:20128/v1/models \
+curl http://localhost:20131/v1/models \
   -H "Authorization: Bearer your-api-key"
 ```
 
@@ -168,7 +168,7 @@ curl http://localhost:20128/v1/models \
 ### Test Chat Completion
 
 ```bash
-curl http://localhost:20128/v1/chat/completions \
+curl http://localhost:20131/v1/chat/completions \
   -H "Authorization: Bearer your-api-key" \
   -H "Content-Type: application/json" \
   -d '{
@@ -196,7 +196,7 @@ export INITIAL_PASSWORD="your-password"
 export DATA_DIR="~/.keyrouter"
 
 # Server
-export PORT="20128"
+export PORT="20131"
 export NODE_ENV="production"
 
 # Logging
@@ -224,7 +224,7 @@ keyrouter
 
 ### Port Configuration
 
-**Default port:** `20128`
+**Default port:** `20131`
 
 **Change port:**
 
@@ -247,14 +247,14 @@ keyrouter --port 3000
 
 **Error:**
 ```
-Error: listen EADDRINUSE: address already in use :::20128
+Error: listen EADDRINUSE: address already in use :::20131
 ```
 
 **Solution 1: Kill existing process**
 
 ```bash
-# Find process using port 20128
-lsof -i :20128
+# Find process using port 20131
+lsof -i :20131
 
 # Kill process
 kill -9 <PID>
@@ -310,7 +310,7 @@ nvm use 20
 **Solution 1: Open manually**
 
 ```
-http://localhost:20128
+http://localhost:20131
 ```
 
 **Solution 2: Check firewall**
@@ -404,7 +404,7 @@ pm2 startup
 docker pull keyrouter/keyrouter:latest
 
 docker run -d \
-  -p 20128:20128 \
+  -p 20131:20131 \
   -e JWT_SECRET="your-secure-secret" \
   -e INITIAL_PASSWORD="your-password" \
   -v keyrouter-data:/root/.keyrouter \
@@ -422,7 +422,7 @@ server {
     server_name your-domain.com;
 
     location / {
-        proxy_pass http://localhost:20128;
+        proxy_pass http://localhost:20131;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';

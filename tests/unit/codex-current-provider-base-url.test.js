@@ -10,10 +10,10 @@ model_provider = "keyrouter"
 base_url = "https://omniroute.example/v1"
 
 [model_providers.keyrouter]
-base_url = "http://127.0.0.1:20128/v1"
+base_url = "http://127.0.0.1:20131/v1"
 `;
 
-    expect(getCurrentCodexProviderBaseUrl(config)).toBe("http://127.0.0.1:20128/v1");
+    expect(getCurrentCodexProviderBaseUrl(config)).toBe("http://127.0.0.1:20131/v1");
   });
 
   it("reads the active provider URL and bearer key when another provider appears first", () => {

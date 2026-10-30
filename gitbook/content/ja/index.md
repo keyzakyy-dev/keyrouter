@@ -116,7 +116,7 @@ keyrouter
 **CLIツールで使う:**
 
 ```
-Endpoint: http://localhost:20128/v1
+Endpoint: http://localhost:20131/v1
 API Key: [ダッシュボードから取得]
 Model: cc/claude-opus-4-5-20251101
 ```

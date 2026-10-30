@@ -22,7 +22,7 @@ Khởi chạy Roo AI Assistant và mở panel settings.
 
 **Cho KeyRouter cục bộ:**
 ```
-Base URL: http://localhost:20128/v1
+Base URL: http://localhost:20131/v1
 API Key: your-api-key-from-dashboard
 ```
 
@@ -87,7 +87,7 @@ Model: cx/deepseek-reasoner
 ## Troubleshooting
 
 ### Connection Failed
-- Xác minh KeyRouter đang chạy: `curl http://localhost:20128/health`
+- Xác minh KeyRouter đang chạy: `curl http://localhost:20131/health`
 - Kiểm tra API key đúng
 - Đảm bảo Base URL bao gồm hậu tố `/v1`
 

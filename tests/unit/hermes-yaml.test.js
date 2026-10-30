@@ -23,7 +23,7 @@ import {
   removeSttKeyRouter,
 } from "../../src/app/api/cli-tools/hermes-settings/hermesYaml.js";
 
-const BASE = "http://127.0.0.1:20128/v1";
+const BASE = "http://127.0.0.1:20131/v1";
 
 // Every top-level `model:` key in the document (mapping head OR scalar line).
 const modelKeys = (yaml) => yaml.match(/^model:/gm) || [];
@@ -247,8 +247,8 @@ describe("hermes config.yaml helpers", () => {
 
   describe("keyrouter detection", () => {
     it("recognises a local keyrouter endpoint", () => {
-      expect(hasKeyRouterConfig({ provider: "custom", base_url: "http://127.0.0.1:20128/v1" })).toBe(true);
-      expect(hasKeyRouterConfig({ provider: "custom", base_url: "http://localhost:20128/v1" })).toBe(true);
+      expect(hasKeyRouterConfig({ provider: "custom", base_url: "http://127.0.0.1:20131/v1" })).toBe(true);
+      expect(hasKeyRouterConfig({ provider: "custom", base_url: "http://localhost:20131/v1" })).toBe(true);
     });
 
     it("rejects other providers or endpoints", () => {

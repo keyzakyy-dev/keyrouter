@@ -24,7 +24,7 @@ describe("mimo login proxy security", () => {
         "set-cookie": "userId=123; Path=/", // plain object header: visible via getSetCookie
       },
     });
-    const out = await buildBrowserResponse({ jar: new Map() }, upstream, "http://localhost:20128", "/pass/");
+    const out = await buildBrowserResponse({ jar: new Map() }, upstream, "http://localhost:20131", "/pass/");
     expect(out.headers.getSetCookie()).toEqual([]);
   });
 
@@ -33,7 +33,7 @@ describe("mimo login proxy security", () => {
       status: 200,
       headers: { "content-type": "text/html" },
     });
-    const out = await buildBrowserResponse({ jar: new Map() }, upstream, "http://localhost:20128", "/fe/");
+    const out = await buildBrowserResponse({ jar: new Map() }, upstream, "http://localhost:20131", "/fe/");
     expect(out.status).toBe(200);
     expect(out.headers.get("content-type")).toBe("text/html");
   });

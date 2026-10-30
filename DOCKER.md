@@ -10,14 +10,14 @@ Run KeyRouter in a container. Published image: [`keyzakyy-dev/keyrouter`](https:
 
 ```bash
 docker run -d \
-  -p 20128:20128 \
+  -p 20131:20131 \
   -v "$HOME/.keyrouter:/app/data" \
   -e DATA_DIR=/app/data \
   --name keyrouter \
   keyzakyy-dev/keyrouter:latest
 ```
 
-App listens on port `20128`. Open: http://localhost:20128
+App listens on port `20131`. Open: http://localhost:20131
 
 ## Manage container
 
@@ -54,10 +54,10 @@ Container path: `/app/data/db/data.sqlite`
 
 ```bash
 docker run -d \
-  -p 20128:20128 \
+  -p 20131:20131 \
   -v "$HOME/.keyrouter:/app/data" \
   -e DATA_DIR=/app/data \
-  -e PORT=20128 \
+  -e PORT=20131 \
   -e HOSTNAME=0.0.0.0 \
   -e DEBUG=true \
   --name keyrouter \
@@ -73,7 +73,7 @@ services:
   keyrouter:
     image: keyzakyy-dev/keyrouter:latest
     ports:
-      - "20128:20128"
+      - "20131:20131"
     volumes:
       - "$HOME/.keyrouter:/app/data"
     environment:
@@ -115,7 +115,7 @@ docker pull keyzakyy-dev/keyrouter:0.5.81
 ```bash
 docker build -t keyrouter .
 
-docker run --rm -p 20128:20128 \
+docker run --rm -p 20131:20131 \
   -v "$HOME/.keyrouter:/app/data" \
   -e DATA_DIR=/app/data \
   keyrouter
