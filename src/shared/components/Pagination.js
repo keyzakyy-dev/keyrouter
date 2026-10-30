@@ -2,6 +2,7 @@
 
 import { cn } from "@/shared/utils/cn";
 import Button from "./Button";
+import Dropdown from "./Dropdown";
 
 export default function Pagination({
   currentPage,
@@ -55,22 +56,12 @@ export default function Pagination({
         {onPageSizeChange && (
           <div className="flex items-center gap-2">
             <span className="text-sm text-text-muted">Rows:</span>
-            <select
+            <Dropdown
               value={pageSize}
-              onChange={(e) => onPageSizeChange(Number(e.target.value))}
-              className={cn(
-                "h-9 rounded-lg border border-black/10 dark:border-white/10 bg-surface",
-                "text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-primary/20",
-                "cursor-pointer"
-              )}
-              style={{ colorScheme: 'auto' }}
-            >
-              {[10, 20, 50].map((size) => (
-                <option key={size} value={size}>
-                  {size}
-                </option>
-              ))}
-            </select>
+              onChange={(v) => onPageSizeChange(Number(v))}
+              options={[10, 20, 50].map((size) => ({ value: size, label: String(size) }))}
+              buttonClassName="h-9 min-w-[70px] py-1"
+            />
           </div>
         )}
 

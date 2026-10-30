@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Card } from "@/shared/components";
+import Dropdown from "@/shared/components/Dropdown";
 import { getProviderAlias, isCustomEmbeddingProvider } from "@/shared/constants/providers";
 import { getModelsByProviderId, getModelKind } from "@/shared/constants/models";
 import { useCopyToClipboard } from "@/shared/hooks/useCopyToClipboard";
@@ -118,15 +119,13 @@ export function EmbeddingExampleCard({ providerId, customAlias }) {
               className="w-full px-3 py-1.5 text-sm border border-border rounded-lg bg-background focus:outline-none focus:border-primary font-mono"
             />
           ) : (
-            <select
+            <Dropdown
               value={selectedModel}
-              onChange={(e) => setSelectedModel(e.target.value)}
-              className="w-full px-3 py-1.5 text-sm border border-border rounded-lg bg-background focus:outline-none focus:border-primary"
-            >
-              {embeddingModels.map((m) => (
-                <option key={m.id} value={m.id}>{m.name || m.id}</option>
-              ))}
-            </select>
+              onChange={setSelectedModel}
+              options={embeddingModels.map((m) => ({ value: m.id, label: m.name || m.id }))}
+              buttonClassName="w-full px-3 py-1.5 rounded-lg"
+              className="w-full"
+            />
           )}
         </Row>
 

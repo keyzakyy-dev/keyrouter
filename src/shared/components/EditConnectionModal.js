@@ -296,7 +296,7 @@ export default function EditConnectionModal({ isOpen, connection, proxyPools, on
             <h3 className="font-semibold mb-3 text-sm">AWS Bedrock Credentials</h3>
             <div className="flex flex-col gap-3">
               <Input
-                label="AWS Profile (SSO — recommended)"
+                label="AWS Profile (SSO - recommended)"
                 value={awsData.profile}
                 onChange={(e) => setAwsData({ ...awsData, profile: e.target.value })}
                 placeholder="my-sso-profile"

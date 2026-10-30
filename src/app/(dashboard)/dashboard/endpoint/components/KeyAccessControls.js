@@ -44,10 +44,10 @@ export default function KeyAccessControls({ apiKey, onChange, onRequestRestrict 
       {access.restricted && (
         <div className="mt-2 flex flex-wrap items-center gap-1.5">
           {access.allow.length === 0 && (
-            <span className="text-xs text-warning">No combos or models allowed — this key can call nothing.</span>
+            <span className="text-xs text-warning">No combos or models allowed - this key can call nothing.</span>
           )}
           {access.allow.map((entry) => (
-            <span key={entry} className="flex items-center gap-1 rounded-xl border border-primary/30 bg-primary/10 px-2 py-0.5 font-mono text-xs text-text-main">
+            <span key={entry} className="flex items-center gap-1 rounded-[4px] border border-border bg-surface-2 px-2 py-0.5 font-mono text-xs text-text-main">
               {entry}
               <button
                 onClick={() => remove(entry)}
@@ -61,7 +61,7 @@ export default function KeyAccessControls({ apiKey, onChange, onRequestRestrict 
           ))}
           <button
             onClick={openPicker}
-            className="flex items-center gap-0.5 rounded-xl border border-dashed border-black/10 px-2 py-0.5 text-xs font-medium text-primary hover:border-primary/50 dark:border-white/10"
+            className="flex items-center gap-0.5 rounded-[4px] border border-dashed border-text-subtle px-2 py-0.5 text-xs font-medium text-text-muted hover:border-text-main hover:text-text-main"
           >
             <span className="material-symbols-outlined leading-none" style={{ fontSize: "14px" }}>add</span>
             Add combo or model

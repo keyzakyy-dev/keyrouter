@@ -7,6 +7,8 @@ import {
   Handle,
   Position,
   Controls,
+  Background,
+  BackgroundVariant,
   BaseEdge,
   getBezierPath,
 } from "@xyflow/react";
@@ -36,11 +38,11 @@ function ProviderNode({ data }) {
   const [imgError, setImgError] = useState(false);
   return (
     <div
-      className="flex items-center gap-2.5 px-4 py-2.5 rounded-lg border-2 transition-all duration-300 bg-bg"
+      className="flex items-center gap-2 px-3 py-2 rounded-lg border-2 transition-all duration-300 bg-bg"
       style={{
-        borderColor: active ? color : "var(--color-border)",
-        boxShadow: active ? `0 0 16px ${color}40` : "none",
-        minWidth: "150px",
+        borderColor: active ? "var(--color-primary)" : "var(--color-border)",
+        boxShadow: active ? "0 0 0 3px color-mix(in srgb, var(--color-primary) 15%, transparent)" : "none",
+        minWidth: "132px",
       }}
     >
       <Handle type="target" position={Position.Top} id="top" className="!bg-transparent !border-0 !w-0 !h-0" />
@@ -49,15 +51,12 @@ function ProviderNode({ data }) {
       <Handle type="target" position={Position.Right} id="right" className="!bg-transparent !border-0 !w-0 !h-0" />
 
       {/* Provider icon */}
-      <div
-        className="w-8 h-8 rounded-md flex items-center justify-center shrink-0"
-        style={{ backgroundColor: `${color}15` }}
-      >
+      <div className="grid size-8 shrink-0 place-items-center rounded-md bg-surface-2">
         {imageUrl && !imgError ? (
           <img
             src={imageUrl}
             alt={label}
-            className="w-6 h-6 rounded-sm object-contain"
+            className="size-5 rounded-sm object-contain"
             loading="lazy"
             decoding="async"
             onError={() => {
@@ -67,14 +66,13 @@ function ProviderNode({ data }) {
             }}
           />
         ) : (
-          <span className="text-sm font-bold" style={{ color }}>{textIcon}</span>
+          <span className="text-xs font-bold" style={{ color }}>{textIcon}</span>
         )}
       </div>
 
       {/* Provider name */}
       <span
-        className="text-base font-medium truncate"
-        style={{ color: active ? color : "var(--color-text)" }}
+        className={`truncate font-display text-[13px] font-medium ${active ? "text-text-main" : "text-text-muted"}`}
       >
         {label}
       </span>
@@ -82,8 +80,8 @@ function ProviderNode({ data }) {
       {/* Active indicator */}
       {active && (
         <span className="relative flex h-2 w-2 shrink-0">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style={{ backgroundColor: color }} />
-          <span className="relative inline-flex rounded-full h-2 w-2" style={{ backgroundColor: color }} />
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-primary" />
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
         </span>
       )}
     </div>
@@ -101,8 +99,8 @@ function RouterNode({ data }) {
     <div
       className={`relative z-[1] flex items-center justify-center px-5 py-3 rounded-xl border-2 min-w-[130px] ${
         powering
-          ? "topology-router-core border-yellow-300 bg-gradient-to-br from-primary/30 via-yellow-400/20 to-cyan-400/25"
-          : "border-primary bg-primary/5 shadow-md"
+          ? "border-primary bg-primary/5"
+          : "border-border bg-surface"
       }`}
     >
       <Handle type="source" position={Position.Top} id="top" className="!bg-transparent !border-0 !w-0 !h-0" />
@@ -110,18 +108,16 @@ function RouterNode({ data }) {
       <Handle type="source" position={Position.Left} id="left" className="!bg-transparent !border-0 !w-0 !h-0" />
       <Handle type="source" position={Position.Right} id="right" className="!bg-transparent !border-0 !w-0 !h-0" />
 
-      <img
-        src="/favicon.svg"
-        alt="KeyRouter"
-        className={`w-6 h-6 mr-2 ${powering ? "topology-router-icon" : ""}`}
-        loading="lazy"
-        decoding="async"
-      />
-      <span className={`text-sm font-bold ${powering ? "topology-router-label text-yellow-300" : "text-primary"}`}>
+      <div
+        className={`mr-2 grid size-7 shrink-0 place-items-center rounded-lg bg-gradient-to-br from-brand-500 to-brand-700 text-white ${powering ? "topology-router-icon" : ""}`}
+      >
+        <span className="material-symbols-outlined text-[16px]">route</span>
+      </div>
+      <span className={`font-display text-sm font-bold ${powering ? "text-text-main" : "text-text-muted"}`}>
         KeyRouter
       </span>
       {data.activeCount > 0 && (
-        <span className="ml-2 px-1.5 py-0.5 rounded-full bg-yellow-400 text-black text-xs font-bold topology-router-badge">
+        <span className="ml-2 rounded-full bg-primary px-2 py-0.5 font-mono text-[10px] font-bold text-white">
           {data.activeCount}
         </span>
       )}
@@ -197,7 +193,7 @@ function TopologyEdge({
       <BaseEdge
         id={id}
         path={edgePath}
-        style={{ stroke: "#f8fafc", strokeWidth: 2.2, opacity: 1 }}
+        style={{ stroke: "var(--color-topo-core)", strokeWidth: 2.2, opacity: 1 }}
         className="topology-edge-kame"
       />
       {/* Energy orbs */}
@@ -305,7 +301,7 @@ function buildLayout(providers, activeSet, lastSet, errorSet) {
     const error = !active && errorSet.has(p.provider?.toLowerCase());
     const nodeId = `provider-${p.provider}`;
     const data = {
-      label: (config.name !== p.provider ? config.name : null) || p.nodeName || p.name || p.provider,
+      label: (config.name !== p.provider ? config.name : null) || p.nodePrefix || p.nodeName || p.name || p.provider,
       color: config.color || "#6b7280",
       imageUrl: getProviderImageUrl(p.provider),
       textIcon: config.textIcon || (p.provider || "?").slice(0, 2).toUpperCase(),
@@ -411,7 +407,7 @@ export default function ProviderTopology({ providers = [], activeRequests = [], 
 
   const rfInstance = useRef(null);
   const containerRef = useRef(null);
-  const fitOpts = { padding: 0.2, duration: 200 };
+  const fitOpts = { padding: 0.9, duration: 200 };
   const onInit = useCallback((instance) => {
     rfInstance.current = instance;
     setTimeout(() => instance.fitView(fitOpts), 50);
@@ -437,7 +433,7 @@ export default function ProviderTopology({ providers = [], activeRequests = [], 
   }, [nodes.length]);
 
   return (
-    <div ref={containerRef} className="h-[320px] w-full min-w-0 rounded-lg border border-border bg-bg-subtle/30 sm:h-[480px]">
+    <div ref={containerRef} className="h-[320px] w-full min-w-0 rounded-lg border border-border bg-[var(--color-topo-frame)] sm:h-[480px]">
       {providers.length === 0 ? (
         <div className="h-full flex items-center justify-center text-text-muted text-sm">
           No providers connected
@@ -464,6 +460,7 @@ export default function ProviderTopology({ providers = [], activeRequests = [], 
           nodesConnectable={false}
           elementsSelectable={false}
         >
+          <Background variant={BackgroundVariant.Dots} gap={20} size={1.5} color="#c4c4ce" />
           <Controls showInteractive={false} className="react-flow-controls-custom" />
         </ReactFlow>
       )}
@@ -476,6 +473,7 @@ ProviderTopology.propTypes = {
     id: PropTypes.string,
     provider: PropTypes.string,
     name: PropTypes.string,
+    nodePrefix: PropTypes.string,
   })),
   activeRequests: PropTypes.arrayOf(PropTypes.shape({
     provider: PropTypes.string,

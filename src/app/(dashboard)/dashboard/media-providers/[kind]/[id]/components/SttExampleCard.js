@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Card } from "@/shared/components";
+import Dropdown from "@/shared/components/Dropdown";
 import { getProviderAlias } from "@/shared/constants/providers";
 import { getModelKind } from "@/shared/constants/models";
 import { getModelsByProviderId } from "@/shared/constants/models";
@@ -129,15 +130,13 @@ export function SttExampleCard({ providerId }) {
         {/* Model */}
         {sttModels.length > 0 ? (
           <Row label="Model">
-            <select
+            <Dropdown
               value={selectedModel}
-              onChange={(e) => setSelectedModel(e.target.value)}
-              className="w-full px-3 py-1.5 text-sm border border-border rounded-lg bg-background focus:outline-none focus:border-primary"
-            >
-              {sttModels.map((m) => (
-                <option key={m.id} value={m.id}>{m.name || m.id}</option>
-              ))}
-            </select>
+              onChange={setSelectedModel}
+              options={sttModels.map((m) => ({ value: m.id, label: m.name || m.id }))}
+              buttonClassName="w-full px-3 py-1.5 rounded-lg"
+              className="w-full"
+            />
           </Row>
         ) : (
           <Row label="Model">
@@ -238,29 +237,31 @@ export function SttExampleCard({ providerId }) {
         {/* Response format (if model supports) */}
         {allowedParams.includes("response_format") && (
           <Row label="Response Format">
-            <select
+            <Dropdown
               value={responseFormat}
-              onChange={(e) => setResponseFormat(e.target.value)}
-              className="w-full px-3 py-1.5 text-sm border border-border rounded-lg bg-background focus:outline-none focus:border-primary"
-            >
-              {responseFormats.map((format) => <option key={format} value={format}>{format}</option>)}
-            </select>
+              onChange={setResponseFormat}
+              options={responseFormats.map((format) => ({ value: format, label: format }))}
+              buttonClassName="w-full px-3 py-1.5 rounded-lg"
+              className="w-full"
+            />
           </Row>
         )}
 
         {/* Scribe-style extras — shown only when the model declares the param */}
         {allowedParams.includes("timestamps_granularity") && (
           <Row label="Timestamps">
-            <select
+            <Dropdown
               value={granularity}
-              onChange={(e) => setGranularity(e.target.value)}
-              className="w-full px-3 py-1.5 text-sm border border-border rounded-lg bg-background focus:outline-none focus:border-primary"
-            >
-              <option value="">provider default</option>
-              <option value="word">word</option>
-              <option value="character">character</option>
-              <option value="none">none</option>
-            </select>
+              onChange={setGranularity}
+              options={[
+                { value: "", label: "provider default" },
+                { value: "word", label: "word" },
+                { value: "character", label: "character" },
+                { value: "none", label: "none" },
+              ]}
+              buttonClassName="w-full px-3 py-1.5 rounded-lg"
+              className="w-full"
+            />
           </Row>
         )}
 

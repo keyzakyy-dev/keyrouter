@@ -9,7 +9,7 @@
 
   [![npm](https://img.shields.io/npm/v/keyrouter.svg)](https://www.npmjs.com/package/keyrouter)
   [![Downloads](https://img.shields.io/npm/dm/keyrouter.svg)](https://www.npmjs.com/package/keyrouter)
-  [![License](https://img.shields.io/npm/l/keyrouter.svg)](https://github.com/decolua/keyrouter/blob/main/LICENSE)
+  [![License](https://img.shields.io/npm/l/keyrouter.svg)](https://github.com/keyzakyy-dev/keyrouter/blob/main/LICENSE)
 
   [🚀 Mulai Cepat](#-mulai-cepat) • [💡 Fitur](#-fitur-utama) • [📖 Setup](#-panduan-setup) • [🌐 Website](https://keyrouter.com)
 
@@ -876,7 +876,7 @@ docker run -d \
   -v keyrouter-data:/app/data \
   -e PORT=20128 \
   -e BASE_URL=http://localhost:20128 \
-  ghcr.io/decolua/keyrouter:latest
+  ghcr.io/keyzakyy-dev/keyrouter:latest
 ```
 
 Dashboard: `http://localhost:20128/dashboard`
@@ -938,14 +938,14 @@ Kontribusi sangat diterima!
 
 ## 📄 Lisensi
 
-MIT License — lihat [LICENSE](https://github.com/decolua/keyrouter/blob/main/LICENSE) untuk detailnya.
+MIT License — lihat [LICENSE](https://github.com/keyzakyy-dev/keyrouter/blob/main/LICENSE) untuk detailnya.
 
 ---
 
 <div align="center">
 
-**Kalau KeyRouter membantumu, kasih ⭐ di [GitHub](https://github.com/decolua/keyrouter)!**
+**Kalau KeyRouter membantumu, kasih ⭐ di [GitHub](https://github.com/keyzakyy-dev/keyrouter)!**
 
-[🌐 Website](https://keyrouter.com) • [📦 npm](https://www.npmjs.com/package/keyrouter) • [🐛 Laporkan Bug](https://github.com/decolua/keyrouter/issues)
+[🌐 Website](https://keyrouter.com) • [📦 npm](https://www.npmjs.com/package/keyrouter) • [🐛 Laporkan Bug](https://github.com/keyzakyy-dev/keyrouter/issues)
 
 </div>

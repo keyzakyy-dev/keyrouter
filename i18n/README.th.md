@@ -15,7 +15,7 @@
   
   [![npm](https://img.shields.io/npm/v/keyrouter.svg)](https://www.npmjs.com/package/keyrouter)
   [![Downloads](https://img.shields.io/npm/dm/keyrouter.svg)](https://www.npmjs.com/package/keyrouter)
-  [![License](https://img.shields.io/npm/l/keyrouter.svg)](https://github.com/decolua/keyrouter/blob/main/LICENSE)
+  [![License](https://img.shields.io/npm/l/keyrouter.svg)](https://github.com/keyzakyy-dev/keyrouter/blob/main/LICENSE)
   
   [🚀 เริ่มต้นใช้งาน](#-quick-start) • [💡 ฟีเจอร์](#-key-features) • [📖 การตั้งค่า](#-setup-guide) • [🌐 เว็บไซต์](https://keyrouter.com)
 </div>
@@ -699,8 +699,8 @@ Authorization: Bearer your-api-key
 ## 📧 สนับสนุน
 
 - **เว็บไซต์**: [keyrouter.com](https://keyrouter.com)
-- **GitHub**: [github.com/decolua/keyrouter](https://github.com/decolua/keyrouter)
-- **Issues**: [github.com/decolua/keyrouter/issues](https://github.com/decolua/keyrouter/issues)
+- **GitHub**: [github.com/keyzakyy-dev/keyrouter](https://github.com/keyzakyy-dev/keyrouter)
+- **Issues**: [github.com/keyzakyy-dev/keyrouter/issues](https://github.com/keyzakyy-dev/keyrouter/issues)
 
 ---
 
@@ -708,7 +708,7 @@ Authorization: Bearer your-api-key
 
 ขอขอบคุณผู้มีส่วนร่วมทุกคนที่ช่วยทำให้ KeyRouter ดียิ่งขึ้น!
 
-[![Contributors](https://contrib.rocks/image?repo=decolua/keyrouter&max=150&columns=15&anon=1)](https://github.com/decolua/keyrouter/graphs/contributors)
+[![Contributors](https://contrib.rocks/image?repo=keyzakyy-dev/keyrouter&max=150&columns=15&anon=1)](https://github.com/keyzakyy-dev/keyrouter/graphs/contributors)
 
 ---
 

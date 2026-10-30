@@ -25,6 +25,7 @@ import { takeRenamedToolNames } from "../utils/opencodeFingerprint.js";
 import { injectCaveman } from "../rtk/caveman.js";
 import { injectPonytail } from "../rtk/ponytail.js";
 import { injectCustomPrompt } from "../rtk/customPrompt.js";
+import { injectSystemPrompt, injectChatTurns } from "../rtk/systemInject.js";
 import { compressMessages, formatRtkLog } from "../rtk/index.js";
 import { compressWithHeadroom, formatHeadroomLog, formatHeadroomSizeLog, isHeadroomPhantomSavings } from "../rtk/headroom.js";
 import { compressWithPxpipe } from "../rtk/pxpipe.js";
@@ -61,7 +62,7 @@ export function stripContinuityFields(body) {
   return body;
 }
 
-export async function handleChatCore({ body, modelInfo, credentials, log, onCredentialsRefreshed, onRequestSuccess, onDisconnect, clientRawRequest, connectionId, userAgent, apiKey, ccFilterNaming, rtkEnabled, headroomEnabled, headroomUrl, headroomCompressUserMessages, headroomTimeoutMs, cavemanEnabled, cavemanLevel, ponytailEnabled, ponytailLevel, customPromptEnabled, customPrompt, pxpipeEnabled, pxpipeMinChars, pxpipeTimeoutMs, pxpipeTransform, onPxpipeEvent, sourceFormatOverride, providerThinking, providerOverrides }) {
+export async function handleChatCore({ body, modelInfo, credentials, log, onCredentialsRefreshed, onRequestSuccess, onDisconnect, clientRawRequest, connectionId, userAgent, apiKey, ccFilterNaming, rtkEnabled, headroomEnabled, headroomUrl, headroomCompressUserMessages, headroomTimeoutMs, cavemanEnabled, cavemanLevel, ponytailEnabled, ponytailLevel, customPromptEnabled, customPrompt, promptInjects, pxpipeEnabled, pxpipeMinChars, pxpipeTimeoutMs, pxpipeTransform, onPxpipeEvent, sourceFormatOverride, providerThinking, providerOverrides }) {
   const { provider, model } = modelInfo;
   const requestStartTime = Date.now();
   // Stable per-session color so all lines of one CLI conversation share a tag
@@ -313,6 +314,26 @@ export async function handleChatCore({ body, modelInfo, credentials, log, onCred
   // Custom prompt: user-authored instruction, independent of the savers above
   if (customPromptEnabled && injectCustomPrompt(translatedBody, finalFormat, customPrompt)) {
     xf.push(`CUSTOMPROMPT:${customPrompt.trim().length}c`);
+  }
+
+  // Prompt Injection: injections resolved by the caller (global → key →
+  // model → model+key). "single" entries are grouped into one injector pass
+  // per position; "chat" entries inject scripted turns as fake history.
+  // Fail-open: an injection must never break a chat.
+  if (Array.isArray(promptInjects) && promptInjects.length) {
+    try {
+      const singles = promptInjects.filter((p) => p && p.mode !== "chat");
+      const chats = promptInjects.filter((p) => p && p.mode === "chat" && Array.isArray(p.turns) && p.turns.length);
+      const prepends = singles.filter((p) => p.position === "prepend");
+      const appends = singles.filter((p) => p.position !== "prepend");
+      if (prepends.length) injectSystemPrompt(translatedBody, finalFormat, prepends.map((p) => p.text).join("\n\n"), "prepend");
+      if (appends.length) injectSystemPrompt(translatedBody, finalFormat, appends.map((p) => p.text).join("\n\n"), "append");
+      if (prepends.length || appends.length) xf.push(`prompt injected: ${singles.map((p) => p.name || "?").join(" + ")}`);
+      if (chats.length) {
+        injectChatTurns(translatedBody, finalFormat, chats.flatMap((p) => p.turns));
+        xf.push(`chat turns injected: ${chats.map((p) => p.name || "?").join(" + ")}`);
+      }
+    } catch { /* fail-open: injection must never break chat */ }
   }
 
   // PXPIPE: image bulky context (Claude-format bodies only), last saver before dispatch

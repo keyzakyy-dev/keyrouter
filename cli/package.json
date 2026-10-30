@@ -1,6 +1,6 @@
 {
   "name": "keyrouter",
-  "version": "0.5.112",
+  "version": "1.0.0",
   "description": "KeyRouter CLI - Start and manage KeyRouter server",
   "bin": {
     "keyrouter": "./cli.js"
@@ -47,5 +47,8 @@
   "devDependencies": {
     "esbuild": "^0.25.12",
     "nodemon": "^3.1.14"
+  },
+  "allowScripts": {
+    "esbuild@0.25.12": true
   }
 }

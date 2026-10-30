@@ -17,5 +17,12 @@ export {
   getCustomModels, addCustomModel, deleteCustomModel,
   getMitmAlias, setMitmAliasAll,
   getPricing, getPricingForModel, updatePricing, resetPricing, resetAllPricing,
+  getInjectGlobal, setInjectGlobal,
+  getInjectUserPrompts, setInjectUserPrompt, deleteInjectUserPrompt,
+  getInjectModelPrompts, setInjectModelPrompt, deleteInjectModelPrompt,
+  getInjectKeyModelPrompts, setInjectKeyModelPrompt, deleteInjectKeyModelPrompt,
+  getInjectVariants, setInjectVariant, deleteInjectVariant, migrateModelPromptsToVariants,
+  getPromptTemplates, upsertPromptTemplate, deletePromptTemplate,
+  resolvePromptInjections,
   exportDb, importDb,
 } from "@/lib/db/index.js";

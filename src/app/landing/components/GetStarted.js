@@ -21,7 +21,7 @@ export default function GetStarted() {
             
             <div className="flex flex-col gap-6">
               <div className="flex gap-4">
-                <div className="flex-none w-8 h-8 rounded-full bg-[#6366f1]/20 text-[#6366f1] flex items-center justify-center font-bold">1</div>
+                <div className="flex-none w-8 h-8 rounded-full bg-white/10 text-white flex items-center justify-center font-bold">1</div>
                 <div>
                   <h4 className="font-bold text-lg">Install KeyRouter</h4>
                   <p className="text-sm text-gray-500 mt-1">Run npx command to start the server instantly</p>
@@ -29,7 +29,7 @@ export default function GetStarted() {
               </div>
               
               <div className="flex gap-4">
-                <div className="flex-none w-8 h-8 rounded-full bg-[#6366f1]/20 text-[#6366f1] flex items-center justify-center font-bold">2</div>
+                <div className="flex-none w-8 h-8 rounded-full bg-white/10 text-white flex items-center justify-center font-bold">2</div>
                 <div>
                   <h4 className="font-bold text-lg">Open Dashboard</h4>
                   <p className="text-sm text-gray-500 mt-1">Configure providers and API keys via web interface</p>
@@ -37,7 +37,7 @@ export default function GetStarted() {
               </div>
               
               <div className="flex gap-4">
-                <div className="flex-none w-8 h-8 rounded-full bg-[#6366f1]/20 text-[#6366f1] flex items-center justify-center font-bold">3</div>
+                <div className="flex-none w-8 h-8 rounded-full bg-white/10 text-white flex items-center justify-center font-bold">3</div>
                 <div>
                   <h4 className="font-bold text-lg">Route Requests</h4>
                   <p className="text-sm text-gray-500 mt-1">Point your CLI tools to http://localhost:20128</p>
@@ -71,9 +71,9 @@ export default function GetStarted() {
                 </div>
                 
                 <div className="text-gray-400 mb-6">
-                  <span className="text-[#6366f1]">&gt;</span> Starting KeyRouter...<br/>
-                  <span className="text-[#6366f1]">&gt;</span> Server running on <span className="text-blue-400">http://localhost:20128</span><br/>
-                  <span className="text-[#6366f1]">&gt;</span> Dashboard: <span className="text-blue-400">http://localhost:20128/dashboard</span><br/>
+                  <span className="text-white">&gt;</span> Starting KeyRouter...<br/>
+                  <span className="text-white">&gt;</span> Server running on <span className="text-blue-400">http://localhost:20128</span><br/>
+                  <span className="text-white">&gt;</span> Dashboard: <span className="text-blue-400">http://localhost:20128/dashboard</span><br/>
                   <span className="text-green-400">&gt;</span> Ready to route! ✓
                 </div>
                 

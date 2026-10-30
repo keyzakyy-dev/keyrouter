@@ -57,7 +57,7 @@ export default function MediaProviderDetailPage() {
 
   // For custom embedding nodes, build a synthetic provider object
   const provider = isCustom
-    ? (customNode ? { id, name: customNode.name || "Custom Embedding", color: "#6366F1", textIcon: "CE" } : null)
+    ? (customNode ? { id, name: customNode.name || "Custom Embedding", color: "#525252", textIcon: "CE" } : null)
     : builtInProvider;
 
   if (!isCustom && !builtInProvider) return notFound();

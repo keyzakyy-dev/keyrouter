@@ -143,7 +143,7 @@ export default function WebLoginButton({ providerId, onConnected, size = "sm" })
         return;
       }
       setPhase("waiting");
-      setMessage(translate("A browser window has opened — log in there, this page updates itself."));
+      setMessage(translate("A browser window has opened - log in there, this page updates itself."));
       poll();
     } catch (error) {
       setPhase("error");
@@ -180,7 +180,7 @@ export default function WebLoginButton({ providerId, onConnected, size = "sm" })
           setMessage("");
           setOpen(true);
         }}
-        title={translate("Open a browser window, log in by hand — the cookie is captured automatically")}
+        title={translate("Open a browser window, log in by hand - the cookie is captured automatically")}
       >
         {phase === "success" ? translate("Connected") : translate("Login via Browser")}
       </Button>
@@ -189,7 +189,7 @@ export default function WebLoginButton({ providerId, onConnected, size = "sm" })
         <div className="flex flex-col gap-4">
           <p className="text-xs text-text-muted">
             {translate(
-              "A Chrome window opens on a shared browser profile. Log in there — the session is captured automatically. One Google login in a profile makes every other provider a single “Continue with Google” click."
+              "A Chrome window opens on a shared browser profile. Log in there - the session is captured automatically. One Google login in a profile makes every other provider a single “Continue with Google” click."
             )}
           </p>
 

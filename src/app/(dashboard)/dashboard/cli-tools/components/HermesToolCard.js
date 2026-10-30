@@ -275,7 +275,7 @@ export default function HermesToolCard({
         if (skipped.length === 0) {
           setMessage({ type: "success", text: `Endpoint and API key applied to ${data.updated} profile(s).` });
         } else {
-          const detail = skipped.map((r) => `${r.profile} — ${r.reason || r.status}`).join("; ");
+          const detail = skipped.map((r) => `${r.profile} - ${r.reason || r.status}`).join("; ");
           setMessage({
             type: data.updated > 0 ? "success" : "error",
             text: `Updated ${data.updated} profile(s), skipped ${skipped.length}: ${detail}`,
@@ -431,7 +431,7 @@ export default function HermesToolCard({
                         <button
                           key={p.name}
                           onClick={() => selectProfile(p.name)}
-                          title={p.isDefault ? `Default profile — ${STATUS_LABEL[status]}` : `${p.command} — ${STATUS_LABEL[status]}`}
+                          title={p.isDefault ? `Default profile - ${STATUS_LABEL[status]}` : `${p.command} - ${STATUS_LABEL[status]}`}
                           className={`flex items-center gap-1.5 px-2 py-1 rounded border text-xs transition-colors ${
                             active
                               ? "border-primary bg-primary/10 text-primary cursor-pointer"
@@ -463,7 +463,7 @@ export default function HermesToolCard({
                         {copiedCommand === (profiles.find((p) => p.name === activeProfile)?.command || "hermes") ? "check" : "content_copy"}
                       </span>
                     </button>
-                    <span className="hidden sm:inline">— every profile runs as its own agent with its own model.</span>
+                    <span className="hidden sm:inline">- every profile runs as its own agent with its own model.</span>
                   </div>
                 </div>
               )}
@@ -513,7 +513,7 @@ export default function HermesToolCard({
                 <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-[8rem_auto_1fr_auto] sm:items-center sm:gap-2">
                   <span className="text-xs font-semibold text-text-main sm:text-right sm:text-sm">Audio STT</span>
                   <span className="material-symbols-outlined hidden text-text-muted text-[14px] sm:inline">arrow_forward</span>
-                  <label className="flex items-center gap-2 text-xs text-text-muted cursor-pointer" title="Route Hermes voice & audio transcription through keyrouter's /v1/audio/transcriptions — usage is tracked on this instance">
+                  <label className="flex items-center gap-2 text-xs text-text-muted cursor-pointer" title="Route Hermes voice & audio transcription through keyrouter's /v1/audio/transcriptions - usage is tracked on this instance">
                     <input type="checkbox" checked={audioEnabled} onChange={(e) => setAudioEnabled(e.target.checked)} className="w-3.5 h-3.5 accent-primary cursor-pointer shrink-0" />
                     <span>Transcribe voice &amp; audio via keyrouter (per-profile)</span>
                   </label>
@@ -618,7 +618,7 @@ export default function HermesToolCard({
           activeProviders={activeProviders}
           modelAliases={modelAliases}
           kindFilter={modalTarget === "stt" ? "stt" : undefined}
-          title={modalTarget === "stt" ? "Select STT Model — audio transcription via keyrouter" : `Select Model for Hermes Agent${modalTarget !== "default" ? ` — ${HERMES_ROLES.find((r) => r.id === modalTarget)?.label || modalTarget}` : ""}`}
+          title={modalTarget === "stt" ? "Select STT Model - audio transcription via keyrouter" : `Select Model for Hermes Agent${modalTarget !== "default" ? ` - ${HERMES_ROLES.find((r) => r.id === modalTarget)?.label || modalTarget}` : ""}`}
         />
       )}
 

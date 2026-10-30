@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Dropdown from "@/shared/components/Dropdown";
 import { readKeyPresets, upsertKeyPreset, deleteKeyPreset, subscribeKeyPresets } from "./cliEndpointPresets";
 
 const CUSTOM_VALUE = "__custom__";
@@ -36,8 +37,7 @@ export default function ApiKeySelect({ value, onChange, apiKeys = [], cloudEnabl
   const canSave = isCustom && (value || "").trim().length > 0 && !apiKeys.some((k) => k.key === value);
   const noKeys = apiKeys.length === 0 && savedKeys.length === 0 && !customMode && !value;
 
-  const handleSelect = (e) => {
-    const next = e.target.value;
+  const handleSelect = (next) => {
     if (next === SAVE_VALUE) {
       upsertKeyPreset((value || "").trim());
       return;
@@ -81,16 +81,16 @@ export default function ApiKeySelect({ value, onChange, apiKeys = [], cloudEnabl
   return (
     <div className={`flex flex-col gap-1.5 ${className}`}>
       <div className="flex items-center gap-2">
-        <select
+        <Dropdown
           value={mode}
           onChange={handleSelect}
-          className="flex-1 min-w-0 px-2 py-2 bg-surface rounded text-xs border border-border focus:outline-none focus:ring-1 focus:ring-primary/50 sm:py-1.5"
-        >
-          {options.map((o) => (
-            <option key={o.value} value={o.value}>{o.label}</option>
-          ))}
-          {canSave && <option value={SAVE_VALUE}>+ Save current as...</option>}
-        </select>
+          options={[
+            ...options.map((o) => ({ value: o.value, label: o.label })),
+            ...(canSave ? [{ value: SAVE_VALUE, label: "+ Save current as..." }] : []),
+          ]}
+          buttonClassName="flex-1 min-w-0 px-2 py-2 rounded text-xs sm:py-1.5"
+          className="flex-1 min-w-0"
+        />
         {isSaved && (
           <button type="button" onClick={handleDeleteSaved} className="p-1 text-text-muted hover:text-red-500 rounded transition-colors shrink-0" title="Delete saved key">
             <span className="material-symbols-outlined text-[14px]">delete</span>

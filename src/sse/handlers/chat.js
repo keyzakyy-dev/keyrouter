@@ -8,7 +8,7 @@ import {
   isValidApiKey,
 } from "../services/auth.js";
 import { handleAntigravityQuotaError, clearAntigravityStrikes } from "../services/antigravityQuota.js";
-import { getSettings } from "@/lib/localDb";
+import { getSettings, getApiKeyByKey, resolvePromptInjections, getInjectVariants } from "@/lib/localDb";
 import { getModelInfo, getComboModels } from "../services/model.js";
 import { handleChatCore } from "open-sse/handlers/chatCore.js";
 import { DEFAULT_HEADROOM_URL } from "@/lib/headroom/detect";
@@ -190,7 +190,25 @@ export async function handleChat(request, clientRawRequest = null) {
 /**
  * Handle single model chat request
  */
-async function handleSingleModelChat(body, modelStr, clientRawRequest = null, request = null, apiKey = null, requestedModel = null) {
+async function handleSingleModelChat(body, modelStr, clientRawRequest = null, request = null, apiKey = null, requestedModel = null, injectModelName = null) {
+  // Direct variant pick: a bare name that names a variant routes straight to
+  // its backing model, with the variant name carried so its prompt fires.
+  // This covers both direct picks and combo members that name variants.
+  if (typeof modelStr === "string" && !modelStr.includes("/")) {
+    const directVariants = await getInjectVariants().catch(() => ({}));
+    const directVariant = directVariants[modelStr];
+    if (directVariant && typeof directVariant.model === "string" && directVariant.model.includes("/")) {
+      return handleSingleModelChat(
+        { ...body, model: directVariant.model },
+        directVariant.model,
+        clientRawRequest,
+        request,
+        apiKey,
+        requestedModel,
+        modelStr
+      );
+    }
+  }
   const modelInfo = await getModelInfo(modelStr);
 
   // If provider is null, this might be a combo name - check and handle
@@ -311,6 +329,17 @@ async function handleSingleModelChat(body, modelStr, clientRawRequest = null, re
     // Use shared chatCore
     const chatSettings = await getSettings();
     const providerThinking = (chatSettings.providerThinking || {})[provider] || null;
+    // Prompt Injection: global → the API key's → the model's (matched by
+    // the resolved provider/model, falling back to the requested name).
+    // Fail-open: resolvePromptInjections already swallows storage errors.
+    const injectKeyRecord = apiKey ? await getApiKeyByKey(apiKey).catch(() => null) : null;
+    const requestTarget = injectModelName || requestedModel || modelStr;
+    const promptInjects = await resolvePromptInjections({
+      apiKeyId: injectKeyRecord?.id || null,
+      requestedModel: requestTarget,
+      resolvedModel: `${provider}/${model}`,
+      bareModel: model,
+    });
     const result = await handleChatCore({
       body: { ...body, model: `${provider}/${model}` },
       modelInfo: { provider, model },
@@ -332,6 +361,7 @@ async function handleSingleModelChat(body, modelStr, clientRawRequest = null, re
       ponytailLevel: chatSettings.ponytailLevel || "full",
       customPromptEnabled: !!chatSettings.customPromptEnabled,
       customPrompt: chatSettings.customPrompt || "",
+      promptInjects,
       pxpipeEnabled: !!chatSettings.pxpipeEnabled,
       pxpipeMinChars: chatSettings.pxpipeMinChars,
       pxpipeTimeoutMs: chatSettings.pxpipeTimeoutMs,

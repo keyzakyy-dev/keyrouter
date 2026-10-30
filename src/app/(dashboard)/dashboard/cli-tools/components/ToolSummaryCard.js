@@ -6,32 +6,32 @@ import { Card } from "@/shared/components";
 
 // Derive simple connected/configured/not-installed status from API payload
 function getStatus(status, tool) {
-  if (tool?.configType === "guide") return { label: "Guide", cls: "bg-blue-500/10 text-blue-600 dark:text-blue-400" };
-  if (!status) return { label: "Unknown", cls: "bg-gray-500/10 text-gray-500" };
-  if (!status.installed) return { label: "Not installed", cls: "bg-gray-500/10 text-gray-500" };
-  if (status.hasKeyRouter) return { label: "Connected", cls: "bg-green-500/10 text-green-600 dark:text-green-400" };
-  return { label: "Not configured", cls: "bg-yellow-500/10 text-yellow-600 dark:text-yellow-400" };
+  if (tool?.configType === "guide") return { label: "Guide", cls: "bg-surface-2 text-text-muted" };
+  if (!status) return { label: "Unknown", cls: "bg-surface-2 text-text-muted" };
+  if (!status.installed) return { label: "Not installed", cls: "bg-surface-2 text-text-muted" };
+  if (status.hasKeyRouter) return { label: "Connected", cls: "bg-success/10 text-success" };
+  return { label: "Not configured", cls: "bg-warning/10 text-warning" };
 }
 
 export default function ToolSummaryCard({ toolId, tool, status }) {
   const s = getStatus(status, tool);
   return (
-    <Link href={`/dashboard/cli-tools/${toolId}`} className="block">
-      <Card padding="sm" className="h-full overflow-hidden hover:border-primary/50 transition-colors cursor-pointer">
+    <Link href={`/dashboard/cli-tools/${toolId}`} className="group block">
+      <Card padding="sm" className="h-full overflow-hidden transition-colors hover:bg-surface-2 cursor-pointer">
         <div className="flex h-full flex-col gap-2">
           <div className="flex items-center gap-3">
-            <div className="size-8 flex items-center justify-center shrink-0">
+            <div className="grid size-11 shrink-0 place-items-center rounded-lg bg-surface-2">
               {tool.image ? (
-                <Image src={tool.image} alt={tool.name} width={32} height={32} className="size-8 object-contain rounded-lg" sizes="32px" onError={(e) => { e.target.style.display = "none"; }} loading="lazy" decoding="async" />
+                <Image src={tool.image} alt={tool.name} width={24} height={24} className="size-6 object-contain" sizes="24px" onError={(e) => { e.target.style.display = "none"; }} loading="lazy" decoding="async" />
               ) : tool.icon ? (
-                <span className="material-symbols-outlined text-[28px]" style={{ color: tool.color }}>{tool.icon}</span>
+                <span className="material-symbols-outlined text-[22px]" style={{ color: tool.color }}>{tool.icon}</span>
               ) : null}
             </div>
             <div className="min-w-0 flex-1">
-              <h3 className="font-medium text-sm truncate">{tool.name}</h3>
-              <span className={`inline-block mt-1 px-1.5 py-0.5 text-[10px] font-medium rounded-full ${s.cls}`}>{s.label}</span>
+              <h3 className="truncate font-display text-[13px] font-medium text-text-main">{tool.name}</h3>
+              <span className={`mt-1 inline-block rounded-full px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider ${s.cls}`}>{s.label}</span>
             </div>
-            <span className="material-symbols-outlined text-text-muted text-[18px] shrink-0">chevron_right</span>
+            <span className="material-symbols-outlined text-text-subtle text-[18px] opacity-40 transition-opacity group-hover:opacity-100 shrink-0">chevron_right</span>
           </div>
         </div>
       </Card>

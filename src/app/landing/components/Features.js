@@ -18,11 +18,11 @@ const FEATURES = [
     title: "Easy Setup", 
     desc: "Get up and running in minutes with npx command.", 
     colors: {
-      border: "hover:border-brand-500/50",
-      bg: "hover:bg-brand-500/5",
-      iconBg: "bg-brand-500/10",
-      iconText: "text-brand-500",
-      titleHover: "group-hover:text-brand-400"
+      border: "hover:border-white/50",
+      bg: "hover:bg-white/5",
+      iconBg: "bg-white/10",
+      iconText: "text-white",
+      titleHover: "group-hover:text-[#d4d4d4]"
     }
   },
   { 

@@ -42,7 +42,7 @@ function scheduleFlush() {
 }
 
 function toLogLine(level, args) {
-  return args.map(formatArg).join(" ");
+  return { level, text: stripEmoji(args.map(formatArg).join(" ")) };
 }
 
 // Strip ANSI escape codes so terminal colors don't bleed into UI
@@ -50,6 +50,25 @@ const ANSI_RE = /\x1b\[[0-9;]*m/g;
 
 function stripAnsi(str) {
   return str.replace(ANSI_RE, "");
+}
+
+// Map meaningful emoji to clean typographic markers; strip the rest so log
+// lines stay readable in the UI. Runs after ANSI stripping at capture time.
+const EMOJI_MAP = {
+  "\u2705": "\u2713", // ✅ → ✓
+  "\u274C": "\u2716", // ❌ → ✖
+  "\u2717": "\u2716", // ✗ → ✖
+  "\u2716": "\u2716", // ✖ → ✖
+  "\u26A0\uFE0F": "!", // ⚠️ → !
+  "\u26A0": "!",     // ⚠ → !
+  "\u{1F4E5}": "\u2193", // 📥 → ↓
+  "\u{1F4E4}": "\u2191", // 📤 → ↑
+};
+
+function stripEmoji(str) {
+  // Match each emoji (with optional variation selector) once and replace inline,
+  // so the marker we substitute is not re-scanned and stripped again.
+  return str.replace(/\p{Extended_Pictographic}(?:\uFE0F)?/gu, (m) => EMOJI_MAP[m] || "");
 }
 
 function formatArg(arg) {

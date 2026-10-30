@@ -9,47 +9,47 @@
 
 /* ============================================================
    KeyRouter palette
-   Brand indigo (calm, clean) / cool neutral bases
+   Brand = pure black & white (monochrome)
    ============================================================ */
 :root {
-  /* Brand scale (light) - centered on #6366F1 */
-  --color-brand-50: #eef2ff;
-  --color-brand-100: #e0e7ff;
-  --color-brand-200: #c7d2fe;
-  --color-brand-300: #a5b4fc;
-  --color-brand-400: #818cf8;
-  --color-brand-500: #6366f1;
-  --color-brand-600: #4f46e5;
-  --color-brand-700: #4338ca;
-  --color-brand-800: #3730a3;
-  --color-brand-900: #312e81;
+  /* Brand scale (light) - monochrome near-black */
+  --color-brand-50: #fafafa;
+  --color-brand-100: #f5f5f5;
+  --color-brand-200: #e5e5e5;
+  --color-brand-300: #d4d4d4;
+  --color-brand-400: #a3a3a3;
+  --color-brand-500: #737373;
+  --color-brand-600: #525252;
+  --color-brand-700: #404040;
+  --color-brand-800: #262626;
+  --color-brand-900: #171717;
 
   /* Primary (legacy alias for backward compat with existing components) */
-  --color-primary: var(--color-brand-500);
-  --color-primary-hover: var(--color-brand-600);
+  --color-primary: var(--color-brand-800);
+  --color-primary-hover: var(--color-brand-900);
 
-  /* Surfaces & backgrounds (light - cool neutral) */
-  --color-bg: #fafafc;
-  --color-bg-alt: #f2f2f6;
-  --color-surface: #ffffff;
-  --color-surface-2: #f4f4f7;
-  --color-surface-3: #e8e8ee;
-  --color-sidebar: rgba(243, 243, 247, 0.85);
+  /* Surfaces & backgrounds (light - instrument paper) */
+  --color-bg: #f2f0e9;
+  --color-bg-alt: #ece9df;
+  --color-surface: #faf8f2;
+  --color-surface-2: #f4f1e9;
+  --color-surface-3: #ebe7db;
+  --color-sidebar: rgba(246, 244, 237, 0.85);
 
   /* Borders */
-  --color-border: #e3e3ea;
-  --color-border-subtle: #efeff4;
+  --color-border: #dcd7ca;
+  --color-border-subtle: #e7e3d7;
 
   /* Text */
-  --color-text: #0d0d14;
-  --color-text-main: #0d0d14;
-  --color-text-muted: #5f6272;
-  --color-text-subtle: #9599a8;
+  --color-text: #1a1a1a;
+  --color-text-main: #1a1a1a;
+  --color-text-muted: #5a564c;
+  --color-text-subtle: #8a857a;
 
   /* Status */
-  --color-danger: #dc2626;
-  --color-success: #16a34a;
-  --color-warning: #d97706;
+  --color-danger: #c92832;
+  --color-success: #15803d;
+  --color-warning: #b7791f;
   --color-info: #2563eb;
 
   /* Radius */
@@ -57,33 +57,38 @@
   --radius-brand-lg: 14px;
 
   /* Shadows */
-  --shadow-soft: 0 1px 2px 0 rgba(13,13,20,0.05);
-  --shadow-warm: 0 2px 12px -2px rgba(99, 102, 241, 0.16);
-  --shadow-elevated: 0 12px 28px -4px rgba(20, 20, 40, 0.08);
+  --shadow-soft: 0 1px 2px 0 rgba(26, 26, 26, 0.04);
+  --shadow-warm: 0 2px 14px -2px rgba(23, 23, 23, 0.14);
+  --shadow-elevated: 0 12px 28px -4px rgba(26, 26, 26, 0.08);
   --shadow-elev:
-    inset 0 1px 0 0 rgba(255,255,255,0.8),
-    0 1px 2px rgba(15,23,42,0.04),
-    0 12px 36px -8px rgba(15,23,42,0.10);
-  --shadow-focus: 0 0 0 3px rgba(99,102,241,0.18);
+    inset 0 1px 0 0 rgba(255,255,255,0.6),
+    0 1px 2px rgba(26,26,26,0.03),
+    0 12px 36px -8px rgba(26,26,26,0.09);
+  --shadow-focus: 0 0 0 3px rgba(23, 23, 23, 0.16);
+
+  /* Topology theming (light) */
+  --color-topo-core: #3f3f46;
+  --color-topo-frame: var(--color-surface);
+  --color-topo-router-active: #b45309;
 
   color-scheme: light;
 }
 
 .dark {
-  /* Brand scale (dark) - centered on #6366F1, same as light for consistency */
-  --color-brand-50: #eef2ff;
-  --color-brand-100: #e0e7ff;
-  --color-brand-200: #c7d2fe;
-  --color-brand-300: #a5b4fc;
-  --color-brand-400: #818cf8;
-  --color-brand-500: #6366f1;
-  --color-brand-600: #4f46e5;
-  --color-brand-700: #4338ca;
-  --color-brand-800: #3730a3;
-  --color-brand-900: #312e81;
+  /* Brand scale (dark) - monochrome near-black (inverted for contrast on dark) */
+  --color-brand-50: #171717;
+  --color-brand-100: #262626;
+  --color-brand-200: #404040;
+  --color-brand-300: #525252;
+  --color-brand-400: #737373;
+  --color-brand-500: #a3a3a3;
+  --color-brand-600: #d4d4d4;
+  --color-brand-700: #e5e5e5;
+  --color-brand-800: #f5f5f5;
+  --color-brand-900: #fafafa;
 
-  --color-primary: #6366f1;
-  --color-primary-hover: #4f46e5;
+  --color-primary: var(--color-brand-100);
+  --color-primary-hover: var(--color-brand-200);
 
   /* Surfaces (dark - cool neutral) */
   --color-bg: #121218;
@@ -107,13 +112,18 @@
   --color-info: #60a5fa;
 
   --shadow-soft: 0 1px 2px 0 rgba(0,0,0,0.3);
-  --shadow-warm: 0 2px 12px -2px rgba(99, 102, 241, 0.25);
+  --shadow-warm: 0 2px 12px -2px rgba(0, 0, 0, 0.25);
   --shadow-elevated: 0 12px 28px -4px rgba(0, 0, 0, 0.45);
   --shadow-elev:
     inset 0 1px 0 0 rgba(255,255,255,0.06),
     0 1px 2px rgba(0,0,0,0.4),
     0 16px 48px -8px rgba(0,0,0,0.55);
-  --shadow-focus: 0 0 0 3px rgba(99,102,241,0.22);
+  --shadow-focus: 0 0 0 3px rgba(0, 0, 0, 0.22);
+
+  /* Topology theming (dark) */
+  --color-topo-core: #f8fafc;
+  --color-topo-frame: var(--color-surface-2);
+  --color-topo-router-active: #fde047;
 
   color-scheme: dark;
 }
@@ -127,6 +137,15 @@ select {
 
 .dark select {
   color-scheme: dark;
+}
+
+select option {
+  font-family: var(--font-mono), ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--color-text-main);
+  background-color: var(--color-surface);
+  padding: 8px 12px;
 }
 
 .dark select option {
@@ -195,8 +214,9 @@ select {
   --shadow-elev: var(--shadow-elev);
   --shadow-focus: var(--shadow-focus);
 
-  /* Font - Inter primary, Apple system fallback */
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', system-ui, sans-serif;
+  /* Font - Inter body / Space Grotesk display */
+  --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', system-ui, sans-serif;
+  --font-display: var(--font-space-grotesk), 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
 }
 
 /* Base */
@@ -208,13 +228,19 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Headings use the Space Grotesk display face */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-space-grotesk), 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+  letter-spacing: -0.01em;
+}
+
 /* Selection - brand-tinted */
 ::selection {
-  background-color: rgba(99, 102, 241, 0.22);
+  background-color: rgba(0, 0, 0, 0.22);
   color: var(--color-primary);
 }
 .dark ::selection {
-  background-color: rgba(99, 102, 241, 0.3);
+  background-color: rgba(255, 255, 255, 0.3);
   color: var(--color-brand-300);
 }
 
@@ -238,22 +264,31 @@ input, textarea {
   background-color: var(--color-primary);
 }
 
-/* Thin horizontal scrollbar - brand colored */
+/* Thin horizontal scrollbar - monochrome */
 .scroll-thin-x {
   scrollbar-width: thin;
-  scrollbar-color: rgba(99, 102, 241, 0.55) transparent;
+  scrollbar-color: rgba(0, 0, 0, 0.55) transparent;
 }
 .dark .scroll-thin-x {
-  scrollbar-color: rgba(99, 102, 241, 0.55) transparent;
+  scrollbar-color: rgba(255, 255, 255, 0.45) transparent;
 }
 .scroll-thin-x::-webkit-scrollbar { height: 3px; }
 .scroll-thin-x::-webkit-scrollbar-track { background: transparent; }
 .scroll-thin-x::-webkit-scrollbar-thumb {
-  background: rgba(99, 102, 241, 0.55);
+  background: rgba(0, 0, 0, 0.55);
   border-radius: 3px;
 }
 .dark .scroll-thin-x::-webkit-scrollbar-thumb {
-  background: rgba(99, 102, 241, 0.55);
+  background: rgba(255, 255, 255, 0.45);
+}
+
+/* Hide scrollbar but keep scrolling (use on overflow containers) */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
 
 /* Global thin mac-like scrollbars (overrides clunky Windows/Linux default) */
@@ -387,12 +422,12 @@ button:disabled,
 
 @keyframes border-glow {
   0%, 100% {
-    box-shadow: 0 0 5px rgba(99, 102, 241, 0.3), 0 0 10px rgba(99, 102, 241, 0.2);
-    border-color: rgba(99, 102, 241, 0.5);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3), 0 0 10px rgba(0, 0, 0, 0.2);
+    border-color: rgba(0, 0, 0, 0.5);
   }
   50% {
-    box-shadow: 0 0 10px rgba(99, 102, 241, 0.5), 0 0 20px rgba(99, 102, 241, 0.3);
-    border-color: rgba(99, 102, 241, 0.8);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 0, 0, 0.3);
+    border-color: rgba(0, 0, 0, 0.8);
   }
 }
 .animate-border-glow { animation: border-glow 2s ease-in-out infinite; }
@@ -425,8 +460,8 @@ button:disabled,
   100% { transform: translateX(220%) skewX(-20deg); }
 }
 @keyframes ctaGlowPulse {
-  0%, 100% { box-shadow: 0 8px 24px -8px rgba(99, 102, 241, 0.45), 0 0 0 0 rgba(99, 102, 241, 0.5); }
-  50% { box-shadow: 0 12px 32px -8px rgba(99, 102, 241, 0.6), 0 0 0 8px rgba(99, 102, 241, 0); }
+  0%, 100% { box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.45), 0 0 0 0 rgba(0, 0, 0, 0.5); }
+  50% { box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.6), 0 0 0 8px rgba(0, 0, 0, 0); }
 }
 .btn-cta {
   position: relative;
@@ -452,25 +487,13 @@ button:disabled,
 .dot-grid-bg {
   background-color: var(--color-bg);
   background-image:
-    radial-gradient(circle at 15% 20%, rgba(99, 102, 241, 0.10) 0%, transparent 40%),
-    radial-gradient(circle at 85% 80%, rgba(99, 102, 241, 0.06) 0%, transparent 40%);
+    radial-gradient(circle at 15% 20%, rgba(0, 0, 0, 0.10) 0%, transparent 40%),
+    radial-gradient(circle at 85% 80%, rgba(0, 0, 0, 0.06) 0%, transparent 40%);
 }
 .dark .dot-grid-bg {
   background-image:
-    radial-gradient(circle at 15% 20%, rgba(99, 102, 241, 0.18) 0%, transparent 40%),
-    radial-gradient(circle at 85% 80%, rgba(99, 102, 241, 0.10) 0%, transparent 40%);
-}
-
-/* Landing-style faint grid overlay (use absolute pos inside relative parent) */
-.landing-grid {
-  background-image:
-    linear-gradient(to right, var(--color-accent) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--color-accent) 1px, transparent 1px);
-  background-size: 40px 40px;
-  opacity: 0.08;
-}
-.dark .landing-grid {
-  opacity: 0.04;
+    radial-gradient(circle at 15% 20%, rgba(255, 255, 255, 0.18) 0%, transparent 40%),
+    radial-gradient(circle at 85% 80%, rgba(255, 255, 255, 0.10) 0%, transparent 40%);
 }
 
 /* Topology: router card pulse (no flying rings) + electric edge beam */
@@ -534,6 +557,26 @@ button:disabled,
   stroke-dasharray: 14 10;
   animation: topology-edge-dash 0.18s linear infinite, topology-edge-flicker 0.22s steps(3) infinite;
 }
+
+/* Login background topology: subtle, calm network pulse */
+@keyframes topo-bg-edge-flow {
+  from { stroke-dashoffset: 0; }
+  to { stroke-dashoffset: -56; }
+}
+@keyframes topo-bg-node-pulse {
+  0%, 100% { transform-origin: center; transform: scale(1); opacity: 0.55; }
+  50% { transform: scale(1.35); opacity: 1; }
+}
+.topo-bg-edges line {
+  stroke-dasharray: 10 18;
+  animation: topo-bg-edge-flow 9s linear infinite;
+}
+.topo-bg-nodes circle {
+  animation: topo-bg-node-pulse 5s ease-in-out infinite;
+}
+.topo-bg-nodes circle:nth-child(3n + 1) { animation-delay: 0s; }
+.topo-bg-nodes circle:nth-child(3n + 2) { animation-delay: -1.7s; }
+.topo-bg-nodes circle:nth-child(3n + 3) { animation-delay: -3.4s; }
 
 /* React Flow controls: match app theme */
 .react-flow-controls-custom {

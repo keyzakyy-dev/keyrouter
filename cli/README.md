@@ -4,15 +4,19 @@
 
 **Connect All AI Code Tools (Claude Code, Cursor, Antigravity, Copilot, Codex, Gemini, OpenCode, Cline, OpenClaw...) to 40+ AI Providers & 100+ Models.**
 
+> KeyRouter is a derivative/rebrand of [9Router](https://github.com/decolua/9router)
+> by decolua (MIT). The original copyright notice and license are preserved.
+
 [![npm](https://img.shields.io/npm/v/keyrouter.svg)](https://www.npmjs.com/package/keyrouter)
 [![Downloads](https://img.shields.io/npm/dm/keyrouter.svg)](https://www.npmjs.com/package/keyrouter)
-[![Docker Pulls](https://img.shields.io/docker/pulls/decolua/keyrouter.svg?logo=docker&label=Docker%20pulls)](https://hub.docker.com/r/decolua/keyrouter)
-[![GHCR](https://img.shields.io/badge/GHCR-decolua%2Fkeyrouter-blue?logo=github)](https://github.com/decolua/keyrouter/pkgs/container/keyrouter)
-[![License](https://img.shields.io/npm/l/keyrouter.svg)](https://github.com/decolua/keyrouter/blob/main/LICENSE)
+[![Docker Pulls](https://img.shields.io/docker/pulls/keyzakyy-dev/keyrouter.svg?logo=docker&label=Docker%20pulls)](https://hub.docker.com/r/keyzakyy-dev/keyrouter)
+[![GHCR](https://img.shields.io/badge/GHCR-keyzakyy-dev%2Fkeyrouter-blue?logo=github)](https://github.com/keyzakyy-dev/keyrouter/pkgs/container/keyrouter)
+[![License](https://img.shields.io/npm/l/keyrouter.svg)](https://github.com/keyzakyy-dev/keyrouter/blob/main/LICENSE)
 
-<a href="https://trendshift.io/repositories/22628" target="_blank"><img src="https://trendshift.io/api/badge/repositories/22628" alt="decolua%2Fkeyrouter | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
+[![Stars](https://img.shields.io/github/stars/keyzakyy-dev/keyrouter?style=social)](https://github.com/keyzakyy-dev/keyrouter)
+[![Forks](https://img.shields.io/github/forks/keyzakyy-dev/keyrouter?style=social)](https://github.com/keyzakyy-dev/keyrouter/network/members)
 
-[🌐 Website](https://keyrouter.com) • [📖 Full Docs](https://github.com/decolua/keyrouter)
+[🌐 Website](https://keyrouter.com) • [📖 Full Docs](https://github.com/keyzakyy-dev/keyrouter)
 
 ---
 
@@ -52,10 +56,10 @@ npx keyrouter
 ```bash
 docker run -d --name keyrouter -p 20128:20128 \
   -v "$HOME/.keyrouter:/app/data" -e DATA_DIR=/app/data \
-  decolua/keyrouter:latest
+  keyzakyy-dev/keyrouter:latest
 ```
 
-Published images: [Docker Hub](https://hub.docker.com/r/decolua/keyrouter) • [GHCR](https://github.com/decolua/keyrouter/pkgs/container/keyrouter) (multi-platform amd64/arm64).
+Published images: [Docker Hub](https://hub.docker.com/r/keyzakyy-dev/keyrouter) • [GHCR](https://github.com/keyzakyy-dev/keyrouter/pkgs/container/keyrouter) (multi-platform amd64/arm64).
 
 🎉 Dashboard opens at `http://localhost:20128`
 
@@ -200,8 +204,8 @@ Any tool supporting OpenAI/Claude-compatible API works.
 
 Full docs, advanced setup, video tutorials & development guide:
 
-- **GitHub**: https://github.com/decolua/keyrouter
-- **Full README**: https://github.com/decolua/keyrouter/blob/master/README.md
+- **GitHub**: https://github.com/keyzakyy-dev/keyrouter
+- **Full README**: https://github.com/keyzakyy-dev/keyrouter/blob/master/README.md
 - **Website**: https://keyrouter.com
 
 ---

@@ -69,6 +69,17 @@ export {
   saveRequestDetail, getRequestDetails, getRequestDetailById, getDistinctProviders,
 } from "./repos/requestDetailsRepo.js";
 
+// Prompt injection
+export {
+  getInjectGlobal, setInjectGlobal,
+  getInjectUserPrompts, setInjectUserPrompt, deleteInjectUserPrompt,
+  getInjectModelPrompts, setInjectModelPrompt, deleteInjectModelPrompt,
+  getInjectKeyModelPrompts, setInjectKeyModelPrompt, deleteInjectKeyModelPrompt,
+  getInjectVariants, setInjectVariant, deleteInjectVariant, migrateModelPromptsToVariants,
+  getPromptTemplates, upsertPromptTemplate, deletePromptTemplate,
+  resolvePromptInjections,
+} from "./repos/promptInjectRepo.js";
+
 // Export/import full DB
 export async function exportDb() {
   const db = await getAdapter();

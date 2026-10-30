@@ -23,6 +23,11 @@ const EXCLUDE_PATTERNS = [
   "*.log",          // Log files
   "tmp",            // Temp files
   ".DS_Store",      // macOS files
+  ".build-home",    // Build-time HOME dir (contains runtime secrets/state)
+  ".keyrouter",     // Runtime data dir (db, jwt-secret, machine-id)
+  "*.sqlite",       // Runtime databases
+  "jwt-secret",     // Runtime secret material
+  "machine-id",     // Runtime machine identity
 ];
 
 function shouldExclude(name) {

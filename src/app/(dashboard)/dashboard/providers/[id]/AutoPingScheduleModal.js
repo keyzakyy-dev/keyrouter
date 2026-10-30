@@ -88,7 +88,7 @@ export default function AutoPingScheduleModal({ isOpen, onClose, onSave, connect
     >
       <div className="flex flex-col gap-4">
         <p className="text-sm text-text-muted">
-          Configure automated quota pings{connection?.name ? ` for ${connection.name}` : ""} — pick one mode.
+          Configure automated quota pings{connection?.name ? ` for ${connection.name}` : ""} - pick one mode.
         </p>
 
         <div className="grid grid-cols-3 gap-1 rounded-[10px] bg-surface-2 p-1">

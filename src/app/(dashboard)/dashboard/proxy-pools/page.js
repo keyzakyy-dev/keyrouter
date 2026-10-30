@@ -602,7 +602,7 @@ export default function ProxyPoolsPage() {
 
   if (loading) {
     return (
-      <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 px-1 sm:gap-6 sm:px-0">
+      <div className="flex w-full flex-col gap-4 px-1 sm:gap-6 sm:px-0">
         <CardSkeleton />
         <CardSkeleton />
       </div>
@@ -610,36 +610,38 @@ export default function ProxyPoolsPage() {
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 px-1 sm:gap-6 sm:px-0">
+    <div className="flex w-full flex-col gap-4 px-1 sm:gap-6 sm:px-0">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
-          <h1 className="text-xl font-semibold sm:text-2xl">Proxy Pools</h1>
+          <h1 className="font-display text-2xl font-semibold tracking-tight text-text-main">Proxy Pools</h1>
+          <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-text-subtle">
+            Rotating IP relay pools for outbound provider requests
+          </p>
         </div>
 
         <div className="grid grid-cols-1 gap-2 sm:flex sm:items-center">
           <div className="relative" ref={relayMenuRef}>
-            <Button
-              size="sm"
-              variant="secondary"
-              icon="rocket_launch"
+            <button
               onClick={() => setShowRelayMenu(!showRelayMenu)}
+              className="inline-flex h-8 items-center justify-center gap-1.5 rounded-lg border border-border bg-surface px-3.5 text-sm font-display font-medium text-text-main transition-colors hover:border-text-subtle hover:bg-surface-2"
             >
+              <span className="material-symbols-outlined text-[17px] text-text-muted">rocket_launch</span>
               Deploy Relay
-              <span className="material-symbols-outlined ml-1 text-[18px]">
+              <span className="material-symbols-outlined text-[16px] text-text-subtle">
                 {showRelayMenu ? "expand_less" : "expand_more"}
               </span>
-            </Button>
+            </button>
 
             {showRelayMenu && (
-              <div className="absolute left-0 top-full z-50 mt-1 w-48 rounded-xl border border-black/10 bg-white p-1 shadow-xl dark:border-white/10 dark:bg-zinc-900 sm:left-auto sm:right-0">
+              <div className="absolute left-0 top-full z-50 mt-1 w-52 rounded-xl border border-border bg-surface p-1 shadow-warm sm:left-auto sm:right-0">
                 <button
                   onClick={() => {
                     openCloudflareModal();
                     setShowRelayMenu(false);
                   }}
-                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-text-main transition-colors hover:bg-black/5 dark:hover:bg-white/5"
+                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-text-main transition-colors hover:bg-surface-2"
                 >
-                  <span className="material-symbols-outlined text-[20px] text-warning">cloud</span>
+                  <span className="material-symbols-outlined text-[18px] text-text-muted">cloud</span>
                   Cloudflare Relay
                 </button>
                 <button
@@ -647,9 +649,9 @@ export default function ProxyPoolsPage() {
                     openVercelModal();
                     setShowRelayMenu(false);
                   }}
-                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-text-main transition-colors hover:bg-black/5 dark:hover:bg-white/5"
+                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-text-main transition-colors hover:bg-surface-2"
                 >
-                  <span className="material-symbols-outlined text-[20px] text-blue-500">cloud_upload</span>
+                  <span className="material-symbols-outlined text-[18px] text-text-muted">cloud_upload</span>
                   Vercel Relay
                 </button>
                 <button
@@ -657,9 +659,9 @@ export default function ProxyPoolsPage() {
                     openDenoModal();
                     setShowRelayMenu(false);
                   }}
-                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-text-main transition-colors hover:bg-black/5 dark:hover:bg-white/5"
+                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-text-main transition-colors hover:bg-surface-2"
                 >
-                  <span className="material-symbols-outlined text-[20px] text-green-500">terminal</span>
+                  <span className="material-symbols-outlined text-[18px] text-text-muted">terminal</span>
                   Deno Relay
                 </button>
                 <button
@@ -667,19 +669,29 @@ export default function ProxyPoolsPage() {
                     openNetlifyModal();
                     setShowRelayMenu(false);
                   }}
-                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-text-main transition-colors hover:bg-black/5 dark:hover:bg-white/5"
+                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-text-main transition-colors hover:bg-surface-2"
                 >
-                  <span className="material-symbols-outlined text-[20px] text-teal-500">deployed_code</span>
+                  <span className="material-symbols-outlined text-[18px] text-text-muted">deployed_code</span>
                   Netlify Relay
                 </button>
               </div>
             )}
           </div>
 
-          <Button size="sm" variant="secondary" icon="upload" onClick={openBatchImportModal}>
+          <button
+            onClick={openBatchImportModal}
+            className="inline-flex h-8 items-center justify-center gap-1.5 rounded-lg border border-border bg-surface px-3.5 text-sm font-display font-medium text-text-main transition-colors hover:border-text-subtle hover:bg-surface-2"
+          >
+            <span className="material-symbols-outlined text-[17px] text-text-muted">upload</span>
             Batch Import
-          </Button>
-          <Button size="sm" icon="add" onClick={openCreateModal}>Add Proxy Pool</Button>
+          </button>
+          <button
+            onClick={openCreateModal}
+            className="inline-flex h-8 items-center justify-center gap-1.5 rounded-lg bg-primary px-3.5 text-sm font-display font-medium text-white transition-colors hover:bg-primary-hover"
+          >
+            <span className="material-symbols-outlined text-[17px]">add</span>
+            Add Proxy Pool
+          </button>
         </div>
       </div>
 
@@ -696,14 +708,18 @@ export default function ProxyPoolsPage() {
               {allSelected ? "Unselect all" : "Select all"}
             </label>
           )}
-          <Badge variant="default">Total: {proxyPools.length}</Badge>
-          <Badge variant="success">Active: {activeCount}</Badge>
+          <span className="rounded-full border border-border bg-surface-2 px-2.5 py-0.5 font-mono text-[11px] uppercase tracking-wider text-text-muted">
+            Total: {proxyPools.length}
+          </span>
+          <span className="rounded-full border border-border bg-surface-2 px-2.5 py-0.5 font-mono text-[11px] uppercase tracking-wider text-text-muted">
+            Active: {activeCount}
+          </span>
         </div>
 
         {(selectedIds.length > 0 || healthChecking) && (
-          <div className="mb-4 flex flex-wrap items-center gap-2 rounded-lg border border-primary/30 bg-primary/5 px-3 py-2">
-            <span className="material-symbols-outlined text-[18px] text-primary">checklist</span>
-            <span className="text-xs font-medium text-primary">
+          <div className="mb-4 flex flex-wrap items-center gap-2 rounded-lg border border-border bg-surface-2/50 px-3 py-2">
+            <span className="material-symbols-outlined text-[18px] text-text-muted">checklist</span>
+            <span className="font-mono text-xs font-medium text-text-main">
               {selectedIds.length > 0 ? `${selectedIds.length} selected` : "All pools"}
             </span>
             <div className="ml-auto flex flex-wrap items-center gap-2">
@@ -736,12 +752,21 @@ export default function ProxyPoolsPage() {
         )}
 
         {proxyPools.length === 0 ? (
-          <div className="text-center py-10">
-            <p className="text-text-main font-medium mb-1">No proxy pool entries yet</p>
-            <p className="text-sm text-text-muted mb-4">
+          <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border bg-surface/40 px-6 py-12 text-center">
+            <div className="grid size-12 place-items-center rounded-xl border border-border bg-surface-2">
+              <span className="material-symbols-outlined text-2xl text-text-muted">public</span>
+            </div>
+            <p className="mt-4 font-display text-lg font-semibold text-text-main">No proxy pool entries yet</p>
+            <p className="mt-1 max-w-sm font-mono text-[11px] uppercase tracking-wider text-text-subtle">
               Create a proxy pool entry, then assign it to connections.
             </p>
-            <Button icon="add" onClick={openCreateModal}>Add Proxy Pool</Button>
+            <button
+              onClick={openCreateModal}
+              className="mt-6 inline-flex h-8 items-center justify-center gap-1.5 rounded-lg bg-primary px-3.5 text-sm font-display font-medium text-white transition-colors hover:bg-primary-hover"
+            >
+              <span className="material-symbols-outlined text-[17px]">add</span>
+              Add Proxy Pool
+            </button>
           </div>
         ) : (
           <div className="flex flex-col divide-y divide-black/[0.04] dark:divide-white/[0.05]">
@@ -756,7 +781,7 @@ export default function ProxyPoolsPage() {
                   />
                   <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <p className="min-w-0 max-w-full truncate text-sm font-medium sm:max-w-[18rem]">{pool.name}</p>
+                    <p className="min-w-0 max-w-full truncate font-display text-sm font-medium text-text-main sm:max-w-[18rem]">{pool.name}</p>
                     <Badge variant={getStatusVariant(pool.testStatus)} size="sm" dot>
                       {pool.testStatus || "unknown"}
                     </Badge>
@@ -779,11 +804,11 @@ export default function ProxyPoolsPage() {
                       {pool.boundConnectionCount || 0} bound
                     </Badge>
                   </div>
-                  <p className="text-xs text-text-muted truncate mt-1">{pool.proxyUrl}</p>
+                  <p className="truncate font-mono text-xs text-text-muted mt-1">{pool.proxyUrl}</p>
                   {pool.noProxy ? (
-                    <p className="text-xs text-text-muted truncate">No proxy: {pool.noProxy}</p>
+                    <p className="truncate font-mono text-xs text-text-muted">No proxy: {pool.noProxy}</p>
                   ) : null}
-                  <p className="text-[11px] text-text-muted mt-1">
+                  <p className="font-mono text-[11px] text-text-muted mt-1">
                     Last tested: {formatDateTime(pool.lastTestedAt)}
                     {pool.lastError ? ` · ${pool.lastError}` : ""}
                   </p>
@@ -799,7 +824,7 @@ export default function ProxyPoolsPage() {
                   />
                   <button
                     onClick={() => handleTest(pool.id)}
-                    className="p-2 rounded hover:bg-black/5 dark:hover:bg-white/5 text-text-muted hover:text-primary"
+                    className="p-2 rounded hover:bg-surface-2 text-text-muted hover:text-primary"
                     title="Test proxy"
                     disabled={testingId === pool.id}
                   >
@@ -812,14 +837,14 @@ export default function ProxyPoolsPage() {
                   </button>
                   <button
                     onClick={() => openEditModal(pool)}
-                    className="p-2 rounded hover:bg-black/5 dark:hover:bg-white/5 text-text-muted hover:text-primary"
+                    className="p-2 rounded hover:bg-surface-2 text-text-muted hover:text-primary"
                     title="Edit"
                   >
                     <span className="material-symbols-outlined text-[18px]">edit</span>
                   </button>
                   <button
                     onClick={() => handleDelete(pool)}
-                    className="p-2 rounded hover:bg-red-500/10 text-red-500"
+                    className="p-2 rounded hover:bg-danger/10 text-text-muted hover:text-danger"
                     title="Delete"
                   >
                     <span className="material-symbols-outlined text-[18px]">delete</span>
@@ -867,14 +892,14 @@ export default function ProxyPoolsPage() {
         onClose={closeVercelModal}
       >
         <div className="flex flex-col gap-4">
-          <div className="rounded-lg bg-blue-500/5 border border-blue-500/10 p-3 flex flex-col gap-1.5">
+          <div className="rounded-lg border border-border bg-surface-2/50 p-3 flex flex-col gap-1.5">
             <p className="text-sm text-text-main font-medium">What is Vercel Relay?</p>
             <p className="text-xs text-text-muted">
               Deploys an edge relay function to Vercel. All AI provider requests will be forwarded through Vercel&apos;s edge network, masking your real IP from providers.
             </p>
             <ul className="text-xs text-text-muted list-disc pl-4 space-y-0.5">
               <li>Your IP is replaced by Vercel&apos;s dynamic edge IPs (hundreds of IPs across 20+ global regions)</li>
-              <li>Vercel serves millions of apps — providers can&apos;t block Vercel IPs without affecting legitimate traffic</li>
+              <li>Vercel serves millions of apps - providers can&apos;t block Vercel IPs without affecting legitimate traffic</li>
               <li>Free tier: 100GB bandwidth/month, 500K edge invocations</li>
               <li>Deploy multiple relays on different accounts for more IP diversity</li>
             </ul>
@@ -915,7 +940,7 @@ export default function ProxyPoolsPage() {
         onClose={closeCloudflareModal}
       >
         <div className="flex flex-col gap-4">
-          <div className="rounded-lg bg-warning/5 border border-warning/10 p-3 flex flex-col gap-1.5">
+          <div className="rounded-lg border border-border bg-surface-2/50 p-3 flex flex-col gap-1.5">
             <p className="text-sm text-text-main font-medium">What is Cloudflare Relay?</p>
             <p className="text-xs text-text-muted">
               Deploys a Cloudflare Worker as a proxy relay. All AI provider requests will be forwarded through Cloudflare&apos;s global edge network.
@@ -925,7 +950,7 @@ export default function ProxyPoolsPage() {
               <li>Free tier: 100,000 requests per day</li>
               <li>Requires Cloudflare Account ID and a Workers API Token (Edit Workers permission)</li>
             </ul>
-            <div className="mt-2 pt-2 border-t border-warning/10 text-xs text-text-muted">
+            <div className="mt-2 pt-2 border-t border-border text-xs text-text-muted">
               <p className="font-medium text-text-main mb-1">How to generate your API Token:</p>
               <ol className="list-decimal pl-4 space-y-0.5">
                 <li>Go to <b>My Profile</b> → <b>API Tokens</b> → <b>Create Token</b></li>
@@ -979,7 +1004,7 @@ export default function ProxyPoolsPage() {
         onClose={closeDenoModal}
       >
         <div className="flex flex-col gap-4">
-          <div className="rounded-lg bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 p-3 flex flex-col gap-1.5">
+          <div className="rounded-lg bg-surface-2/50 border border-border p-3 flex flex-col gap-1.5">
             <p className="text-sm text-text-main font-medium">What is Deno Relay?</p>
             <p className="text-xs text-text-muted">
               Deploys a relay worker to Deno Deploy&apos;s global edge network. All AI provider requests are forwarded through Deno&apos;s edge, masking your real IP.
@@ -1043,7 +1068,7 @@ export default function ProxyPoolsPage() {
         onClose={closeNetlifyModal}
       >
         <div className="flex flex-col gap-4">
-          <div className="rounded-lg bg-teal-500/5 border border-teal-500/10 p-3 flex flex-col gap-1.5">
+          <div className="rounded-lg border border-border bg-surface-2/50 p-3 flex flex-col gap-1.5">
             <p className="text-sm text-text-main font-medium">What is Netlify Relay?</p>
             <p className="text-xs text-text-muted">
               Deploys a serverless relay function to Netlify&apos;s global edge network. All AI provider requests are forwarded through Netlify&apos;s edge, masking your real IP.
@@ -1054,12 +1079,12 @@ export default function ProxyPoolsPage() {
               <li>Relay URL format: https://your-site.netlify.app/.netlify/functions/relay</li>
               <li>Deploy multiple relays on different accounts for more IP diversity</li>
             </ul>
-            <div className="mt-2 pt-2 border-t border-teal-500/10 text-xs text-text-muted">
+            <div className="mt-2 pt-2 border-t border-border text-xs text-text-muted">
               <p className="font-medium text-text-main mb-1">How to generate API token:</p>
               <ol className="list-decimal pl-4 space-y-0.5">
                 <li>Go to <b>User Settings</b> → <b>Applications</b> → <b>Personal access tokens</b></li>
                 <li>Select <b>New access token</b> and generate a token</li>
-                <li>Copy the token — you won&apos;t see it again after leaving the page</li>
+                <li>Copy the token - you won&apos;t see it again after leaving the page</li>
               </ol>
             </div>
           </div>

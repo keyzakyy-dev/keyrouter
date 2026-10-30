@@ -404,8 +404,8 @@ export default function ConnectionsCard({ providerId, isOAuth, loginProviderId =
       <Card>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
           <h2 className="text-lg font-semibold">Connections</h2>
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs text-text-muted font-medium">Round Robin</span>
+          <div className="flex flex-wrap items-center gap-2.5 rounded-lg border border-border bg-surface-2/40 px-3 py-2">
+            <span className="font-mono text-[10px] uppercase tracking-wider text-text-subtle">Round Robin</span>
             <Toggle
               checked={providerStrategy === "round-robin"}
               onChange={(enabled) => {
@@ -417,11 +417,11 @@ export default function ConnectionsCard({ providerId, isOAuth, loginProviderId =
             />
             {providerStrategy === "round-robin" && (
               <div className="flex flex-wrap items-center gap-1.5">
-                <span className="text-xs text-text-muted">Sticky:</span>
+                <span className="font-mono text-[10px] uppercase tracking-wider text-text-subtle">Sticky:</span>
                 <input
                   type="number" min={1} value={providerStickyLimit}
                   onChange={(e) => { setProviderStickyLimit(e.target.value); saveStrategy("round-robin", e.target.value); }}
-                  className="w-16 px-2 py-1 text-xs border border-border rounded-md bg-background focus:outline-none focus:border-primary"
+                  className="w-16 rounded-md border border-border bg-surface px-2 py-1 font-mono text-xs text-text-main focus:border-text-subtle focus:outline-none"
                 />
               </div>
             )}

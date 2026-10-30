@@ -85,7 +85,7 @@ export default function SmartPolicyModal({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={`Router Policy — ${comboName || "Combo"}`}
+      title={`Router Policy - ${comboName || "Combo"}`}
       size="lg"
     >
       <div className="flex flex-col gap-4">

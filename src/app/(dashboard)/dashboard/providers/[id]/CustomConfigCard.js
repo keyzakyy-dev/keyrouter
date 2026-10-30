@@ -95,7 +95,7 @@ export default function CustomConfigCard({ providerId }) {
       >
         <div className="flex items-center gap-2">
           <span className="material-symbols-outlined text-primary text-[20px]">tune</span>
-          <span className="text-sm font-semibold">Custom Headers</span>
+          <span className="font-display text-sm font-semibold text-text-main">Custom Headers</span>
           {hasOverride && (
             <Badge variant="success" size="sm">Active</Badge>
           )}

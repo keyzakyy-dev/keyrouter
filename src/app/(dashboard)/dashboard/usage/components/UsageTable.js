@@ -36,13 +36,13 @@ function ValueCells({ item, viewMode, isSummary = false }) {
     return (
       <>
         <td className="px-6 py-3 text-right text-text-muted">
-          {isSummary && item.promptTokens === undefined ? "—" : fmt(item.promptTokens)}
+          {isSummary && item.promptTokens === undefined ? "-" : fmt(item.promptTokens)}
         </td>
         <td className="px-6 py-3 text-right text-text-muted">
-          {item.cachedTokens ? fmt(item.cachedTokens) : "—"}
+          {item.cachedTokens ? fmt(item.cachedTokens) : "-"}
         </td>
         <td className="px-6 py-3 text-right text-text-muted">
-          {isSummary && item.completionTokens === undefined ? "—" : fmt(item.completionTokens)}
+          {isSummary && item.completionTokens === undefined ? "-" : fmt(item.completionTokens)}
         </td>
         <td className="px-6 py-3 text-right font-medium">
           {fmt(item.totalTokens)}
@@ -53,13 +53,13 @@ function ValueCells({ item, viewMode, isSummary = false }) {
   return (
     <>
       <td className="px-6 py-3 text-right text-text-muted">
-        {isSummary && item.inputCost === undefined ? "—" : fmtCost(item.inputCost)}
+        {isSummary && item.inputCost === undefined ? "-" : fmtCost(item.inputCost)}
       </td>
       <td className="px-6 py-3 text-right text-text-muted">
-        {item.cachedCost ? fmtCost(item.cachedCost) : "—"}
+        {item.cachedCost ? fmtCost(item.cachedCost) : "-"}
       </td>
       <td className="px-6 py-3 text-right text-text-muted">
-        {isSummary && item.outputCost === undefined ? "—" : fmtCost(item.outputCost)}
+        {isSummary && item.outputCost === undefined ? "-" : fmtCost(item.outputCost)}
       </td>
       <td className="px-6 py-3 text-right font-medium text-warning">
         {fmtCost(item.totalCost || item.cost)}
@@ -105,6 +105,7 @@ export default function UsageTable({
   renderDetailCells,
   renderSummaryCells,
   emptyMessage,
+  bare = false,
 }) {
   const [expanded, setExpanded] = useState(new Set());
 
@@ -154,19 +155,43 @@ export default function UsageTable({
 
   const totalColSpan = columns.length + valueColumns.length;
 
+  // Grand totals across all groups (footer row)
+  const grandTotal = useMemo(() => {
+    const t = { promptTokens: 0, cachedTokens: 0, completionTokens: 0, totalTokens: 0, inputCost: 0, cachedCost: 0, outputCost: 0, totalCost: 0 };
+    groupedData.forEach((g) => {
+      const s = g.summary;
+      t.promptTokens += s.promptTokens || 0;
+      t.cachedTokens += s.cachedTokens || 0;
+      t.completionTokens += s.completionTokens || 0;
+      t.totalTokens += s.totalTokens || 0;
+      t.inputCost += s.inputCost || 0;
+      t.cachedCost += s.cachedCost || 0;
+      t.outputCost += s.outputCost || 0;
+      t.totalCost += s.totalCost || s.cost || 0;
+    });
+    return t;
+  }, [groupedData]);
+
+  const showFooter = groupedData.length > 0;
+
+  const Wrapper = bare ? "div" : Card;
+  const wrapClass = bare ? "overflow-hidden rounded-md border border-border-subtle bg-surface" : "overflow-hidden";
+
   return (
-    <Card className="overflow-hidden">
-      <div className="p-4 border-b border-border bg-bg-subtle/50">
-        <h3 className="font-semibold">{title}</h3>
-      </div>
+    <Wrapper className={wrapClass}>
+      {title && (
+        <div className="border-b border-border bg-bg-subtle/50 p-4">
+          <h3 className="font-display text-base font-semibold text-text-main">{title}</h3>
+        </div>
+      )}
       <div className="overflow-x-auto">
         <table className="w-full text-sm text-left">
-          <thead className="bg-bg-subtle/30 text-text-muted uppercase text-xs">
+          <thead className="bg-bg-subtle/40 text-text-muted uppercase text-[11px]">
             <tr>
               {columns.map((col) => (
                 <th
                   key={col.field}
-                  className={`px-6 py-3 cursor-pointer hover:bg-bg-subtle/50 ${col.align === "right" ? "text-right" : ""}`}
+                  className={`px-6 py-3 cursor-pointer font-semibold hover:bg-bg-subtle/60 ${col.align === "right" ? "text-right" : ""}`}
                   onClick={() => onToggleSort(tableType, col.field)}
                 >
                   {col.label}{" "}
@@ -176,7 +201,7 @@ export default function UsageTable({
               {valueColumns.map((col) => (
                 <th
                   key={col.field}
-                  className="px-6 py-3 text-right cursor-pointer hover:bg-bg-subtle/50"
+                  className="px-6 py-3 text-right cursor-pointer font-semibold hover:bg-bg-subtle/60"
                   onClick={() => onToggleSort(tableType, col.field)}
                 >
                   {col.label}{" "}
@@ -190,7 +215,7 @@ export default function UsageTable({
               <Fragment key={group.groupKey}>
                 {/* Group summary row */}
                 <tr
-                  className="group-summary cursor-pointer hover:bg-bg-subtle/50 transition-colors"
+                  className="group-summary cursor-pointer bg-bg-subtle/20 hover:bg-bg-subtle/50 transition-colors"
                   onClick={() => toggleGroup(group.groupKey)}
                 >
                   <td className="px-6 py-3">
@@ -226,9 +251,19 @@ export default function UsageTable({
               </tr>
             )}
           </tbody>
+          {showFooter && (
+            <tfoot>
+              <tr className="border-t border-border bg-bg-subtle/30">
+                <td colSpan={columns.length} className="px-6 py-3 font-display text-sm font-semibold text-text-main">
+                  Total
+                </td>
+                <ValueCells item={grandTotal} viewMode={viewMode} />
+              </tr>
+            </tfoot>
+          )}
         </table>
       </div>
-    </Card>
+    </Wrapper>
   );
 }
 

@@ -43,12 +43,22 @@ function UsageContent() {
 
   return (
     <div className="flex min-w-0 flex-col gap-6 px-1 sm:px-0">
+      {/* Hero header */}
+      <div className="flex flex-col gap-2">
+        <h1 className="font-display text-2xl font-semibold tracking-tight text-text-main">
+          Usage
+        </h1>
+        <p className="font-mono text-[10px] uppercase tracking-wider text-text-subtle">
+          Usage across every provider connection - real-time requests, tokens, and estimated cost.
+        </p>
+      </div>
+
       {/* Tabs + period selector on same row */}
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <SegmentedControl
           options={[
-            { value: "overview", label: "Overview" },
-            { value: "details", label: "Details" },
+            { value: "overview", label: "Overview", icon: "monitoring" },
+            { value: "details", label: "Details", icon: "table_rows" },
           ]}
           value={activeTab}
           onChange={handleTabChange}
@@ -60,7 +70,8 @@ function UsageContent() {
             value={period}
             onChange={setPeriod}
             size="sm"
-            className="w-full sm:w-auto"
+            wrap
+            className="w-full sm:w-auto sm:justify-end"
           />
         )}
       </div>

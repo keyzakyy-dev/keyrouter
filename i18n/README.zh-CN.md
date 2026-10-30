@@ -13,7 +13,7 @@
   
   [![npm](https://img.shields.io/npm/v/keyrouter.svg)](https://www.npmjs.com/package/keyrouter)
   [![Downloads](https://img.shields.io/npm/dm/keyrouter.svg)](https://www.npmjs.com/package/keyrouter)
-  [![License](https://img.shields.io/npm/l/keyrouter.svg)](https://github.com/decolua/keyrouter/blob/main/LICENSE)
+  [![License](https://img.shields.io/npm/l/keyrouter.svg)](https://github.com/keyzakyy-dev/keyrouter/blob/main/LICENSE)
   
   [🚀 快速开始](#-quick-start) • [💡 特性](#-key-features) • [📖 设置](#-setup) • [🌐 网站](https://keyrouter.com)
 </div>
@@ -946,7 +946,7 @@ Model: cc/claudeus-4-6
 
 ```bash
 # Clone and install
-git clone https://github.com/decolua/keyrouter.git
+git clone https://github.com/keyzakyy-dev/keyrouter.git
 cd keyrouter
 npm install
 npm run build
@@ -1255,8 +1255,8 @@ OPENAI_API_KEY="your-cloud-key" bash tester/security/test-cloud-openai-compatibl
 ## 📧 支持
 
 - **网站**：[keyrouter.com](https://keyrouter.com)
-- **GitHub**：[github.com/decolua/keyrouter](https://github.com/decolua/keyrouter)
-- **问题**：[github.com/decolua/keyrouter/issues](https://github.com/decolua/keyrouter/issues)
+- **GitHub**：[github.com/keyzakyy-dev/keyrouter](https://github.com/keyzakyy-dev/keyrouter)
+- **问题**：[github.com/keyzakyy-dev/keyrouter/issues](https://github.com/keyzakyy-dev/keyrouter/issues)
 
 ---
 
@@ -1264,13 +1264,13 @@ OPENAI_API_KEY="your-cloud-key" bash tester/security/test-cloud-openai-compatibl
 
 感谢所有帮助让 KeyRouter 变得更好的贡献者！
 
-[![Contributors](https://contrib.rocks/image?repo=decolua/keyrouter&max=100&columns=20&anon=1)](https://github.com/decolua/keyrouter/graphs/contributors)
+[![Contributors](https://contrib.rocks/image?repo=keyzakyy-dev/keyrouter&max=100&columns=20&anon=1)](https://github.com/keyzakyy-dev/keyrouter/graphs/contributors)
 
 ---
 
 ## 📊 Star 图表
 
-[![Star Chart](https://starchart.cc/decolua/keyrouter.svg?variant=adaptive)](https://starchart.cc/decolua/keyrouter)
+[![Star Chart](https://starchart.cc/keyzakyy-dev/keyrouter.svg?variant=adaptive)](https://starchart.cc/keyzakyy-dev/keyrouter)
 
 ### 如何贡献
 
@@ -1280,7 +1280,7 @@ OPENAI_API_KEY="your-cloud-key" bash tester/security/test-cloud-openai-compatibl
 4 推送到分支（`git push origin feature/amazing-feature`）
 5. 打开 Pull Request
 
-详细指南请参阅 [Pull Requests](https://github.com/decolua/keyrouter/pulls)。
+详细指南请参阅 [Pull Requests](https://github.com/keyzakyy-dev/keyrouter/pulls)。
 
 ---
 

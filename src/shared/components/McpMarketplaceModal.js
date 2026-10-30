@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Modal from "./Modal";
+import Dropdown from "./Dropdown";
 
 const REGISTRY_ENDPOINT = "/api/cli-tools/cowork-mcp-registry";
 const TOOLS_ENDPOINT = "/api/cli-tools/cowork-mcp-tools";
@@ -114,15 +115,17 @@ export default function McpMarketplaceModal({ isOpen, onClose, onAdd, addedNames
             placeholder="Search by name or description..."
             className="flex-1 px-2 py-1.5 bg-surface rounded text-xs border border-border focus:outline-none focus:ring-1 focus:ring-primary/50"
           />
-          <select
+          <Dropdown
             value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            className="px-2 py-1.5 bg-surface rounded text-xs border border-border focus:outline-none focus:ring-1 focus:ring-primary/50"
-          >
-            <option value="all">All</option>
-            <option value="authless">Authless</option>
-            <option value="oauth">OAuth</option>
-          </select>
+            onChange={setFilter}
+            options={[
+              { value: "all", label: "All" },
+              { value: "authless", label: "Authless" },
+              { value: "oauth", label: "OAuth" },
+            ]}
+            buttonClassName="px-2 py-1.5 rounded text-xs"
+            className="w-32 shrink-0"
+          />
         </div>
 
         {error && (

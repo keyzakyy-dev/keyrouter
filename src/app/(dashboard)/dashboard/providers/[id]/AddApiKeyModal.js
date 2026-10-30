@@ -374,7 +374,7 @@ export default function AddApiKeyModal({ isOpen, provider, providerName, isCompa
             <h3 className="font-semibold mb-3 text-sm">AWS Bedrock Credentials</h3>
             <div className="flex flex-col gap-3">
               <Input
-                label="AWS Profile (SSO — recommended)"
+                label="AWS Profile (SSO - recommended)"
                 value={bedrockData.profile}
                 onChange={(e) => setBedrockData({ ...bedrockData, profile: e.target.value })}
                 placeholder="my-sso-profile"

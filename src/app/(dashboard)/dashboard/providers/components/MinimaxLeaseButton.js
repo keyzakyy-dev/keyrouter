@@ -44,7 +44,7 @@ export default function MinimaxLeaseButton({ providerId, onConnected, size = "sm
         variant="secondary"
         disabled={busy}
         onClick={handleConnect}
-        title={translate("Borrow the signed-in MiniMax Code desktop app's login — no second sign-in, refresh stays with the desktop app")}
+        title={translate("Borrow the signed-in MiniMax Code desktop app's login - no second sign-in, refresh stays with the desktop app")}
       >
         {busy ? translate("Connecting...") : translate("Use Desktop App")}
       </Button>

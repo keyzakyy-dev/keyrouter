@@ -9,11 +9,12 @@
   
   [![npm](https://img.shields.io/npm/v/keyrouter.svg)](https://www.npmjs.com/package/keyrouter)
   [![Downloads](https://img.shields.io/npm/dm/keyrouter.svg)](https://www.npmjs.com/package/keyrouter)
-  [![Docker Pulls](https://img.shields.io/docker/pulls/decolua/keyrouter.svg?logo=docker&label=Docker%20pulls)](https://hub.docker.com/r/decolua/keyrouter)
-  [![GHCR](https://img.shields.io/badge/GHCR-decolua%2Fkeyrouter-blue?logo=github)](https://github.com/decolua/keyrouter/pkgs/container/keyrouter)
-  [![License](https://img.shields.io/npm/l/keyrouter.svg)](https://github.com/decolua/keyrouter/blob/main/LICENSE)
+  [![Docker Pulls](https://img.shields.io/docker/pulls/keyzakyy-dev/keyrouter.svg?logo=docker&label=Docker%20pulls)](https://hub.docker.com/r/keyzakyy-dev/keyrouter)
+  [![GHCR](https://img.shields.io/badge/GHCR-keyzakyy-dev%2Fkeyrouter-blue?logo=github)](https://github.com/keyzakyy-dev/keyrouter/pkgs/container/keyrouter)
+  [![License](https://img.shields.io/npm/l/keyrouter.svg)](https://github.com/keyzakyy-dev/keyrouter/blob/main/LICENSE)
 
-<a href="https://trendshift.io/repositories/22628" target="_blank"><img src="https://trendshift.io/api/badge/repositories/22628" alt="decolua%2Fkeyrouter | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
+  [![Stars](https://img.shields.io/github/stars/keyzakyy-dev/keyrouter?style=social)](https://github.com/keyzakyy-dev/keyrouter)
+  [![Forks](https://img.shields.io/github/forks/keyzakyy-dev/keyrouter?style=social)](https://github.com/keyzakyy-dev/keyrouter/network/members)
 
 [🚀 شروع سریع](#-شروع-سریع) • [💡 ویژگی‌ها](#-ویژگی‌های-کلیدی) • [📖 راه‌اندازی](#-راهنمای-راه‌اندازی) • [🌐 وب‌سایت](https://keyrouter.com)
 
@@ -213,7 +214,7 @@ PORT=20128 HOSTNAME=0.0.0.0 NEXT_PUBLIC_BASE_URL=http://localhost:20128 npm run 
 
 </div>
 
-> 🎬 **درباره KeyRouter ویدیو ساخته‌اید؟** یک [درخواست Pull](https://github.com/decolua/keyrouter/pulls) برای افزودن ویدیوی خود به این بخش ارسال کنید — ما آن را ادغام خواهیم کرد!
+> 🎬 **درباره KeyRouter ویدیو ساخته‌اید؟** یک [درخواست Pull](https://github.com/keyzakyy-dev/keyrouter/pulls) برای افزودن ویدیوی خود به این بخش ارسال کنید — ما آن را ادغام خواهیم کرد!
 
 ---
 
@@ -1125,7 +1126,7 @@ codex "your prompt"
 
 ```bash
 # کلون و نصب
-git clone https://github.com/decolua/keyrouter.git
+git clone https://github.com/keyzakyy-dev/keyrouter.git
 cd keyrouter
 npm install
 npm run build
@@ -1156,8 +1157,8 @@ pm2 startup
 
 تصاویر منتشر شده (چند پلتفرم `linux/amd64` + `linux/arm64`):
 
-- Docker Hub: [`decolua/keyrouter`](https://hub.docker.com/r/decolua/keyrouter)
-- GHCR: [`ghcr.io/decolua/keyrouter`](https://github.com/decolua/keyrouter/pkgs/container/keyrouter)
+- Docker Hub: [`keyzakyy-dev/keyrouter`](https://hub.docker.com/r/keyzakyy-dev/keyrouter)
+- GHCR: [`ghcr.io/keyzakyy-dev/keyrouter`](https://github.com/keyzakyy-dev/keyrouter/pkgs/container/keyrouter)
 
 **شروع سریع (استفاده از تصویر منتشر شده):**
 
@@ -1167,7 +1168,7 @@ docker run -d \
   -p 20128:20128 \
   -v "$HOME/.keyrouter:/app/data" \
   -e DATA_DIR=/app/data \
-  decolua/keyrouter:latest
+  keyzakyy-dev/keyrouter:latest
 ```
 
 → باز کردن http://localhost:20128
@@ -1175,7 +1176,7 @@ docker run -d \
 **ساخت از سورس (توسعه):**
 
 ```bash
-git clone https://github.com/decolua/keyrouter.git
+git clone https://github.com/keyzakyy-dev/keyrouter.git
 cd keyrouter/app
 docker build -t keyrouter .
 docker run -d --name keyrouter -p 20128:20128 \
@@ -1193,7 +1194,7 @@ docker run -d --name keyrouter -p 20128:20128 \
 docker logs -f keyrouter
 docker restart keyrouter
 docker stop keyrouter && docker rm keyrouter
-docker pull decolua/keyrouter:latest   # به‌روزرسانی به آخرین نسخه
+docker pull keyzakyy-dev/keyrouter:latest   # به‌روزرسانی به آخرین نسخه
 ```
 
 **ماندگاری داده:** `$HOME/.keyrouter/db/data.sqlite` در میزبان ↔ `/app/data/db/data.sqlite` در کانتینر.
@@ -1395,8 +1396,8 @@ Authorization: Bearer your-api-key
 ## 📧 پشتیبانی
 
 - **وب‌سایت**: [keyrouter.com](https://keyrouter.com)
-- **GitHub**: [github.com/decolua/keyrouter](https://github.com/decolua/keyrouter)
-- **مسائل**: [github.com/decolua/keyrouter/issues](https://github.com/decolua/keyrouter/issues)
+- **GitHub**: [github.com/keyzakyy-dev/keyrouter](https://github.com/keyzakyy-dev/keyrouter)
+- **مسائل**: [github.com/keyzakyy-dev/keyrouter/issues](https://github.com/keyzakyy-dev/keyrouter/issues)
 
 ---
 
@@ -1404,13 +1405,13 @@ Authorization: Bearer your-api-key
 
 با تشکر از همه مشارکت‌کنندگانی که به بهتر شدن KeyRouter کمک کردند!
 
-[![Contributors](https://contrib.rocks/image?repo=decolua/keyrouter&max=150&columns=15&anon=1&v=20260309)](https://github.com/decolua/keyrouter/graphs/contributors)
+[![Contributors](https://contrib.rocks/image?repo=keyzakyy-dev/keyrouter&max=150&columns=15&anon=1&v=20260309)](https://github.com/keyzakyy-dev/keyrouter/graphs/contributors)
 
 ---
 
 ## 📊 نمودار ستاره
 
-[![Star Chart](https://starchart.cc/decolua/keyrouter.svg?variant=adaptive)](https://starchart.cc/decolua/keyrouter)
+[![Star Chart](https://starchart.cc/keyzakyy-dev/keyrouter.svg?variant=adaptive)](https://starchart.cc/keyzakyy-dev/keyrouter)
 
 ## 🔀 فورک‌ها
 

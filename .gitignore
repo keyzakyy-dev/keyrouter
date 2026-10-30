@@ -103,6 +103,9 @@ start-dev-silent.cjs
 debug.log
 .scratch/
 AGENTS.md
+CLAUDE.md
+.gitignorerules
+.cursor/rules/
 
 # Playwright MCP artifacts
 .playwright-mcp/

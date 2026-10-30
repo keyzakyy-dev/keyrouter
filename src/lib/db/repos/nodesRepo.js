@@ -47,6 +47,34 @@ export async function getProviderNodes(filter = {}) {
   return db.all(sql, params).map(rowToNode);
 }
 
+// Map a provider-alias prefix to its routable provider-id form. When the
+// model already uses a node id (or no node matches), it is returned as-is.
+// Returns null when a prefix is ambiguous (multiple nodes share it), so the
+// caller can refuse to save rather than guess.
+export function resolveRoutableBacking(model, nodes = []) {
+  if (typeof model !== "string") return model;
+  const slash = model.indexOf("/");
+  if (slash <= 0) return model;
+  const providerPart = model.slice(0, slash);
+  const rest = model.slice(slash + 1);
+  if (!Array.isArray(nodes) || nodes.length === 0) return model;
+  if (nodes.some((n) => n?.id === providerPart)) return model;
+  const byPrefix = nodes.filter((n) => n?.prefix === providerPart);
+  if (byPrefix.length === 1) return `${byPrefix[0].id}/${rest}`;
+  if (byPrefix.length > 1) return null;
+  return model;
+}
+
+export async function normalizeRoutableMembers(models, nodes = null) {
+  if (!Array.isArray(models)) return models;
+  const list = nodes ?? (await getProviderNodes().catch(() => []));
+  return models.map((m) => {
+    if (typeof m !== "string") return m;
+    const routed = resolveRoutableBacking(m, list);
+    return routed === null ? m : routed;
+  });
+}
+
 export async function getProviderNodeById(id) {
   const db = await getAdapter();
   return rowToNode(db.get(`SELECT * FROM providerNodes WHERE id = ?`, [id]));

@@ -4,19 +4,19 @@ export default function HeroSection() {
   return (
     <section className="relative pt-32 pb-20 px-6 min-h-[90vh] flex flex-col items-center justify-center overflow-hidden">
       {/* Glow effect */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-[#6366f1]/10 rounded-full blur-[120px] pointer-events-none"></div>
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-white/10 rounded-full blur-[120px] pointer-events-none"></div>
       
       <div className="relative z-10 max-w-4xl w-full text-center flex flex-col items-center gap-8">
         {/* Version badge */}
-        <div className="inline-flex items-center gap-2 rounded-full border border-[#2f2f3c] bg-[#1e1e28]/50 px-3 py-1 text-xs font-medium text-[#6366f1]">
-          <span className="flex h-2 w-2 rounded-full bg-[#6366f1] animate-pulse"></span>
+        <div className="inline-flex items-center gap-2 rounded-full border border-[#2f2f3c] bg-[#1e1e28]/50 px-3 py-1 text-xs font-medium text-white">
+          <span className="flex h-2 w-2 rounded-full bg-white animate-pulse"></span>
           v1.0 is now live
         </div>
 
         {/* Main heading */}
         <h1 className="text-5xl md:text-7xl font-black leading-[1.1] tracking-tight">
           One Endpoint for <br/>
-          <span className="text-[#6366f1]">All AI Providers</span>
+          <span className="text-white">All AI Providers</span>
         </h1>
 
         {/* Description */}
@@ -26,7 +26,7 @@ export default function HeroSection() {
 
         {/* CTA Buttons */}
         <div className="flex flex-wrap items-center justify-center gap-4 w-full">
-          <button className="h-12 px-8 rounded-lg bg-[#6366f1] hover:bg-[#4f46e5] text-[#14141b] text-base font-bold transition-all shadow-[0_0_15px_rgba(99,102,241,0.4)] flex items-center gap-2">
+          <button className="h-12 px-8 rounded-lg bg-white hover:bg-[#d4d4d4] text-[#14141b] text-base font-bold transition-all shadow-[0_0_15px_rgba(255,255,255,0.2)] flex items-center gap-2">
             <span className="material-symbols-outlined">rocket_launch</span>
             Get Started
           </button>

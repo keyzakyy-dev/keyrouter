@@ -42,7 +42,7 @@ export default function Avatar({
       "bg-cyan-500",
       "bg-sky-500",
       "bg-blue-500",
-      "bg-indigo-500",
+      "bg-neutral-500",
       "bg-violet-500",
       "bg-purple-500",
       "bg-fuchsia-500",

@@ -9,18 +9,18 @@ import Image from "next/image";
  */
 export default function MitmLinkCard({ tool }) {
   return (
-    <Link href="/dashboard/mitm" className="block">
-      <Card padding="sm" className="overflow-hidden hover:border-primary/50 transition-colors cursor-pointer">
+    <Link href="/dashboard/mitm" className="group block">
+      <Card padding="sm" className="overflow-hidden transition-colors hover:bg-surface-2 cursor-pointer">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="size-8 flex items-center justify-center shrink-0">
+            <div className="grid size-11 shrink-0 place-items-center rounded-lg bg-surface-2">
               <Image
                 src={tool.image}
                 alt={tool.name}
-                width={32}
-                height={32}
-                className="size-8 object-contain rounded-lg"
-                sizes="32px"
+                width={24}
+                height={24}
+                className="size-6 object-contain"
+                sizes="24px"
                 onError={(e) => { e.target.style.display = "none"; }}
               loading="lazy"
               decoding="async"
@@ -28,13 +28,13 @@ export default function MitmLinkCard({ tool }) {
             </div>
             <div className="min-w-0">
               <div className="flex items-center gap-2">
-                <h3 className="font-medium text-sm">{tool.name}</h3>
-                <span className="px-1.5 py-0.5 text-[10px] font-medium bg-purple-500/10 text-purple-600 dark:text-purple-400 rounded-full">MITM</span>
+                <h3 className="truncate font-display text-[13px] font-medium text-text-main">{tool.name}</h3>
+                <span className="rounded-full bg-surface-2 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-text-muted">MITM</span>
               </div>
-              <p className="text-xs text-text-muted truncate">{tool.description}</p>
+              <p className="truncate text-xs text-text-muted">{tool.description}</p>
             </div>
           </div>
-          <span className="material-symbols-outlined text-text-muted text-[20px]">chevron_right</span>
+          <span className="material-symbols-outlined text-text-subtle text-[20px] opacity-40 transition-opacity group-hover:opacity-100">chevron_right</span>
         </div>
       </Card>
     </Link>

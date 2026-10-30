@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Card, Button, ModelSelectModal, ManualConfigModal } from "@/shared/components";
+import Dropdown from "@/shared/components/Dropdown";
 import Image from "next/image";
 import BaseUrlSelect from "./BaseUrlSelect";
 import { rememberEndpoint } from "./cliEndpointPresets";
@@ -539,26 +540,20 @@ export default function GenericCliToolCard({
                                 className="flex w-full flex-wrap items-center gap-1.5 rounded border border-border bg-bg-secondary px-2 py-1 text-xs text-text-main"
                               >
                                 <span className="min-w-0 flex-1 basis-40 truncate">{modelId}</span>
-                                <select
+                                <Dropdown
                                   value={caps.contextWindow}
-                                  onChange={(e) => setModelCap(modelId, "contextWindow", e.target.value)}
-                                  title="Context window"
-                                  className="shrink-0 rounded border border-border bg-surface px-1 py-0.5 text-[11px] focus:outline-none focus:ring-1 focus:ring-primary/50"
-                                >
-                                  {capOptions(PI_CONTEXT_WINDOWS, caps.contextWindow).map((n) => (
-                                    <option key={n} value={n}>{formatTokens(n)} ctx</option>
-                                  ))}
-                                </select>
-                                <select
+                                  onChange={(v) => setModelCap(modelId, "contextWindow", v)}
+                                  options={capOptions(PI_CONTEXT_WINDOWS, caps.contextWindow).map((n) => ({ value: n, label: `${formatTokens(n)} ctx` }))}
+                                  buttonClassName="shrink-0 rounded px-1 py-0.5 text-[11px]"
+                                  className="shrink-0"
+                                />
+                                <Dropdown
                                   value={caps.maxTokens}
-                                  onChange={(e) => setModelCap(modelId, "maxTokens", e.target.value)}
-                                  title="Max output tokens"
-                                  className="rounded border border-border bg-surface px-1 py-0.5 text-[11px] focus:outline-none focus:ring-1 focus:ring-primary/50"
-                                >
-                                  {capOptions(PI_MAX_TOKENS, caps.maxTokens).map((n) => (
-                                    <option key={n} value={n}>{formatTokens(n)} out</option>
-                                  ))}
-                                </select>
+                                  onChange={(v) => setModelCap(modelId, "maxTokens", v)}
+                                  options={capOptions(PI_MAX_TOKENS, caps.maxTokens).map((n) => ({ value: n, label: `${formatTokens(n)} out` }))}
+                                  buttonClassName="shrink-0 rounded px-1 py-0.5 text-[11px]"
+                                  className="shrink-0"
+                                />
                                 <button
                                   type="button"
                                   onClick={() => handleRemoveModel(modelId)}

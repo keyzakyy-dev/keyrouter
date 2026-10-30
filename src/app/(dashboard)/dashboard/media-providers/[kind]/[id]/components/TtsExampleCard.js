@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Card } from "@/shared/components";
+import Dropdown from "@/shared/components/Dropdown";
 import { AI_PROVIDERS, getProviderAlias } from "@/shared/constants/providers";
 import { getModelsByProviderId, getModelKind } from "@/shared/constants/models";
 import { useCopyToClipboard } from "@/shared/hooks/useCopyToClipboard";
@@ -377,36 +378,36 @@ export function TtsExampleCard({ providerId }) {
           )}
           {providerId !== "selfhosted-tts" && config.hasModelSelector && (config.modelKey || getModelsByProviderId(providerId).some(m => getModelKind(m) === "tts")) && (
             <Row label="Model">
-              <select
+              <Dropdown
                 value={selectedModel}
-                onChange={(e) => setSelectedModel(e.target.value)}
-                className="w-full px-3 py-1.5 text-sm border border-border rounded-lg bg-background focus:outline-none focus:border-primary"
-              >
-                {(() => {
+                onChange={setSelectedModel}
+                options={(() => {
                   const ttsModels = getModelsByProviderId(providerId).filter(m => getModelKind(m) === "tts");
-                  return (ttsModels.length ? ttsModels : getModelsByProviderId(config.modelKey) || []).map((m) => (
-                    <option key={m.id} value={m.id}>{m.name || m.id}</option>
-                  ));
+                  return (ttsModels.length ? ttsModels : getModelsByProviderId(config.modelKey) || []).map((m) => ({ value: m.id, label: m.name || m.id }));
                 })()}
-              </select>
+                buttonClassName="w-full px-3 py-1.5 rounded-lg"
+                className="w-full"
+              />
             </Row>
           )}
 
           {/* Language hint dropdown (Gemini, Xiaomi MiMo) — sends body.language to guide pronunciation */}
           {config.hasLanguageHint && (
             <Row label="Language">
-              <select
+              <Dropdown
                 value={languageHint}
-                onChange={(e) => setLanguageHint(e.target.value)}
-                className="w-full px-3 py-1.5 text-sm border border-border rounded-lg bg-background focus:outline-none focus:border-primary"
-              >
-                <option value="">Auto-detect</option>
-                {(config.languageOptions || GOOGLE_TTS_LANGUAGES).map((l) =>
-                  typeof l === "string"
-                    ? <option key={l} value={l}>{l}</option>
-                    : <option key={l.id} value={l.name}>{l.name}</option>
-                )}
-              </select>
+                onChange={setLanguageHint}
+                options={[
+                  { value: "", label: "Auto-detect" },
+                  ...(config.languageOptions || GOOGLE_TTS_LANGUAGES).map((l) =>
+                    typeof l === "string"
+                      ? { value: l, label: l }
+                      : { value: l.name, label: l.name }
+                  ),
+                ]}
+                buttonClassName="w-full px-3 py-1.5 rounded-lg"
+                className="w-full"
+              />
             </Row>
           )}
 
@@ -497,19 +498,17 @@ export function TtsExampleCard({ providerId }) {
           {/* Google TTS: Language dropdown */}
           {config.hasLanguageDropdown && (
             <Row label="Language">
-              <select
+              <Dropdown
                 value={selectedVoice}
-                onChange={(e) => {
-                  const m = getModelsByProviderId(providerId).filter((m) => getModelKind(m) === "tts").find((m) => m.id === e.target.value);
-                  setSelectedVoice(e.target.value);
-                  setSelectedVoiceName(m?.name || e.target.value);
+                onChange={(v) => {
+                  const m = getModelsByProviderId(providerId).filter((m) => getModelKind(m) === "tts").find((m) => m.id === v);
+                  setSelectedVoice(v);
+                  setSelectedVoiceName(m?.name || v);
                 }}
-                className="w-full px-3 py-1.5 text-sm border border-border rounded-lg bg-background focus:outline-none focus:border-primary"
-              >
-                {getModelsByProviderId(providerId).filter((m) => getModelKind(m) === "tts").map((m) => (
-                  <option key={m.id} value={m.id}>{m.name || m.id}</option>
-                ))}
-              </select>
+                options={getModelsByProviderId(providerId).filter((m) => getModelKind(m) === "tts").map((m) => ({ value: m.id, label: m.name || m.id }))}
+                buttonClassName="w-full px-3 py-1.5 rounded-lg"
+                className="w-full"
+              />
             </Row>
           )}
 
@@ -559,15 +558,13 @@ export function TtsExampleCard({ providerId }) {
 
           {/* Output Format */}
           <Row label="Output Format">
-            <select
+            <Dropdown
               value={responseFormat}
-              onChange={(e) => setResponseFormat(e.target.value)}
-              className="w-full px-3 py-1.5 text-sm border border-border rounded-lg bg-background focus:outline-none focus:border-primary"
-            >
-              {formatOptions.map((opt) => (
-                <option key={opt.value} value={opt.value}>{opt.label}</option>
-              ))}
-            </select>
+              onChange={setResponseFormat}
+              options={formatOptions.map((opt) => ({ value: opt.value, label: opt.label }))}
+              buttonClassName="w-full px-3 py-1.5 rounded-lg"
+              className="w-full"
+            />
           </Row>
 
           {/* Curl + Run */}

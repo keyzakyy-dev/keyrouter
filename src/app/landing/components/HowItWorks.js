@@ -13,7 +13,7 @@ export default function HowItWorks() {
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
           {/* Connection line */}
-          <div className="hidden md:block absolute top-12 left-[16%] right-[16%] h-[2px] bg-linear-to-r from-gray-700 via-[#6366f1] to-gray-700 -z-10"></div>
+          <div className="hidden md:block absolute top-12 left-[16%] right-[16%] h-[2px] bg-linear-to-r from-gray-700 via-white to-gray-700 -z-10"></div>
           
           {/* Step 1: CLI & SDKs */}
           <div className="flex flex-col gap-6 relative group">
@@ -30,11 +30,11 @@ export default function HowItWorks() {
 
           {/* Step 2: KeyRouter Hub */}
           <div className="flex flex-col gap-6 relative group md:items-center md:text-center">
-            <div className="w-24 h-24 rounded-2xl bg-[#14141b] border-2 border-[#6366f1] flex items-center justify-center shadow-[0_0_30px_rgba(99,102,241,0.2)] z-10 mx-auto">
-              <span className="material-symbols-outlined text-4xl text-[#6366f1] animate-pulse">hub</span>
+            <div className="w-24 h-24 rounded-2xl bg-[#14141b] border-2 border-white flex items-center justify-center shadow-[0_0_30px_rgba(255,255,255,0.15)] z-10 mx-auto">
+              <span className="material-symbols-outlined text-4xl text-white animate-pulse">hub</span>
             </div>
             <div>
-              <h3 className="text-xl font-bold mb-2 text-[#6366f1]">2. KeyRouter Hub</h3>
+              <h3 className="text-xl font-bold mb-2 text-white">2. KeyRouter Hub</h3>
               <p className="text-sm text-gray-400">
                 Our engine analyzes the prompt, checks provider health, and routes for lowest latency or cost.
               </p>

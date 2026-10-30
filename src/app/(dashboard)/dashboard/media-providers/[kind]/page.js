@@ -52,14 +52,11 @@ function MediaProviderCard({ provider, kind, connections, isCustom, onToggle }) 
     <Link href={`/dashboard/media-providers/${kind}/${provider.id}`} className="group">
       <Card
         padding="xs"
-        className={`h-full hover:bg-black/[0.01] dark:hover:bg-white/[0.01] transition-colors cursor-pointer ${allDisabled ? "opacity-50" : ""}`}
+        className={`h-full transition-colors hover:bg-surface-2/60 cursor-pointer ${allDisabled ? "opacity-50" : ""}`}
       >
         <div className="flex min-w-0 items-center justify-between gap-3">
           <div className="flex min-w-0 items-center gap-3">
-            <div
-              className="size-8 rounded-lg flex items-center justify-center shrink-0"
-              style={{ backgroundColor: `${provider.color?.length > 7 ? provider.color : (provider.color ?? "#888") + "15"}` }}
-            >
+            <div className="grid size-9 shrink-0 place-items-center rounded-lg bg-surface-2">
               <ProviderIcon
                 src={`/providers/${provider.id}.png`}
                 alt={provider.name}
@@ -70,7 +67,7 @@ function MediaProviderCard({ provider, kind, connections, isCustom, onToggle }) 
               />
             </div>
             <div className="min-w-0">
-              <h3 className="font-semibold text-sm">{provider.name}</h3>
+              <h3 className="truncate font-display text-sm font-medium text-text-main">{provider.name}</h3>
               <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                 {isCustom && <Badge variant="default" size="sm">Custom</Badge>}
                 {renderStatus()}
@@ -185,7 +182,7 @@ export default function MediaProviderKindPage() {
   const customProviders = customNodes.map((n) => ({
     id: n.id,
     name: n.name || "Custom Embedding",
-    color: "#6366F1",
+    color: "#525252",
     textIcon: "CE",
   }));
 

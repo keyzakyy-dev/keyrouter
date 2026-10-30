@@ -16,7 +16,7 @@ export default function Navigation() {
           onClick={() => router.push("/")}
           aria-label="Navigate to home"
         >
-          <div className="size-8 rounded bg-linear-to-br from-brand-500 to-brand-700 flex items-center justify-center text-white">
+          <div className="size-8 rounded bg-linear-to-br from-white to-[#d4d4d4] flex items-center justify-center text-[#14141b]">
             <span className="material-symbols-outlined text-[20px]">hub</span>
           </div>
           <h2 className="text-white text-xl font-bold tracking-tight">KeyRouter</h2>
@@ -36,7 +36,7 @@ export default function Navigation() {
         <div className="flex items-center gap-4">
           <button 
             onClick={() => router.push("/dashboard")}
-            className="hidden sm:flex h-9 items-center justify-center rounded-lg px-4 bg-[#6366f1] hover:bg-[#4f46e5] transition-all text-[#14141b] text-sm font-bold shadow-[0_0_15px_rgba(99,102,241,0.4)] hover:shadow-[0_0_20px_rgba(99,102,241,0.6)]"
+            className="hidden sm:flex h-9 items-center justify-center rounded-lg px-4 bg-white hover:bg-[#d4d4d4] transition-all text-[#14141b] text-sm font-bold shadow-[0_0_15px_rgba(255,255,255,0.15)] hover:shadow-[0_0_20px_rgba(255,255,255,0.25)]"
           >
             Get Started
           </button>
@@ -59,7 +59,7 @@ export default function Navigation() {
             <a className="text-gray-300 hover:text-white text-sm font-medium transition-colors" href="https://github.com/decolua/keyrouter" target="_blank" rel="noopener noreferrer">GitHub</a>
             <button 
               onClick={() => router.push("/dashboard")}
-              className="h-9 rounded-lg bg-[#6366f1] hover:bg-[#4f46e5] text-[#14141b] text-sm font-bold"
+              className="h-9 rounded-lg bg-white hover:bg-[#d4d4d4] text-[#14141b] text-sm font-bold"
             >
               Get Started
             </button>

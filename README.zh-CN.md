@@ -10,9 +10,10 @@
   
   [![npm](https://img.shields.io/npm/v/keyrouter.svg)](https://www.npmjs.com/package/keyrouter)
   [![Downloads](https://img.shields.io/npm/dm/keyrouter.svg)](https://www.npmjs.com/package/keyrouter)
-  [![License](https://img.shields.io/npm/l/keyrouter.svg)](https://github.com/decolua/keyrouter/blob/main/LICENSE)
+  [![License](https://img.shields.io/npm/l/keyrouter.svg)](https://github.com/keyzakyy-dev/keyrouter/blob/main/LICENSE)
 
-  <a href="https://trendshift.io/repositories/22628" target="_blank"><img src="https://trendshift.io/api/badge/repositories/22628" alt="decolua%2Fkeyrouter | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
+  [![Stars](https://img.shields.io/github/stars/keyzakyy-dev/keyrouter?style=social)](https://github.com/keyzakyy-dev/keyrouter)
+  [![Forks](https://img.shields.io/github/forks/keyzakyy-dev/keyrouter?style=social)](https://github.com/keyzakyy-dev/keyrouter/network/members)
   
   [🚀 快速开始](#-快速开始) • [💡 功能特点](#-主要功能) • [📖 设置指南](#-设置指南) • [🌐 网站](https://keyrouter.com)
 
@@ -173,7 +174,7 @@ PORT=20128 HOSTNAME=0.0.0.0 NEXT_PUBLIC_BASE_URL=http://localhost:20128 npm run 
 
 </div>
 
-> 🎬 **制作了关于 KeyRouter 的视频？** 提交 [Pull Request](https://github.com/decolua/keyrouter/pulls)，将你的视频添加到此部分 — 我们会合并它！
+> 🎬 **制作了关于 KeyRouter 的视频？** 提交 [Pull Request](https://github.com/keyzakyy-dev/keyrouter/pulls)，将你的视频添加到此部分 — 我们会合并它！
 
 ---
 
@@ -1022,7 +1023,7 @@ Model：cc/claude-opus-4-7
 
 ```bash
 # 克隆并安装
-git clone https://github.com/decolua/keyrouter.git
+git clone https://github.com/keyzakyy-dev/keyrouter.git
 cd keyrouter
 npm install
 npm run build
@@ -1267,8 +1268,8 @@ Authorization: Bearer your-api-key
 ## 📧 支持
 
 - **网站**：[keyrouter.com](https://keyrouter.com)
-- **GitHub**：[github.com/decolua/keyrouter](https://github.com/decolua/keyrouter)
-- **问题**：[github.com/decolua/keyrouter/issues](https://github.com/decolua/keyrouter/issues)
+- **GitHub**：[github.com/keyzakyy-dev/keyrouter](https://github.com/keyzakyy-dev/keyrouter)
+- **问题**：[github.com/keyzakyy-dev/keyrouter/issues](https://github.com/keyzakyy-dev/keyrouter/issues)
 
 ---
 
@@ -1276,13 +1277,13 @@ Authorization: Bearer your-api-key
 
 感谢所有帮助改进 KeyRouter 的贡献者！
 
-[![Contributors](https://contrib.rocks/image?repo=decolua/keyrouter&max=150&columns=15&anon=1&v=20260309)](https://github.com/decolua/keyrouter/graphs/contributors)
+[![Contributors](https://contrib.rocks/image?repo=keyzakyy-dev/keyrouter&max=150&columns=15&anon=1&v=20260309)](https://github.com/keyzakyy-dev/keyrouter/graphs/contributors)
 
 ---
 
 ## 📊 Star 图表
 
-[![Star Chart](https://starchart.cc/decolua/keyrouter.svg?variant=adaptive)](https://starchart.cc/decolua/keyrouter)
+[![Star Chart](https://starchart.cc/keyzakyy-dev/keyrouter.svg?variant=adaptive)](https://starchart.cc/keyzakyy-dev/keyrouter)
 
 
 

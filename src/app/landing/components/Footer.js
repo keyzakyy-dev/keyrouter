@@ -8,7 +8,7 @@ export default function Footer() {
           {/* Brand */}
           <div className="col-span-2 lg:col-span-2">
             <div className="flex items-center gap-3 mb-6">
-              <div className="size-6 rounded bg-[#6366f1] flex items-center justify-center text-white">
+              <div className="size-6 rounded bg-white flex items-center justify-center text-[#14141b]">
                 <span className="material-symbols-outlined text-[16px]">hub</span>
               </div>
               <h3 className="text-white text-lg font-bold">KeyRouter</h3>
@@ -26,23 +26,23 @@ export default function Footer() {
           {/* Product */}
           <div className="flex flex-col gap-4">
             <h4 className="font-bold text-white">Product</h4>
-            <a className="text-gray-400 hover:text-[#6366f1] text-sm transition-colors" href="#features">Features</a>
-            <a className="text-gray-400 hover:text-[#6366f1] text-sm transition-colors" href="/dashboard">Dashboard</a>
-            <a className="text-gray-400 hover:text-[#6366f1] text-sm transition-colors" href="https://github.com/decolua/keyrouter" target="_blank" rel="noopener noreferrer">Changelog</a>
+            <a className="text-gray-400 hover:text-white text-sm transition-colors" href="#features">Features</a>
+            <a className="text-gray-400 hover:text-white text-sm transition-colors" href="/dashboard">Dashboard</a>
+            <a className="text-gray-400 hover:text-white text-sm transition-colors" href="https://github.com/decolua/keyrouter" target="_blank" rel="noopener noreferrer">Changelog</a>
           </div>
           
           {/* Resources */}
           <div className="flex flex-col gap-4">
             <h4 className="font-bold text-white">Resources</h4>
-            <a className="text-gray-400 hover:text-[#6366f1] text-sm transition-colors" href="https://github.com/decolua/keyrouter#readme" target="_blank" rel="noopener noreferrer">Documentation</a>
-            <a className="text-gray-400 hover:text-[#6366f1] text-sm transition-colors" href="https://github.com/decolua/keyrouter" target="_blank" rel="noopener noreferrer">GitHub</a>
-            <a className="text-gray-400 hover:text-[#6366f1] text-sm transition-colors" href="https://www.npmjs.com/package/keyrouter" target="_blank" rel="noopener noreferrer">NPM</a>
+            <a className="text-gray-400 hover:text-white text-sm transition-colors" href="https://github.com/decolua/keyrouter#readme" target="_blank" rel="noopener noreferrer">Documentation</a>
+            <a className="text-gray-400 hover:text-white text-sm transition-colors" href="https://github.com/decolua/keyrouter" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a className="text-gray-400 hover:text-white text-sm transition-colors" href="https://www.npmjs.com/package/keyrouter" target="_blank" rel="noopener noreferrer">NPM</a>
           </div>
           
           {/* Legal */}
           <div className="flex flex-col gap-4">
             <h4 className="font-bold text-white">Legal</h4>
-            <a className="text-gray-400 hover:text-[#6366f1] text-sm transition-colors" href="https://github.com/decolua/keyrouter/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>
+            <a className="text-gray-400 hover:text-white text-sm transition-colors" href="https://github.com/decolua/keyrouter/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>
           </div>
         </div>
         

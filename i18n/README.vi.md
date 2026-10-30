@@ -9,7 +9,7 @@
   
   [![npm](https://img.shields.io/npm/v/keyrouter.svg)](https://www.npmjs.com/package/keyrouter)
   [![Downloads](https://img.shields.io/npm/dm/keyrouter.svg)](https://www.npmjs.com/package/keyrouter)
-  [![License](https://github.com/decolua/keyrouter/blob/main/LICENSE)](https://github.com/decolua/keyrouter/blob/main/LICENSE)
+  [![License](https://github.com/keyzakyy-dev/keyrouter/blob/main/LICENSE)](https://github.com/keyzakyy-dev/keyrouter/blob/main/LICENSE)
   
   [🚀 Bắt đầu nhanh](#-quick-start) • [💡 Tính năng](#-key-features) • [📖 Cài đặt](#-setup-guide) • [🌐 Website](https://keyrouter.com)
 </div>
@@ -945,7 +945,7 @@ Model: cc/claude-opus-4-6
 
 ```bash
 # Clone và cài đặt
-git clone https://github.com/decolua/keyrouter.git
+git clone https://github.com/keyzakyy-dev/keyrouter.git
 cd keyrouter
 npm install
 npm run build
@@ -1256,8 +1256,8 @@ Tài liệu tham khảo kiến trúc đầy đủ: [`docs/ARCHITECTURE.md`](../d
 ## 📧 Hỗ trợ
 
 - **Website**: [keyrouter.com](https://keyrouter.com)
-- **GitHub**: [github.com/decolua/9](https://github.com/decolua/keyrouter)
-- **Issues**: [github.com/decolua/keyrouter/issues](https://github.com/decolua/keyrouter/issues)
+- **GitHub**: [github.com/keyzakyy-dev/keyrouter](https://github.com/keyzakyy-dev/keyrouter)
+- **Issues**: [github.com/keyzakyy-dev/keyrouter/issues](https://github.com/keyzakyy-dev/keyrouter/issues)
 
 ---
 
@@ -1265,13 +1265,13 @@ Tài liệu tham khảo kiến trúc đầy đủ: [`docs/ARCHITECTURE.md`](../d
 
 Cảm ơn tất cả những người đã đóng góp giúp KeyRouter tốt hơn!
 
-[![Contributors](https://contrib.rocks/image?repo=decolua/keyrouter&max=100&columns=20&anon=1)](https://github.com/decolua/keyrouter/graphs/contributors)
+[![Contributors](https://contrib.rocks/image?repo=keyzakyy-dev/keyrouter&max=100&columns=20&anon=1)](https://github.com/keyzakyy-dev/keyrouter/graphs/contributors)
 
 ---
 
 ## 📊 Star Chart
 
-[![ Chart](https://starchart.cc/decolua/keyrouter.svg?variant=adaptive)](https://starchart.cc/decolua/keyrouter)
+[![ Chart](https://starchart.cc/keyzakyy-dev/keyrouter.svg?variant=adaptive)](https://starchart.cc/keyzakyy-dev/keyrouter)
 
 ### Cách Đóng góp
 
@@ -1281,7 +1281,7 @@ Cảm ơn tất cả những người đã đóng góp giúp KeyRouter tốt hơ
 4. Push lên nhánh (`git push origin feature/amazing-feature`)
 5. Mở một Pull Request
 
-Xem [Pull Requests](https://github.com/decolua/keyrouter/pulls) để biết hướng dẫn chi tiết.
+Xem [Pull Requests](https://github.com/keyzakyy-dev/keyrouter/pulls) để biết hướng dẫn chi tiết.
 
 ---
 

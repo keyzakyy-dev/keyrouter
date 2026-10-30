@@ -1,11 +1,13 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import PropTypes from "prop-types";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { getProviderIconSrc, markProviderIconMissing } from "@/shared/utils/providerIcon";
 import { Card, Button, Badge, Input, Modal, CardSkeleton, OAuthModal, KiroOAuthWrapper, CursorAuthModal, ZedAuthModal, XiaomiMimoAuthModal, IFlowCookieModal, GitLabAuthModal, Toggle, Select, EditConnectionModal, NoAuthProxyCard, ConfirmModal } from "@/shared/components";
+import Dropdown from "@/shared/components/Dropdown";
 import { OAUTH_PROVIDERS, APIKEY_PROVIDERS, FREE_PROVIDERS, FREE_TIER_PROVIDERS, WEB_COOKIE_PROVIDERS, getProviderAlias, isOpenAICompatibleProvider, isAnthropicCompatibleProvider, AI_PROVIDERS } from "@/shared/constants/providers";
 import { getModelsByProviderId, getModelKind } from "@/shared/constants/models";
 import { getThinkingLevels } from "open-sse/providers/thinkingLevels.js";
@@ -40,6 +42,16 @@ const AUTO_PING_SETTINGS_KEYS = {
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function getEffectiveConnStatus(conn) {
+  const isCooldown = Object.entries(conn).some(
+    ([k, v]) =>
+      k.startsWith("modelLock_") && v && new Date(v).getTime() > Date.now(),
+  );
+  return conn.testStatus === "unavailable" && !isCooldown
+    ? "active"
+    : conn.testStatus;
 }
 
 export default function ProviderDetailPage() {
@@ -1042,7 +1054,7 @@ export default function ProviderDetailPage() {
                 className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
               />
             </div>
-            <div className="flex-1 min-w-0">
+            <div className="flex-1 min-w-0 ml-2 sm:ml-4">
               <ConnectionRow
                 connection={conn}
                 proxyPools={proxyPools}
@@ -1257,7 +1269,7 @@ export default function ProviderDetailPage() {
         {/* Add model button — inline, same style as model chips */}
         <button
           onClick={() => setShowAddCustomModel(true)}
-          className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-dashed border-primary/40 px-3 py-2 text-xs text-primary transition-colors hover:border-primary hover:bg-primary/5 sm:w-auto"
+          className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-dashed border-border px-3 py-2 text-xs font-display font-medium text-text-muted transition-colors hover:border-text-subtle hover:bg-surface-2/60 hover:text-text-main sm:w-auto"
         >
           <span className="material-symbols-outlined text-sm">add</span>
           Add Model
@@ -1268,7 +1280,7 @@ export default function ProviderDetailPage() {
           <button
             onClick={handleImportQoderModels}
             disabled={importingQoderModels}
-            className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-dashed border-blue-500/40 px-3 py-2 text-xs text-blue-600 dark:text-blue-400 transition-colors hover:border-blue-500 hover:bg-blue-500/5 sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-dashed border-border px-3 py-2 text-xs font-display font-medium text-text-muted transition-colors hover:border-text-subtle hover:bg-surface-2/60 hover:text-text-main sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span className="material-symbols-outlined text-sm" style={importingQoderModels ? { animation: "spin 1s linear infinite" } : undefined}>
               {importingQoderModels ? "progress_activity" : "download"}
@@ -1282,7 +1294,7 @@ export default function ProviderDetailPage() {
           <button
             onClick={handleImportClineModels}
             disabled={importingClineModels}
-            className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-dashed border-blue-500/40 px-3 py-2 text-xs text-blue-600 dark:text-blue-400 transition-colors hover:border-blue-500 hover:bg-blue-500/5 sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-dashed border-border px-3 py-2 text-xs font-display font-medium text-text-muted transition-colors hover:border-text-subtle hover:bg-surface-2/60 hover:text-text-main sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span className="material-symbols-outlined text-sm" style={importingClineModels ? { animation: "spin 1s linear infinite" } : undefined}>
               {importingClineModels ? "progress_activity" : "download"}
@@ -1378,82 +1390,117 @@ export default function ProviderDetailPage() {
     return getProviderIconSrc(providerInfo.id);
   };
 
+  // Live summary metrics from connection data (mirrors providers index).
+  const summary = {
+    total: connections.length,
+    connected: connections.filter((c) => {
+      const s = getEffectiveConnStatus(c);
+      return s === "active" || s === "success";
+    }).length,
+    errors: connections.filter((c) => {
+      const s = getEffectiveConnStatus(c);
+      return s === "error" || s === "expired" || s === "unavailable";
+    }).length,
+    active: connections.filter((c) => c.isActive !== false).length,
+  };
+
   return (
     <div className="flex min-w-0 flex-col gap-6 px-1 sm:gap-8 sm:px-0">
-      {/* Header */}
+      {/* Header hero */}
       <div className="min-w-0">
         <Link
           href="/dashboard/providers"
-          className="inline-flex items-center gap-1 text-sm text-text-muted hover:text-primary transition-colors mb-4"
+          className="mb-4 inline-flex h-8 items-center gap-1.5 rounded-lg border border-border bg-surface pl-1.5 pr-3 text-sm font-display font-medium text-text-main transition-colors hover:border-text-subtle hover:bg-surface-2"
         >
-          <span className="material-symbols-outlined text-lg">arrow_back</span>
+          <span className="material-symbols-outlined text-[17px] text-text-muted">arrow_back</span>
           Back to Providers
         </Link>
-        <div className="flex min-w-0 items-center gap-3 sm:gap-4">
-          <div
-            className="flex size-12 shrink-0 items-center justify-center rounded-lg"
-            style={{ backgroundColor: `${providerInfo.color}15` }}
-          >
-            {headerImgError || !getHeaderIconPath() ? (
-              <span className="text-sm font-bold" style={{ color: providerInfo.color }}>
-                {providerInfo.textIcon || providerInfo.id.slice(0, 2).toUpperCase()}
-              </span>
-            ) : (
-              <Image
-                src={getHeaderIconPath()}
-                alt={providerInfo.name}
-                width={48}
-                height={48}
-                className="max-h-12 max-w-12 rounded-lg object-contain"
-                sizes="48px"
-                onError={() => {
-                  markProviderIconMissing(providerInfo.id);
-                  setHeaderImgError(true);
-                }}
-              loading="lazy"
-              decoding="async"
-              />
-            )}
-          </div>
-          <div className="min-w-0">
-            <div className="flex items-center gap-3 flex-wrap">
-              <h1 className="truncate text-2xl font-semibold tracking-tight sm:text-3xl">{providerInfo.name}</h1>
+        <div className="relative overflow-hidden rounded-xl border border-border-subtle bg-surface/60">
+          <div className="flex items-center gap-4 p-4 sm:p-5">
+            <div
+              className="grid size-14 shrink-0 place-items-center rounded-xl border border-border bg-surface-2 sm:size-16"
+              style={{ backgroundColor: `${providerInfo.color}12` }}
+            >
+              {headerImgError || !getHeaderIconPath() ? (
+                <span className="text-lg font-bold sm:text-xl" style={{ color: providerInfo.color }}>
+                  {providerInfo.textIcon || providerInfo.id.slice(0, 2).toUpperCase()}
+                </span>
+              ) : (
+                <Image
+                  src={getHeaderIconPath()}
+                  alt={providerInfo.name}
+                  width={56}
+                  height={56}
+                  className="max-h-14 max-w-14 rounded-lg object-contain sm:max-h-16 sm:max-w-16"
+                  sizes="56px"
+                  onError={() => {
+                    markProviderIconMissing(providerInfo.id);
+                    setHeaderImgError(true);
+                  }}
+                  loading="lazy"
+                  decoding="async"
+                />
+              )}
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h1 className="truncate font-display text-2xl font-bold tracking-tight sm:text-3xl">
+                  {providerInfo.name}
+                </h1>
+                <Badge variant="default" size="sm">
+                  {isCompatible ? "Compatible" : isFreeNoAuth ? "Free" : supportsApiKeyAuth && isOAuth ? "Dual Auth" : isOAuth ? "OAuth" : "API Key"}
+                </Badge>
+              </div>
+              <p className="mt-1 text-sm text-text-muted">
+                {summary.total} connection{summary.total === 1 ? "" : "s"}
+                {summary.total > 0 && ` · ${summary.connected} connected`}
+              </p>
               {(providerInfo.notice?.apiKeyUrl || providerInfo.notice?.signupUrl || providerInfo.website) && (
                 <a
                   href={providerInfo.notice?.apiKeyUrl || providerInfo.notice?.signupUrl || providerInfo.website}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs text-primary hover:underline inline-flex items-center gap-1"
+                  className="mt-2 inline-flex items-center gap-1 text-xs text-primary hover:underline"
                 >
                   <span className="material-symbols-outlined text-sm">open_in_new</span>
                   {providerInfo.notice?.apiKeyUrl ? "Get API Key" : "Sign up / Learn more"}
                 </a>
               )}
             </div>
-            <p className="text-text-muted">
-              {connections.length} connection{connections.length === 1 ? "" : "s"}
-            </p>
           </div>
         </div>
       </div>
 
+      {/* Summary ribbon */}
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <SummaryStat icon="hub" label="Total koneksi" value={summary.total} />
+        <SummaryStat icon="check_circle" label="Connected" value={summary.connected} tone="success" />
+        <SummaryStat icon="error" label="Error" value={summary.errors} tone="danger" />
+        <SummaryStat
+          icon="toggle_on"
+          label="Aktif"
+          value={summary.active}
+          sub={summary.total > 0 ? `dari ${summary.total} koneksi` : null}
+        />
+      </div>
+
       {providerInfo.deprecated && (
-        <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
-          <span className="material-symbols-outlined text-[16px] text-yellow-500 mt-0.5 shrink-0">warning</span>
-          <p className="text-xs text-red-600 dark:text-yellow-400 leading-relaxed">{providerInfo.deprecationNotice}</p>
+        <div className="flex items-center gap-2.5 rounded-lg border border-danger/25 bg-danger/5 px-3 py-2.5">
+          <span className="material-symbols-outlined text-[16px] text-danger shrink-0">warning</span>
+          <p className="text-xs text-danger leading-relaxed">{providerInfo.deprecationNotice}</p>
         </div>
       )}
 
       {providerInfo.notice?.text && !providerInfo.deprecated && (
-        <div className="flex flex-col gap-2 rounded-lg border border-blue-500/30 bg-blue-500/10 px-3 py-2 sm:flex-row sm:items-center">
-          <span className="material-symbols-outlined text-[16px] text-blue-500 shrink-0">info</span>
-          <p className="min-w-0 flex-1 text-xs leading-relaxed text-blue-600 dark:text-blue-400">{providerInfo.notice.text}</p>
+        <div className="flex flex-col gap-2.5 rounded-lg border border-border bg-surface-2/60 px-3 py-2.5 sm:flex-row sm:items-center">
+          <span className="material-symbols-outlined text-[16px] text-text-muted shrink-0">info</span>
+          <p className="min-w-0 flex-1 text-xs leading-relaxed text-text-muted">{providerInfo.notice.text}</p>
           {providerInfo.notice.apiKeyUrl && (
             <a
               href={providerInfo.notice.apiKeyUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex justify-center rounded bg-blue-500 px-2 py-1 text-xs font-medium text-white transition-colors hover:bg-blue-600 sm:py-0.5"
+              className="inline-flex h-7 items-center justify-center rounded-lg bg-primary px-3 text-xs font-display font-medium text-white transition-colors hover:bg-primary-hover sm:py-0"
             >
               Get API Key →
             </a>
@@ -1465,8 +1512,8 @@ export default function ProviderDetailPage() {
         <Card>
           <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div className="min-w-0">
-              <h2 className="text-lg font-semibold">{isAnthropicCompatible ? "Anthropic Compatible Details" : "OpenAI Compatible Details"}</h2>
-              <p className="break-all text-sm text-text-muted">
+              <h2 className="font-display text-lg font-semibold text-text-main">{isAnthropicCompatible ? "Anthropic Compatible Details" : "OpenAI Compatible Details"}</h2>
+              <p className="mt-0.5 break-all font-mono text-xs text-text-muted">
                 {isAnthropicCompatible ? "Messages API" : (providerNode.apiType === "responses" ? "Responses API" : "Chat Completions")} · {(providerNode.baseUrl || "").replace(/\/$/, "")}/
                 {isAnthropicCompatible ? "messages" : (providerNode.apiType === "responses" ? "responses" : "chat/completions")}
               </p>
@@ -1528,7 +1575,12 @@ export default function ProviderDetailPage() {
       ) : (
         <Card>
           <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <h2 className="text-lg font-semibold">Connections</h2>
+            <div className="flex items-center gap-2">
+              <h2 className="font-display text-lg font-semibold text-text-main">Connections</h2>
+              <span className="rounded-full bg-surface-2 px-2 py-0.5 font-mono text-[11px] font-semibold text-text-main">
+                {connections.length}
+              </span>
+            </div>
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
               {connections.length > 0 && proxyPools.length > 0 && (
                 <Button
@@ -1575,22 +1627,22 @@ export default function ProviderDetailPage() {
                 </>
               )}
               {/* Round Robin toggle */}
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-xs text-text-muted font-medium">Round Robin</span>
+              <div className="flex flex-wrap items-center gap-2.5 rounded-lg border border-border bg-surface-2/40 px-3 py-2">
+                <span className="font-mono text-[10px] uppercase tracking-wider text-text-subtle">Round Robin</span>
                 <Toggle
                   checked={providerStrategy === "round-robin"}
                   onChange={handleRoundRobinToggle}
                 />
                 {providerStrategy === "round-robin" && (
                   <div className="flex items-center gap-1.5">
-                    <span className="text-xs text-text-muted">Sticky:</span>
+                    <span className="font-mono text-[10px] uppercase tracking-wider text-text-subtle">Sticky:</span>
                     <input
                       type="number"
                       min={1}
                       value={providerStickyLimit}
                       onChange={(e) => handleStickyLimitChange(e.target.value)}
                       placeholder="1"
-                      className="w-14 px-2 py-1 text-xs border border-border rounded-md bg-background focus:outline-none focus:border-primary"
+                      className="w-14 rounded-md border border-border bg-surface px-2 py-1 font-mono text-xs text-text-main focus:border-text-subtle focus:outline-none"
                     />
                   </div>
                 )}
@@ -1616,12 +1668,20 @@ export default function ProviderDetailPage() {
               <div className="flex gap-2">
                 {hasDualAuthModes ? (
                   <>
-                    <Button size="sm" icon="lock" variant="secondary" onClick={triggerOAuthConnection}>
+                    <button
+                      onClick={triggerOAuthConnection}
+                      className="inline-flex h-8 items-center justify-center gap-2 rounded-lg border border-border bg-surface px-3.5 text-sm font-display font-medium text-text-main transition-colors hover:border-text-subtle hover:bg-surface-2"
+                    >
+                      <span className="material-symbols-outlined text-[17px]">lock</span>
                       {oauthConnectionLabel}
-                    </Button>
-                    <Button size="sm" icon="key" onClick={triggerApiKeyConnection}>
+                    </button>
+                    <button
+                      onClick={triggerApiKeyConnection}
+                      className="inline-flex h-8 items-center justify-center gap-2 rounded-lg bg-primary px-3.5 text-sm font-display font-medium text-white transition-colors hover:bg-primary-hover"
+                    >
+                      <span className="material-symbols-outlined text-[17px]">key</span>
                       {apiKeyConnectionLabel}
-                    </Button>
+                    </button>
                   </>
                 ) : (
                   <>
@@ -1735,23 +1795,20 @@ export default function ProviderDetailPage() {
                   )}
                   {hasDualAuthModes ? (
                     <>
-                      <Button
-                        size="sm"
-                        icon="lock"
-                        variant="secondary"
+                      <button
                         onClick={triggerOAuthConnection}
-                        className="w-full sm:w-auto"
+                        className="inline-flex h-8 items-center justify-center gap-2 rounded-lg border border-border bg-surface px-3.5 text-sm font-display font-medium text-text-main transition-colors hover:border-text-subtle hover:bg-surface-2 w-full sm:w-auto"
                       >
+                        <span className="material-symbols-outlined text-[17px]">lock</span>
                         {oauthConnectionLabel}
-                      </Button>
-                      <Button
-                        size="sm"
-                        icon="key"
+                      </button>
+                      <button
                         onClick={triggerApiKeyConnection}
-                        className="w-full sm:w-auto"
+                        className="inline-flex h-8 items-center justify-center gap-2 rounded-lg bg-primary px-3.5 text-sm font-display font-medium text-white transition-colors hover:bg-primary-hover w-full sm:w-auto"
                       >
+                        <span className="material-symbols-outlined text-[17px]">key</span>
                         {apiKeyConnectionLabel}
-                      </Button>
+                      </button>
                     </>
                   ) : (
                     <Button
@@ -1775,77 +1832,97 @@ export default function ProviderDetailPage() {
 
       {/* Models */}
       <Card>
-        <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-3">
-            <h2 className="text-lg font-semibold">
+        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-1.5">
+            <h2 className="font-display text-lg font-semibold text-text-main">
               {"Available Models"}
             </h2>
-            {providerThinkingLevels && (
-              <select
-                value={thinkingMode}
-                onChange={(e) => handleThinkingModeChange(e.target.value)}
-                title="Appends (level) suffix to copied model names"
-                className="rounded-md border border-border bg-background px-2 py-1 text-xs focus:border-primary focus:outline-none"
-              >
-                {providerThinkingLevels.map((opt) => (
-                  <option key={opt} value={opt}>{`Thinking: ${opt.charAt(0).toUpperCase() + opt.slice(1)}`}</option>
-                ))}
-              </select>
-            )}
+            <p className="font-mono text-[10px] uppercase tracking-wider text-text-subtle">
+              Model IDs served by this provider
+            </p>
           </div>
-          {!isCompatible && (() => {
-            const allIds = [
-              ...models,
-              ...kiloFreeModels.filter((fm) => !models.some((m) => m.id === fm.id)),
-            ].filter((m) => { const k = getModelKind(m); return !k || k === "llm"; }).map((m) => m.id);
-            const activeIds = allIds.filter((id) => !disabledModelIds.includes(id));
-            return (
-              <div className="flex gap-2">
-                {disabledModelIds.length > 0 && (
-                  <Button size="sm" variant="secondary" icon="restart_alt" onClick={handleEnableAll}>
-                    Active All
-                  </Button>
-                )}
-                {activeIds.length > 0 && (
-                  <Button size="sm" variant="secondary" icon="block" onClick={() => handleDisableAll(activeIds)}>
-                    Disable All
-                  </Button>
-                )}
-              </div>
-            );
-          })()}
-        </div>
-        {!!modelsTestError && (
-          <div className="mb-3">
-            <p className="text-xs text-red-500 break-words">{modelsTestError}</p>
-            {/RegionError|hosted in China|regionNotAllowed/i.test(modelsTestError) && (() => {
-              const str = typeof modelsTestError === "string" ? modelsTestError : JSON.stringify(modelsTestError);
-              const linkMatch = str.match(/https:\/\/opencode\.ai\/workspace\/[^\s"')]+/);
-              const wrkMatch = str.match(/wrk_[0-9A-Za-z]+/);
-              const targetUrl = linkMatch
-                ? (linkMatch[0].endsWith("/go") ? linkMatch[0] : `${linkMatch[0]}/go`)
-                : wrkMatch
-                  ? `https://opencode.ai/workspace/${wrkMatch[0]}/go`
-                  : "https://opencode.ai";
-
+          <div className="flex flex-wrap items-center gap-2">
+            {providerThinkingLevels && (
+              <Dropdown
+                value={thinkingMode}
+                onChange={handleThinkingModeChange}
+                options={providerThinkingLevels.map((opt) => ({
+                  value: opt,
+                  label: `Thinking: ${opt.charAt(0).toUpperCase() + opt.slice(1)}`,
+                  icon: "psychology",
+                }))}
+                buttonClassName="h-8 rounded-lg pl-3 pr-1.5 font-mono text-xs"
+                menuClassName="w-64"
+              />
+            )}
+            {!isCompatible && (() => {
+              const allIds = [
+                ...models,
+                ...kiloFreeModels.filter((fm) => !models.some((m) => m.id === fm.id)),
+              ].filter((m) => { const k = getModelKind(m); return !k || k === "llm"; }).map((m) => m.id);
+              const activeIds = allIds.filter((id) => !disabledModelIds.includes(id));
               return (
-                <div className="mt-1.5">
-                  <a
-                    href={targetUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1 rounded-md bg-amber-500/10 px-2 py-0.5 text-xs font-medium text-amber-600 hover:bg-amber-500/20 dark:text-amber-400 transition-colors"
-                  >
-                    <span>Allow China-hosted models</span>
-                    <span className="material-symbols-outlined text-[13px]">open_in_new</span>
-                  </a>
+                <div className="flex gap-2">
+                  {disabledModelIds.length > 0 && (
+                    <button
+                      onClick={handleEnableAll}
+                      className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-border bg-surface px-3 text-sm font-display font-medium text-text-main transition-colors hover:border-text-subtle hover:bg-surface-2"
+                    >
+                      <span className="material-symbols-outlined text-[16px]">restart_alt</span>
+                      Activate All
+                    </button>
+                  )}
+                  {activeIds.length > 0 && (
+                    <button
+                      onClick={() => handleDisableAll(activeIds)}
+                      className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-border bg-surface px-3 text-sm font-display font-medium text-text-main transition-colors hover:border-text-subtle hover:bg-surface-2"
+                    >
+                      <span className="material-symbols-outlined text-[16px]">block</span>
+                      Disable All
+                    </button>
+                  )}
                 </div>
               );
             })()}
           </div>
+        </div>
+        {!!modelsTestError && (
+          <div className="mb-3 flex items-center gap-2.5 rounded-lg border border-danger/25 bg-danger/5 px-3 py-2.5">
+            <span className="material-symbols-outlined shrink-0 text-[18px] text-danger">error</span>
+            <div className="min-w-0 flex-1">
+              <p className="break-words font-mono text-xs leading-relaxed text-danger">{modelsTestError}</p>
+              {/RegionError|hosted in China|regionNotAllowed/i.test(modelsTestError) && (() => {
+                const str = typeof modelsTestError === "string" ? modelsTestError : JSON.stringify(modelsTestError);
+                const linkMatch = str.match(/https:\/\/opencode\.ai\/workspace\/[^\s"')]+/);
+                const wrkMatch = str.match(/wrk_[0-9A-Za-z]+/);
+                const targetUrl = linkMatch
+                  ? (linkMatch[0].endsWith("/go") ? linkMatch[0] : `${linkMatch[0]}/go`)
+                  : wrkMatch
+                    ? `https://opencode.ai/workspace/${wrkMatch[0]}/go`
+                    : "https://opencode.ai";
+
+                return (
+                  <div className="mt-2">
+                    <a
+                      href={targetUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex h-7 items-center gap-1.5 rounded-lg border border-border bg-surface px-2.5 text-xs font-display font-medium text-text-main transition-colors hover:border-text-subtle hover:bg-surface-2"
+                    >
+                      <span>Allow China-hosted models</span>
+                      <span className="material-symbols-outlined text-[13px]">open_in_new</span>
+                    </a>
+                  </div>
+                );
+              })()}
+            </div>
+          </div>
         )}
         {providerId === "zed" && !!liveModelsError && (
-          <p className="text-xs text-red-500 mb-3 break-words">{liveModelsError}</p>
+          <div className="mb-3 flex items-center gap-2.5 rounded-lg border border-danger/25 bg-danger/5 px-3 py-2.5">
+            <span className="material-symbols-outlined shrink-0 text-[18px] text-danger">error</span>
+            <p className="break-words font-mono text-xs leading-relaxed text-danger">{liveModelsError}</p>
+          </div>
         )}
         {renderModelsSection()}
       </Card>
@@ -2004,3 +2081,37 @@ export default function ProviderDetailPage() {
     </div>
   );
 }
+
+function SummaryStat({ icon, label, value, sub, tone }) {
+  const toneClass = {
+    default: "text-text-main",
+    success: "text-success",
+    danger: "text-danger",
+    brand: "text-text-main",
+  }[tone || "default"];
+
+  return (
+    <Card className="flex items-center gap-3 p-3.5">
+      <div className="grid size-10 shrink-0 place-items-center rounded-lg bg-surface-2 text-text-muted">
+        <span className="material-symbols-outlined text-[20px]">{icon}</span>
+      </div>
+      <div className="min-w-0">
+        <p className="font-mono text-[10px] uppercase tracking-[0.15em] text-text-subtle">
+          {label}
+        </p>
+        <p className={`font-display text-xl font-bold leading-tight ${toneClass}`}>
+          {value}
+        </p>
+        {sub && <p className="truncate text-[11px] text-text-muted">{sub}</p>}
+      </div>
+    </Card>
+  );
+}
+
+SummaryStat.propTypes = {
+  icon: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  value: PropTypes.number.isRequired,
+  sub: PropTypes.string,
+  tone: PropTypes.string,
+};
