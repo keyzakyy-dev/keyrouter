@@ -594,10 +594,10 @@ export default function PromptInjectionClient() {
                           {displayBacking(v?.model || "", nodePrefixes)}
                         </p>
                       </div>
-                      <Button size="xs" variant={active ? "primary" : "outline"} onClick={() => selectVariant(name)}>
+                      <Button size="xs" className="font-display" variant={active ? "primary" : "outline"} onClick={() => selectVariant(name)}>
                         {active ? "Editing" : "Select"}
                       </Button>
-                      <Button size="xs" variant="ghost" icon="delete" onClick={() => deleteVariant(name)}>
+                      <Button size="xs" className="font-display" variant="ghost" icon="delete" onClick={() => deleteVariant(name)}>
                         Delete
                       </Button>
                     </div>
