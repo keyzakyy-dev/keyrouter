@@ -708,7 +708,7 @@ function ProviderCard({ providerId, provider, stats, authType, onToggle }) {
     free: "bg-green-500",
     oauth: "bg-blue-500",
     apikey: "bg-amber-500",
-    compatible: "bg-orange-500",
+    compatible: "bg-warning",
   };
   const dotLabels = {
     free: "Free",
@@ -827,7 +827,7 @@ function ApiKeyProviderCard({
     free: "bg-green-500",
     oauth: "bg-blue-500",
     apikey: "bg-amber-500",
-    compatible: "bg-orange-500",
+    compatible: "bg-warning",
   };
   const dotLabels = {
     free: "Free",

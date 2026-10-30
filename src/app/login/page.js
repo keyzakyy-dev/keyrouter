@@ -254,8 +254,8 @@ export default function LoginPage() {
           aria-hidden
           className="absolute inset-0 isolate contain-strict -z-10 opacity-70"
         >
-          <div className="absolute top-0 right-0 h-[320px] w-[560px] -translate-y-[87.5%] translate-x-[30%] rounded-full bg-[radial-gradient(68.54%_68.72%_at_55.02%_31.46%,rgba(229,106,74,0.14)_0,rgba(0,0,0,0)_80%)]" />
-          <div className="absolute top-0 right-0 h-[320px] w-[240px] translate-x-[5%] -translate-y-[50%] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(229,106,74,0.08)_0,rgba(0,0,0,0)_100%)]" />
+          <div className="absolute top-0 right-0 h-[320px] w-[560px] -translate-y-[87.5%] translate-x-[30%] rounded-full bg-[radial-gradient(68.54%_68.72%_at_55.02%_31.46%,rgba(99,102,241,0.14)_0,rgba(0,0,0,0)_80%)]" />
+          <div className="absolute top-0 right-0 h-[320px] w-[240px] translate-x-[5%] -translate-y-[50%] rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(99,102,241,0.08)_0,rgba(0,0,0,0)_100%)]" />
         </div>
 
         <Button

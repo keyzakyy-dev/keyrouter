@@ -103,3 +103,6 @@ start-dev-silent.cjs
 debug.log
 .scratch/
 AGENTS.md
+
+# Playwright MCP artifacts
+.playwright-mcp/

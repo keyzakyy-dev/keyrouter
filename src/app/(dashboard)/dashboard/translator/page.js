@@ -298,7 +298,7 @@ export default function TranslatorPage() {
 function MetaBadge({ label, value, color }) {
   const colors = {
     blue: "bg-blue-500/10 text-blue-500",
-    orange: "bg-orange-500/10 text-orange-500",
+    orange: "bg-warning/10 text-warning",
     green: "bg-green-500/10 text-green-500",
     purple: "bg-purple-500/10 text-purple-500",
   };
