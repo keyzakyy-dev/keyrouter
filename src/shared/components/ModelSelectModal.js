@@ -10,6 +10,7 @@ import { getModelsByProviderId, getModelKind } from "@/shared/constants/models";
 import { OAUTH_PROVIDERS, APIKEY_PROVIDERS, FREE_PROVIDERS, FREE_TIER_PROVIDERS, AI_PROVIDERS, isOpenAICompatibleProvider, isAnthropicCompatibleProvider, getProviderAlias } from "@/shared/constants/providers";
 import { parseSearchQuery, matchesSearch } from "@/shared/utils/modelSearchFilter";
 import { getDeactivatedProviderIds } from "@/shared/utils/connectionStatus";
+import { translate } from "@/i18n/runtime";
 
 // Provider order: OAuth first, then Free Tier, then API Key (matches dashboard/providers)
 const PROVIDER_ORDER = [
@@ -72,6 +73,22 @@ function useLiveProviderModels(isOpen, connectionIds, label) {
   return models;
 }
 
+// Unified section header — icon tile + font-display title + mono count pill.
+// Keeps Combos / Variants / provider groups visually consistent.
+function SectionHeader({ icon, title, count }) {
+  return (
+    <div className="mb-2 flex items-center gap-2">
+      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-surface-2 text-text-subtle">
+        <span className="material-symbols-outlined text-[15px] leading-none">{icon}</span>
+      </span>
+      <span className="font-display text-[13px] font-semibold tracking-tight text-text-main">{title}</span>
+      <span className="ml-auto rounded-full bg-surface-2 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-text-muted">
+        {count}
+      </span>
+    </div>
+  );
+}
+
 export default function ModelSelectModal({
   isOpen,
   onClose,
@@ -89,6 +106,7 @@ export default function ModelSelectModal({
   addedModelValues = [],
   closeOnSelect = true,
   allowProviderWildcard = false,
+  variants = [],
 }) {
   // Live-fetched connections on modal open, fallback to activeProviders prop
   const [fetchedConnections, setFetchedConnections] = useState(null);
@@ -512,6 +530,22 @@ export default function ModelSelectModal({
     return combos.filter(c => matchesSearch(c.name, parsedQuery));
   }, [combos, parsedQuery, kindFilter, capFilter]);
 
+  // Variants — prompt-injection custom-named models. Accepts either an object
+  // map {name: {model,...}} or an array [{name, model}]. Hidden when a kind or
+  // capability filter is active (variants are LLM-only).
+  const variantEntries = useMemo(() => {
+    if (kindFilter || capFilter) return [];
+    let list = [];
+    if (Array.isArray(variants)) {
+      list = variants.map((v) => (typeof v === "string" ? { name: v, value: v } : { name: v?.name, value: v?.name || v?.model, model: v?.model }));
+    } else if (variants && typeof variants === "object") {
+      list = Object.entries(variants).map(([name, v]) => ({ name, value: name, model: v?.model }));
+    }
+    list = list.filter((v) => v && typeof v.name === "string" && v.name.trim());
+    if (parsedQuery.isEmpty) return list;
+    return list.filter((v) => matchesSearch(v.name, parsedQuery));
+  }, [variants, parsedQuery, kindFilter, capFilter]);
+
   // Sort models alphabetically, with added models floated to top
   const sortModels = (models) => {
     const added = models.filter(m => addedModelValues.includes(m.value)).sort((a, b) => a.name.localeCompare(b.name));
@@ -627,41 +661,41 @@ export default function ModelSelectModal({
       className="p-4!"
       footer={null}
     >
-      {/* Info bar */}
-      <div className="flex items-center gap-2 mb-3 px-2.5 py-2 bg-primary/8 border border-primary/20 rounded-lg text-xs text-text-muted">
-        <span className="material-symbols-outlined text-primary shrink-0" style={{ fontSize: "14px" }}>info</span>
-        <span>
+      {/* Info bar — mono kicker */}
+      <div className="mb-3 flex items-center gap-2 rounded-lg border border-border bg-surface-2 px-3 py-2 text-[11px] text-text-muted">
+        <span className="material-symbols-outlined shrink-0 text-text-subtle" style={{ fontSize: "14px" }}>info</span>
+        <span className="font-mono tracking-wide">
           {allowProviderWildcard
-            ? "Click to add/remove a model, or click a provider name for wildcard (e.g. provider/*). Search supports exclusions (e.g. claude -haiku) and RegEx (/pattern/)."
-            : "Click to add, click again to remove. Search supports exclusions (e.g. claude -haiku) and RegEx (/pattern/)."}
+            ? "Click to add/remove models, or click a provider name for a wildcard (e.g. provider/*). Search supports exclusions (e.g. claude -haiku) & RegEx (/pattern/)."
+            : "Click to select, click again to remove. Search supports exclusions (e.g. claude -haiku) & RegEx (/pattern/)."}
         </span>
       </div>
 
       {/* Search & batch actions */}
       <div className="mb-3 space-y-2">
         <div className="relative">
-          <span className="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted text-[16px]">
+          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted text-[16px]">
             search
           </span>
           <input
             type="text"
-            placeholder={
+            placeholder={translate(
               allowProviderWildcard
-                ? "Search models (e.g. claude -haiku, oc/*, /regex/)..."
-                : "Search models (e.g. claude -haiku, !embed, /regex/)..."
-            }
+                ? "Search models (e.g. claude -haiku, oc/*, /regex/)…"
+                : "Search models (e.g. claude -haiku, !embed, /regex/)…"
+            )}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-8 pr-20 py-1.5 bg-surface border border-border rounded text-xs focus:outline-none focus:ring-1 focus:ring-primary/50"
+            className="w-full rounded-xl border border-border bg-surface py-2.5 pl-10 pr-20 text-sm text-text-main outline-none transition-colors placeholder:text-text-muted focus:border-text-subtle focus:ring-1 focus:ring-text-subtle/40"
           />
-          <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
+          <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-1">
             {parsedQuery.isRegex && (
-              <span className="text-[10px] px-1 py-0.2 rounded bg-primary/10 text-primary font-mono font-medium">
+              <span className="rounded-md bg-surface-2 px-1.5 py-0.5 font-mono text-[10px] font-medium uppercase tracking-wider text-primary">
                 regex
               </span>
             )}
             {parsedQuery.negativeTerms.length > 0 && !parsedQuery.isRegex && (
-              <span className="text-[10px] px-1 py-0.2 rounded bg-amber-500/10 text-amber-500 font-mono font-medium">
+              <span className="rounded-md bg-surface-2 px-1.5 py-0.5 font-mono text-[10px] font-medium uppercase tracking-wider text-amber-600">
                 !exclude
               </span>
             )}
@@ -669,19 +703,19 @@ export default function ModelSelectModal({
               <button
                 type="button"
                 onClick={() => setSearchQuery("")}
-                className="text-text-muted hover:text-text-main cursor-pointer p-0.5 rounded"
+                className="cursor-pointer rounded-md p-1 text-text-muted transition-colors hover:bg-surface-2 hover:text-text-main"
                 title="Clear search"
               >
-                <span className="material-symbols-outlined text-[14px] leading-none">close</span>
+                <span className="material-symbols-outlined text-[16px] leading-none">close</span>
               </button>
             )}
           </div>
         </div>
 
         {!closeOnSelect && visibleModels.length > 0 && (
-          <div className="flex items-center justify-between px-1 text-[11px] text-text-muted">
-            <span className="flex items-center gap-1.5">
-              <span>{visibleModels.length} models</span>
+          <div className="flex items-center justify-between px-1 font-mono text-[11px] uppercase tracking-wider text-text-muted">
+            <span className="flex items-center gap-2">
+              <span>{visibleModels.length} model</span>
               {addedModelValues.length > 0 && (
                 <span className="text-primary font-medium">({addedModelValues.length} selected)</span>
               )}
@@ -691,20 +725,20 @@ export default function ModelSelectModal({
                 <button
                   type="button"
                   onClick={handleSelectAllVisible}
-                  className="px-2 py-0.5 rounded text-[11px] font-medium bg-primary/10 text-primary hover:bg-primary/20 transition-colors cursor-pointer"
-                  title="Select all filtered models"
+                  className="rounded-lg border border-border bg-surface px-2.5 py-1 text-[11px] font-medium text-text-main transition-colors hover:border-text-subtle hover:bg-surface-2 cursor-pointer"
+                  title={translate("Select all filtered models")}
                 >
-                  Select All ({visibleUnadded.length})
+                  {translate("Select All")} ({visibleUnadded.length})
                 </button>
               )}
               {visibleAdded.length > 0 && (
                 <button
                   type="button"
                   onClick={handleDeselectAllVisible}
-                  className="px-2 py-0.5 rounded text-[11px] font-medium bg-border/40 text-text-muted hover:text-text-main hover:bg-border/60 transition-colors cursor-pointer"
-                  title="Deselect all filtered models"
+                  className="rounded-lg border border-border bg-surface px-2.5 py-1 text-[11px] font-medium text-text-muted transition-colors hover:text-text-main hover:bg-surface-2 cursor-pointer"
+                  title={translate("Remove all selections")}
                 >
-                  Deselect All ({visibleAdded.length})
+                  {translate("Clear")} ({visibleAdded.length})
                 </button>
               )}
             </div>
@@ -717,11 +751,7 @@ export default function ModelSelectModal({
         {/* Combos section - always first */}
         {filteredCombos.length > 0 && (
           <div>
-            <div className="flex items-center gap-1.5 mb-1.5 sticky top-0 bg-surface py-0.5">
-              <span className="material-symbols-outlined text-primary text-[14px]">layers</span>
-              <span className="text-xs font-medium text-primary">Combos</span>
-              <span className="text-[10px] text-text-muted">({filteredCombos.length})</span>
-            </div>
+            <SectionHeader icon="layers" title="Combos" count={`${filteredCombos.length} item`} />
             <div className="flex flex-wrap gap-1.5">
               {filteredCombos.map((combo) => {
                 const isSelected = selectedModel === combo.name;
@@ -730,7 +760,7 @@ export default function ModelSelectModal({
                     key={combo.id}
                     onClick={() => handleSelect({ id: combo.name, name: combo.name, value: combo.name })}
                     className={`
-                      px-2 py-1 rounded-xl text-xs font-medium transition-all border hover:cursor-pointer flex items-center gap-1
+                      rounded-xl border px-2.5 py-1.5 text-xs font-medium transition-all hover:cursor-pointer flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40
                       ${isSelected
                         ? "bg-primary text-white border-primary"
                         : addedModelValues.includes(combo.name)
@@ -750,28 +780,63 @@ export default function ModelSelectModal({
           </div>
         )}
 
+        {/* Variants (from prompt injection) — custom-named model pick */}
+        {variantEntries.length > 0 && (
+          <div>
+            <SectionHeader icon="skull" title="Injected Model" count={`${variantEntries.length} item`} />
+            <div className="flex flex-wrap gap-1.5">
+              {variantEntries.map((v) => {
+                const isSelected = selectedModel === v.value;
+                return (
+                  <button
+                    key={v.value}
+                    onClick={() => handleSelect({ id: v.value, name: v.name, value: v.value })}
+                    title={translate("Custom variant — this name is backed by a model + prompt")}
+                    className={`
+                      rounded-xl border px-2.5 py-1.5 text-xs font-medium transition-all hover:cursor-pointer flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40
+                      ${isSelected
+                        ? "bg-primary text-white border-primary"
+                        : addedModelValues.includes(v.value)
+                          ? "bg-primary border-primary text-white hover:bg-primary-hover"
+                          : "bg-surface border-border text-text-main hover:border-primary/50 hover:bg-primary/5"
+                      }
+                    `}
+                  >
+                    {addedModelValues.includes(v.value) && (
+                      <span className="material-symbols-outlined leading-none" style={{ fontSize: "10px" }}>check</span>
+                    )}
+                    {v.name}
+                    <span className="shrink-0 rounded-full bg-surface-2 px-1.5 py-0.5 text-[9px] font-mono uppercase tracking-wider text-text-muted">variant</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {/* Provider models */}
-        {Object.entries(filteredGroups).map(([providerId, group]) => {
-          const wildcardValue = `${group.alias || providerId}/*`;
+        {Object.entries(filteredGroups).map(([providerId, group]) => {          const wildcardValue = `${group.alias || providerId}/*`;
           const isWildcardAdded = allowProviderWildcard && addedModelValues.includes(wildcardValue);
 
           return (
             <div key={providerId}>
               {/* Provider header */}
-              <div className="flex items-center gap-1.5 mb-1.5 sticky top-0 bg-surface py-0.5 z-10">
-                <ProviderIcon
-                  src={`/providers/${providerId}.png`}
-                  alt={group.name}
-                  size={14}
-                  fallbackText={(group.name || providerId).slice(0, 2).toUpperCase()}
-                  fallbackColor={group.color}
-                />
+              <div className="mb-2 flex items-center gap-2">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-surface-2">
+                  <ProviderIcon
+                    src={`/providers/${providerId}.png`}
+                    alt={group.name}
+                    size={14}
+                    fallbackText={(group.name || providerId).slice(0, 2).toUpperCase()}
+                    fallbackColor={group.color}
+                  />
+                </span>
                 {allowProviderWildcard ? (
                   <button
                     type="button"
                     onClick={() => handleSelect({ value: wildcardValue, name: wildcardValue })}
                     title={isWildcardAdded ? `Click to remove wildcard ${wildcardValue}` : `Click to allow all models from ${group.name} (${wildcardValue})`}
-                    className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-medium transition-all cursor-pointer border ${
+                    className={`inline-flex min-w-0 items-center gap-1.5 rounded-lg px-2 py-1 text-[13px] font-medium transition-all cursor-pointer border ${
                       isWildcardAdded
                         ? "bg-primary text-white border-primary shadow-2xs hover:bg-primary-hover"
                         : "text-primary border-transparent hover:bg-primary/10 hover:border-primary/20"
@@ -780,18 +845,18 @@ export default function ModelSelectModal({
                     {isWildcardAdded && (
                       <span className="material-symbols-outlined leading-none text-[12px]">check</span>
                     )}
-                    <span>{group.name}</span>
-                    <span className={`text-[10px] font-mono px-1 py-0.2 rounded ${isWildcardAdded ? "bg-white/20 text-white" : "text-text-muted bg-sidebar border border-border/50"}`}>
+                    <span className="truncate font-display font-semibold tracking-tight">{group.name}</span>
+                    <span className={`mt-0.5 shrink-0 rounded-full px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider ${isWildcardAdded ? "bg-white/20 text-white" : "text-text-muted bg-surface-2"}`}>
                       {wildcardValue}
                     </span>
                   </button>
                 ) : (
-                  <span className="text-xs font-medium text-primary">
+                  <span className="truncate font-display text-[13px] font-semibold tracking-tight text-text-main">
                     {group.name}
                   </span>
                 )}
-                <span className="text-[10px] text-text-muted">
-                  ({group.models.length})
+                <span className="ml-auto shrink-0 rounded-full bg-surface-2 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-text-muted">
+                  {group.models.length}
                 </span>
               </div>
 
@@ -805,7 +870,7 @@ export default function ModelSelectModal({
                     onClick={() => handleSelect(model)}
                     title={isPlaceholder ? "Select to pre-fill, then edit model ID in the input" : undefined}
                     className={`
-                      px-2 py-1 rounded-xl text-xs font-medium transition-all border hover:cursor-pointer
+                      rounded-xl border px-2.5 py-1.5 text-xs font-medium transition-all hover:cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40
                       ${isPlaceholder
                         ? "border-dashed border-border text-text-muted hover:border-primary/50 hover:text-primary bg-surface italic"
                         : isSelected
@@ -816,7 +881,7 @@ export default function ModelSelectModal({
                       }
                     `}
                   >
-                    <span className="flex items-center gap-1">
+                    <span className="flex items-center gap-1.5">
                       {addedModelValues.includes(model.value) && !isPlaceholder && (
                         <span className="material-symbols-outlined leading-none" style={{ fontSize: "10px" }}>check</span>
                       )}
@@ -828,7 +893,7 @@ export default function ModelSelectModal({
                       ) : model.isCustom ? (
                         <>
                           {model.name}
-                          <span className="text-[9px] opacity-60 font-normal">custom</span>
+                          <span className="shrink-0 rounded-full bg-surface-2 px-1.5 py-0.5 text-[9px] font-mono uppercase tracking-wider text-text-muted">custom</span>
                           <CapacityBadges caps={getCaps(model.value)} />
                         </>
                       ) : (
@@ -846,12 +911,13 @@ export default function ModelSelectModal({
         );
       })}
 
-      {Object.keys(filteredGroups).length === 0 && filteredCombos.length === 0 && (
-        <div className="text-center py-4 text-text-muted">
-          <span className="material-symbols-outlined text-2xl mb-1 block">
-            search_off
+      {Object.keys(filteredGroups).length === 0 && filteredCombos.length === 0 && variantEntries.length === 0 && (
+        <div className="rounded-xl border border-dashed border-border px-4 py-10 text-center">
+          <span className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-surface-2">
+            <span className="material-symbols-outlined text-[20px] text-text-muted">search_off</span>
           </span>
-          <p className="text-xs">No models found</p>
+          <p className="font-mono text-[11px] uppercase tracking-wider text-text-muted">No models found</p>
+          <p className="mt-1 text-xs text-text-subtle">Try changing your keywords or exclusions.</p>
         </div>
       )}
       </div>
