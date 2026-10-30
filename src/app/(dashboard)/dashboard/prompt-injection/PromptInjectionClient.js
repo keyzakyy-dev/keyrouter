@@ -19,6 +19,12 @@ function friendlyVariantName(name) {
   return String(name || "").replace(/-/g, " ");
 }
 
+// Display-only: same treatment for backing model labels (e.g.
+// "deepseek-ai/DeepSeek-V4.1-Flash-1017" → "deepseek ai/DeepSeek V4.1 Flash 1017").
+function friendlyModelLabel(model) {
+  return String(model || "").replace(/-/g, " ");
+}
+
 function estimateTokens(text) {
   if (!text) return 0;
   return Math.ceil(text.length / 4);
@@ -547,7 +553,7 @@ export default function PromptInjectionClient() {
                   className="flex w-full items-center justify-between gap-2 rounded-lg border border-border bg-surface px-3 py-2 text-left text-sm text-text-main transition-colors hover:border-text-subtle cursor-pointer"
                 >
                   <span className={variantModel ? "" : "text-text-muted"}>
-                    {variantModel || "Select model…"}
+                    {variantModel ? friendlyModelLabel(variantModel) : "Select model…"}
                   </span>
                   <span className="material-symbols-outlined text-[18px] text-text-muted">add</span>
                 </button>
@@ -603,7 +609,7 @@ export default function PromptInjectionClient() {
                       <div className="min-w-0 flex-1">
                         <p className="break-all text-sm font-semibold text-text-main">{friendlyVariantName(name)}</p>
                         <p className="break-all font-mono text-[12px] text-primary">
-                          {displayBacking(v?.model || "", nodePrefixes)}
+                          {friendlyModelLabel(displayBacking(v?.model || "", nodePrefixes))}
                         </p>
                       </div>
                       <Button size="xs" variant={active ? "primary" : "outline"} onClick={() => selectVariant(name)}>
