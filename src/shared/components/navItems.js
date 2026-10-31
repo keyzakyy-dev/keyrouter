@@ -22,6 +22,7 @@ export const systemNavItems = [
   { href: "/dashboard/proxy-pools", label: "Proxies", icon: "lan" },
   { href: "/dashboard/skills", label: "Skills", icon: "extension" },
   { href: "/dashboard/prompt-injection", label: "Prompt", icon: "skull" },
+  { href: "/dashboard/profile", label: "Settings", icon: "settings" },
 ];
 
 export const debugNavItems = [
