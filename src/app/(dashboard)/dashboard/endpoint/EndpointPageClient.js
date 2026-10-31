@@ -1067,8 +1067,8 @@ export default function APIPageClient({ machineId }) {
             <div className="mx-auto mb-3 grid size-12 place-items-center rounded-md bg-surface-2 text-text-muted">
               <span className="material-symbols-outlined text-[24px]">vpn_key</span>
             </div>
-            <p className="font-medium text-text-main">No keys yet</p>
-            <p className="mx-auto mt-1 mb-4 max-w-xs text-sm text-text-muted">
+            <p className="font-display text-base font-semibold text-text-main">No keys yet</p>
+            <p className="mx-auto mt-1 mb-4 max-w-xs font-mono text-[10px] uppercase tracking-wider text-text-muted">
               Create a key, then point your client at the endpoint above.
             </p>
             <Button icon="add" className="font-display" onClick={() => setShowAddModal(true)}>
