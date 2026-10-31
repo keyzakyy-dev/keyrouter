@@ -1031,13 +1031,7 @@ export default function APIPageClient({ machineId }) {
 
         <div className="mt-4 flex items-center justify-between gap-3 rounded-xl bg-surface p-4">
           <div className="flex min-w-0 items-center gap-3">
-            <span
-              className={`grid size-9 shrink-0 place-items-center rounded-lg transition-colors ${
-                requireApiKey ? "bg-primary text-white" : "bg-surface-2 text-text-muted"
-              }`}
-            >
-              <span className="material-symbols-outlined text-[18px]">vpn_key</span>
-            </span>
+            <span className="material-symbols-outlined text-[22px] shrink-0 text-primary dark:text-primary">vpn_key</span>
             <div className="min-w-0">
               <div className="flex items-center gap-2">
                 <p className="font-display text-[15px] font-semibold text-text-main">Require API key</p>
@@ -1064,9 +1058,7 @@ export default function APIPageClient({ machineId }) {
 
         {otherKeys.length === 0 ? (
           <div className="mt-4 rounded-md border border-dashed border-border px-6 py-10 text-center">
-            <div className="mx-auto mb-3 grid size-12 place-items-center rounded-md bg-surface-2 text-text-muted">
-              <span className="material-symbols-outlined text-[24px]">vpn_key</span>
-            </div>
+            <span className="material-symbols-outlined mb-3 block text-[32px] text-primary dark:text-primary">vpn_key</span>
             <p className="font-display text-base font-semibold text-text-main">No keys yet</p>
             <p className="mx-auto mt-1 mb-4 max-w-xs font-mono text-[10px] uppercase tracking-wider text-text-muted">
               Create a key, then point your client at the endpoint above.
@@ -1175,20 +1167,6 @@ export default function APIPageClient({ machineId }) {
             })}
           </div>
         )}
-
-        <div className="mt-auto pt-4">
-          <div className="flex items-start gap-3 rounded-xl bg-surface-2/50 px-4 py-3.5">
-            <span className="material-symbols-outlined mt-0.5 text-[20px] text-text-muted">shield_lock</span>
-            <div className="min-w-0">
-              <p className="font-display text-sm font-semibold text-text-main">Restrict a key</p>
-              <p className="mt-0.5 font-mono text-[10px] leading-relaxed text-text-muted">
-                Toggle "Restrict access" under a key to limit it to specific combos
-                and models. Until you add at least one allowed target, a restricted
-                key can call nothing.
-              </p>
-            </div>
-          </div>
-        </div>
       </Card>
       </div>
 
@@ -1216,9 +1194,7 @@ export default function APIPageClient({ machineId }) {
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex min-w-0 items-center gap-2.5">
-                    <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-primary text-white">
-                      <span className="material-symbols-outlined text-[20px]">key</span>
-                    </span>
+                    <span className="material-symbols-outlined text-[20px] text-primary dark:text-primary">key</span>
                     <div className="min-w-0">
                       <p className="truncate font-display text-[15px] font-semibold text-text-main">{key.name}</p>
                     </div>

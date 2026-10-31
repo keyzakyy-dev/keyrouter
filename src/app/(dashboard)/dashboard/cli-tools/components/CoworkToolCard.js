@@ -263,7 +263,7 @@ export default function CoworkToolCard({
               {configStatus === "not_configured" && <span className="px-1.5 py-0.5 text-[10px] font-medium bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 rounded-full">Not configured</span>}
               {configStatus === "other" && <span className="px-1.5 py-0.5 text-[10px] font-medium bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-full">Other</span>}
             </div>
-            <p className="text-xs text-text-muted truncate">{tool.description}</p>
+            <p className="font-display text-xs text-text-muted truncate">{tool.description}</p>
           </div>
         </div>
         <span className={`material-symbols-outlined text-text-muted text-[20px] transition-transform ${isExpanded ? "rotate-180" : ""}`}>expand_more</span>
@@ -279,16 +279,16 @@ export default function CoworkToolCard({
           )}
 
           {!checking && status && !status.installed && (
-            <div className="flex flex-col gap-3 p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
+            <div className="flex flex-col gap-3 p-4 bg-warning/5 border border-warning/25 rounded-lg">
               <div className="flex items-start gap-3">
-                <span className="material-symbols-outlined text-yellow-500">warning</span>
+                <span className="material-symbols-outlined !text-[18px] text-warning mt-0.5">warning</span>
                 <div className="flex-1">
-                  <p className="font-medium text-yellow-600 dark:text-yellow-400">Claude Desktop (Cowork mode) not detected</p>
+                  <p className="font-display font-medium text-warning">Claude Desktop (Cowork mode) not detected</p>
                   <p className="text-sm text-text-muted">Open Claude Desktop → Help → Troubleshooting → Enable Developer mode → Configure third-party inference, then return here.</p>
                 </div>
               </div>
               <div className="pl-9">
-                <Button variant="secondary" size="sm" onClick={() => setShowManualConfigModal(true)} className="!bg-yellow-500/20 !border-yellow-500/40 !text-yellow-700 dark:!text-yellow-300 hover:!bg-yellow-500/30">
+                <Button variant="outline" size="sm" onClick={() => setShowManualConfigModal(true)} className="font-mono uppercase text-[10px] tracking-wide">
                   <span className="material-symbols-outlined text-[18px] mr-1">content_copy</span>
                   Manual Config
                 </Button>
@@ -596,7 +596,7 @@ export default function CoworkToolCard({
                   setCustomPlugins((prev) => [...prev.filter((x) => x.name !== name), { name, url: addMcpForm.url.trim(), transport: "sse", custom: true }]);
                   setAddMcpOpen(false);
                 }}
-                className="px-3 py-1.5 rounded bg-primary text-white text-xs font-medium hover:opacity-90 cursor-pointer"
+                className="px-3 py-1.5 rounded bg-primary text-white dark:text-amber-950 text-xs font-medium hover:opacity-90 cursor-pointer"
               >Add</button>
             </div>
           </div>

@@ -857,7 +857,7 @@ export default function ProviderLimits() {
     return (
       <Card padding="lg">
         <div className="text-center py-12">
-          <span className="material-symbols-outlined text-[64px] text-text-muted opacity-20">
+          <span className="material-symbols-outlined text-[64px] text-primary dark:text-primary">
             cloud_off
           </span>
           <h3 className="mt-4 text-lg font-semibold text-text-primary">
@@ -876,7 +876,7 @@ export default function ProviderLimits() {
     return (
       <Card padding="lg">
         <div className="text-center py-12">
-          <span className="material-symbols-outlined text-[64px] text-text-muted opacity-20">
+          <span className="material-symbols-outlined text-[64px] text-primary dark:text-primary">
             {emptyState.icon}
           </span>
           <h3 className="mt-4 text-lg font-semibold text-text-primary">
@@ -906,7 +906,7 @@ export default function ProviderLimits() {
             >
               <span className="flex min-w-0 items-center gap-1.5">
                 {providerFilter === "all" ? (
-                  <span className="material-symbols-outlined text-[14px] text-text-muted">
+                  <span className="material-symbols-outlined text-[14px] text-primary dark:text-primary">
                     apps
                   </span>
                 ) : (
@@ -945,7 +945,7 @@ export default function ProviderLimits() {
                       setProviderFilter("all");
                       setProviderMenuOpen(false);
                     }}
-                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm transition-colors ${providerFilter === "all" ? "bg-surface-2 text-text-main" : "text-text-main hover:bg-surface-2"}`}
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm transition-colors ${providerFilter === "all" ? "bg-surface-2 text-text-main" : "text-text-main hover:text-primary dark:hover:text-primary"}`}
                   >
                     <span className="material-symbols-outlined text-[22px]">
                       apps
@@ -970,7 +970,7 @@ export default function ProviderLimits() {
                           setProviderFilter(provider);
                           setProviderMenuOpen(false);
                         }}
-                        className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm transition-colors ${providerFilter === provider ? "bg-surface-2 text-text-main" : "text-text-main hover:bg-surface-2"}`}
+                        className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm transition-colors ${providerFilter === provider ? "bg-surface-2 text-text-main" : "text-text-main hover:text-primary dark:hover:text-primary"}`}
                       >
                         <ProviderIcon
                           src={`/providers/${provider}.png`}
@@ -1383,7 +1383,7 @@ export default function ProviderLimits() {
                 )}
                 {hiddenQuotaRows.length > 0 && (
                   <div className="mt-2 flex min-w-0 items-center gap-1 border-t border-border pt-2 text-[10px] text-text-muted">
-                    <span className="material-symbols-outlined shrink-0 text-[14px]">
+                    <span className="material-symbols-outlined shrink-0 text-[14px] text-primary dark:text-primary">
                       visibility_off
                     </span>
                     <span className="shrink-0">Hidden:</span>

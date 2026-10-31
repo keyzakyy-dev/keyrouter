@@ -235,7 +235,7 @@ function InjSelect({ label, value, onChange, options = [], placeholder = "Select
                       setOpen(false);
                     }}
                     className={`flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm transition-colors ${
-                      active ? "bg-surface-2 text-text-main" : "text-text-muted hover:bg-surface-2 hover:text-text-main"
+                      active ? "bg-surface-2 text-text-main" : "text-text-muted hover:text-primary dark:hover:text-primary"
                     }`}
                   >
                     <span className="flex-1 truncate font-display">{option.label}</span>
@@ -258,9 +258,7 @@ function SectionCard({ title, subtitle, icon, children }) {
   return (
     <Card padding="sm">
       <div className="mb-4 flex items-center gap-3">
-        <div className="grid size-9 shrink-0 place-items-center rounded-lg bg-surface-2 text-text-muted">
-          <span className="material-symbols-outlined text-[20px]">{icon}</span>
-        </div>
+        <span className="material-symbols-outlined text-[24px] shrink-0 text-primary dark:text-primary">{icon}</span>
         <div className="min-w-0">
           <h2 className="font-display text-base font-semibold text-text-main">{title}</h2>
           {subtitle && <p className="mt-0.5 font-mono text-[11px] leading-relaxed text-text-muted">{subtitle}</p>}
@@ -568,7 +566,7 @@ export default function PromptInjectionClient() {
         <div className="space-y-2">
           {Object.keys(data?.variants || {}).length === 0 ? (
             <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed border-border px-4 py-6 text-center">
-              <span className="material-symbols-outlined text-[28px] text-text-muted">badge</span>
+              <span className="material-symbols-outlined text-[28px] text-primary dark:text-primary">badge</span>
               <p className="text-sm text-text-muted">
                 No variants yet. Create a custom name + pick a backing model above.
               </p>

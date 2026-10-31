@@ -49,12 +49,15 @@ function parseLine(text) {
   return { ts, tag, rest };
 }
 
+// Level styling is restrained: the message text always stays neutral/warm, and
+// color only appears on a small pill chip. Routine log/debug lines get no chip
+// at all so the stream reads calm.
 const LEVEL_STYLE = {
-  log: { icon: "terminal", iconCls: "text-text-muted", textCls: "text-text-muted", label: "log" },
-  info: { icon: "info", iconCls: "text-sky-600", textCls: "text-sky-600", label: "info" },
-  warn: { icon: "warning", iconCls: "text-amber-600", textCls: "text-amber-600", label: "warn" },
-  error: { icon: "error", iconCls: "text-red-600", textCls: "text-red-600", label: "error" },
-  debug: { icon: "code", iconCls: "text-text-muted", textCls: "text-text-muted", label: "debug" },
+  log: { label: null, labelCls: "", textCls: "text-text-muted" },
+  debug: { label: null, labelCls: "", textCls: "text-text-subtle" },
+  info: { label: "info", labelCls: "bg-sky-500/10 text-sky-600 dark:text-sky-400", textCls: "text-text-main" },
+  warn: { label: "warn", labelCls: "bg-amber-500/10 text-amber-600 dark:text-amber-400", textCls: "text-text-main" },
+  error: { label: "error", labelCls: "bg-red-500/10 text-red-600 dark:text-red-400", textCls: "text-text-main" },
 };
 
 const FILTER_PRESETS = [
@@ -67,16 +70,29 @@ function renderLine(entry) {
   const { ts, tag, rest } = parseLine(entry.text);
   const style = LEVEL_STYLE[entry.level] || LEVEL_STYLE.log;
 
+  const isContinuation = /^\s+at\s|^\s+\.\.\.|^Caused by:/.test(rest);
+
   return (
-    <div className="flex items-start gap-2 whitespace-pre-wrap break-words">
-      <span className={cn("material-symbols-outlined shrink-0 text-[15px] leading-5", style.iconCls)}>
-        {style.icon}
-      </span>
-      <span className="shrink-0 font-mono text-[10px] uppercase tracking-wider text-text-subtle">
-        {style.label}
-      </span>
+    <div
+      className={cn(
+        "flex items-start gap-2 whitespace-pre-wrap break-words",
+        isContinuation && "text-text-subtle"
+      )}
+    >
+      {style.label ? (
+        <span
+          className={cn(
+            "shrink-0 rounded px-1.5 py-px font-mono text-[9px] uppercase tracking-wider leading-4",
+            style.labelCls
+          )}
+        >
+          {style.label}
+        </span>
+      ) : (
+        <span className="shrink-0 w-[6px]" />
+      )}
       {ts && <span className="shrink-0 text-text-subtle">{ts}</span>}
-      {tag && <span className="shrink-0 text-text-main">[{tag}]</span>}
+      {tag && <span className="shrink-0 text-text-subtle">[{tag}]</span>}
       <span className={cn(style.textCls)}>
         {rest}
       </span>
@@ -241,11 +257,6 @@ export default function ConsoleLogClient() {
         <div
           ref={logRef}
           className="h-[calc(100vh-220px)] overflow-y-auto rounded-lg border border-border bg-bg p-4 font-mono text-xs leading-relaxed"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at center, #c4c4ce 1px, transparent 1px)",
-            backgroundSize: "20px 20px",
-          }}
         >
           {visibleLogs.length === 0 ? (
             <div className="flex h-full flex-col items-center justify-center gap-3 text-center">
@@ -255,7 +266,7 @@ export default function ConsoleLogClient() {
               </span>
             </div>
           ) : (
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               {visibleLogs.map((entry, i) => (
                 <div key={i}>{renderLine(entry)}</div>
               ))}

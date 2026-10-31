@@ -84,7 +84,7 @@ export default function Modal({
                 </div>
               )}
               {title && (
-                <h2 className="text-lg font-semibold text-text-main">{title}</h2>
+                <h2 className="font-display text-lg font-semibold text-text-main">{title}</h2>
               )}
             </div>
             {/* X button — mobile only */}
@@ -122,6 +122,7 @@ export function ConfirmModal({
   cancelText = "Cancel",
   variant = "danger",
   loading = false,
+  messageClassName,
 }) {
   return (
     <Modal
@@ -140,7 +141,7 @@ export function ConfirmModal({
         </>
       }
     >
-      <p className="text-text-muted">{message}</p>
+      <p className={messageClassName ?? "text-text-muted"}>{message}</p>
     </Modal>
   );
 }

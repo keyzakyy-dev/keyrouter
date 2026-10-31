@@ -479,9 +479,7 @@ export default function TokenSaverClient() {
       <Card className="relative overflow-hidden">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
-            <div className="grid size-11 shrink-0 place-items-center rounded-[12px] bg-brand-600 text-white shadow-[var(--shadow-warm)]">
-              <span className="material-symbols-outlined text-[22px]">savings</span>
-            </div>
+            <span className="material-symbols-outlined text-[26px] shrink-0 text-primary dark:text-primary">savings</span>
             <div>
               <h2 className="font-display text-lg font-semibold text-text-main">
                 Token Saver
@@ -505,9 +503,7 @@ export default function TokenSaverClient() {
         <Card id="rtk" className="flex flex-col gap-4">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="grid size-9 shrink-0 place-items-center rounded-lg bg-surface-2 text-primary dark:text-text-main">
-                <span className="material-symbols-outlined text-[18px]">bolt</span>
-              </div>
+              <span className="material-symbols-outlined text-[22px] shrink-0 text-primary dark:text-primary">bolt</span>
               <div>
                 <div className="flex items-center gap-2">
                   <h3 className="font-display text-base font-semibold text-text-main">RTK</h3>
@@ -544,9 +540,7 @@ export default function TokenSaverClient() {
         <Card className="flex flex-col gap-4">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="grid size-9 shrink-0 place-items-center rounded-lg bg-surface-2 text-primary dark:text-text-main">
-                <span className="material-symbols-outlined text-[18px]">compress</span>
-              </div>
+              <span className="material-symbols-outlined text-[22px] shrink-0 text-primary dark:text-primary">compress</span>
               <div>
                 <div className="flex items-center gap-2">
                   <h3 className="font-display text-base font-semibold text-text-main">Headroom</h3>
@@ -661,7 +655,7 @@ export default function TokenSaverClient() {
                   <button
                     onClick={handleInstallExtras}
                     disabled={extrasActionLoading}
-                    className="text-xs px-2.5 py-1 rounded bg-primary text-white hover:opacity-90 disabled:opacity-50"
+                    className="text-xs px-2.5 py-1 rounded bg-primary text-white dark:text-amber-950 hover:opacity-90 disabled:opacity-50"
                   >
                     {extrasActionLoading
                       ? "Installing…"
@@ -697,9 +691,7 @@ export default function TokenSaverClient() {
         <Card className="flex flex-col gap-4">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="grid size-9 shrink-0 place-items-center rounded-lg bg-surface-2 text-primary dark:text-text-main">
-                <span className="material-symbols-outlined text-[18px]">format_quote</span>
-              </div>
+              <span className="material-symbols-outlined text-[22px] shrink-0 text-primary dark:text-primary">format_quote</span>
               <div>
                 <div className="flex items-center gap-2">
                   <h3 className="font-display text-base font-semibold text-text-main">Caveman</h3>
@@ -736,7 +728,7 @@ export default function TokenSaverClient() {
                     onClick={() => handleCavemanLevel(lvl.id)}
                     className={`px-3 py-1.5 rounded text-xs font-medium border transition-colors ${
                       cavemanLevel === lvl.id
-                        ? "bg-primary text-white border-primary"
+                        ? "bg-primary text-white dark:text-amber-950 border-primary"
                         : "bg-transparent border-border text-text-muted hover:bg-surface-2"
                     }`}
                     title={lvl.desc}
@@ -756,9 +748,7 @@ export default function TokenSaverClient() {
         <Card className="flex flex-col gap-4">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="grid size-9 shrink-0 place-items-center rounded-lg bg-surface-2 text-primary dark:text-text-main">
-                <span className="material-symbols-outlined text-[18px]">content_cut</span>
-              </div>
+              <span className="material-symbols-outlined text-[22px] shrink-0 text-primary dark:text-primary">content_cut</span>
               <div>
                 <div className="flex items-center gap-2">
                   <h3 className="font-display text-base font-semibold text-text-main">Ponytail</h3>
@@ -796,7 +786,7 @@ export default function TokenSaverClient() {
                     onClick={() => handlePonytailLevel(lvl.id)}
                     className={`px-3 py-1.5 rounded text-xs font-medium border transition-colors ${
                       ponytailLevel === lvl.id
-                        ? "bg-primary text-white border-primary"
+                        ? "bg-primary text-white dark:text-amber-950 border-primary"
                         : "bg-transparent border-border text-text-muted hover:bg-surface-2"
                     }`}
                     title={lvl.desc}

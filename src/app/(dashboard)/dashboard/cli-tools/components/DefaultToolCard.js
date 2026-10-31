@@ -116,21 +116,21 @@ export default function DefaultToolCard({ toolId, tool, isExpanded, onToggle, ba
           let icon = "info";
           
           if (isWarning) {
-            bgClass = "bg-yellow-500/10 border-yellow-500/30";
-            textClass = "text-yellow-600 dark:text-yellow-400";
-            iconClass = "text-yellow-500";
+            bgClass = "bg-warning/5 border-warning/25";
+            textClass = "text-warning";
+            iconClass = "text-warning";
             icon = "warning";
           } else if (isError) {
-            bgClass = "bg-red-500/10 border-red-500/30";
-            textClass = "text-red-600 dark:text-red-400";
-            iconClass = "text-red-500";
+            bgClass = "bg-danger/5 border-danger/25";
+            textClass = "text-danger";
+            iconClass = "text-danger";
             icon = "error";
           }
           
           return (
-            <div key={index} className={`flex items-start gap-3 p-3 rounded-lg border ${bgClass}`}>
-              <span className={`material-symbols-outlined text-lg ${iconClass}`}>{icon}</span>
-              <p className={`text-sm ${textClass}`}>{note.text}</p>
+            <div key={index} className={`flex items-start gap-2.5 p-3 rounded-lg border ${bgClass}`}>
+              <span className={`material-symbols-outlined !text-[16px] mt-0.5 ${iconClass}`}>{icon}</span>
+              <p className={`font-display text-sm ${textClass}`}>{note.text}</p>
             </div>
           );
         })}
@@ -153,13 +153,13 @@ export default function DefaultToolCard({ toolId, tool, isExpanded, onToggle, ba
         {canShowGuide() && tool.guideSteps.map((item) => (
           <div key={item.step} className="flex items-start gap-4">
             <div 
-              className="size-8 rounded-full flex items-center justify-center shrink-0 text-sm font-semibold text-white"
+              className="size-8 rounded-full flex items-center justify-center shrink-0 text-sm font-display font-semibold text-white"
               style={{ backgroundColor: tool.color }}
             >
               {item.step}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-medium text-text">{item.title}</p>
+              <p className="font-display font-medium text-text">{item.title}</p>
               {item.desc && <p className="text-sm text-text-muted mt-0.5">{item.desc}</p>}
               {item.type === "apiKeySelector" && renderApiKeySelector()}
               {item.type === "modelSelector" && renderModelSelector()}
@@ -257,7 +257,7 @@ export default function DefaultToolCard({ toolId, tool, isExpanded, onToggle, ba
           </div>
           <div className="min-w-0">
             <h3 className="font-medium text-sm">{tool.name}</h3>
-            <p className="text-xs text-text-muted truncate">{tool.description}</p>
+            <p className="font-display text-xs text-text-muted truncate">{tool.description}</p>
           </div>
         </div>
         <span className={`material-symbols-outlined text-text-muted text-[20px] transition-transform ${isExpanded ? "rotate-180" : ""}`}>expand_more</span>

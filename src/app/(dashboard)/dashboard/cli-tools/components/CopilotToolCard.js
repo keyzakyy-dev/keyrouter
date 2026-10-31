@@ -197,7 +197,7 @@ export default function CopilotToolCard({ tool, isExpanded, onToggle, baseUrl, a
               {configStatus === "not_configured" && <span className="px-1.5 py-0.5 text-[10px] font-medium bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 rounded-full">Not configured</span>}
               {configStatus === "other" && <span className="px-1.5 py-0.5 text-[10px] font-medium bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-full">Other</span>}
             </div>
-            <p className="text-xs text-text-muted truncate">{tool.description}</p>
+            <p className="font-display text-xs text-text-muted truncate">{tool.description}</p>
           </div>
         </div>
         <span className={`material-symbols-outlined text-text-muted text-[20px] transition-transform ${isExpanded ? "rotate-180" : ""}`}>expand_more</span>

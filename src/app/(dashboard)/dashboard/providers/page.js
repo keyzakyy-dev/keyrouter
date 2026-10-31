@@ -425,7 +425,7 @@ function ProvidersContent() {
       disabled={!!testingMode}
       className={`flex w-full items-center justify-center gap-2 rounded-lg px-3.5 py-2 font-display text-sm font-medium transition-colors sm:w-auto ${
         testingMode === mode
-          ? "bg-primary text-white animate-pulse"
+          ? "bg-primary text-white dark:text-amber-950 animate-pulse"
           : "border border-border bg-surface text-text-muted hover:border-text-subtle hover:text-text-main"
       }`}
       title={`Test all ${mode} connections`}
@@ -538,12 +538,7 @@ function ProvidersContent() {
         <SummaryStat icon="hub" label="Total koneksi" value={summary.total} />
         <SummaryStat icon="check_circle" label="Connected" value={summary.connected} tone="success" />
         <SummaryStat icon="error" label="Error" value={summary.errors} tone="danger" />
-        <SummaryStat
-          icon="toggle_on"
-          label="Provider aktif"
-          value={summary.activeProviders}
-          sub={summary.uniqueProviders > 0 ? `dari ${summary.uniqueProviders} unik` : null}
-        />
+        <SummaryStat icon="toggle_on" label="Provider aktif" value={summary.activeProviders} />
       </div>
 
       {/* Filter + Tabs */}
@@ -560,11 +555,11 @@ function ProvidersContent() {
                   onClick={() => handleTabChange(t.id)}
                   className={`flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.5 font-display text-[13px] font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-text-subtle/60 focus-visible:ring-offset-1 focus-visible:ring-offset-surface-2 ${
                     active
-                      ? "bg-surface text-text-main shadow-[var(--shadow-soft)]"
+                      ? "bg-surface text-primary shadow-[var(--shadow-soft)] dark:text-primary"
                       : "text-text-muted hover:text-text-main"
                   }`}
                 >
-                  <span className={`material-symbols-outlined text-[15px] ${active ? "text-text-main" : "text-text-subtle"}`}>
+                  <span className={`material-symbols-outlined text-[15px] ${active ? "text-primary dark:text-primary" : "text-text-subtle"}`}>
                     {t.icon}
                   </span>
                   {t.label}
@@ -776,20 +771,24 @@ function SummaryStat({ icon, label, value, sub, tone }) {
     danger: "text-danger",
     brand: "text-text-main",
   }[tone || "default"];
+  const iconClass = {
+    default: "text-primary dark:text-primary",
+    success: "text-success",
+    danger: "text-danger",
+    brand: "text-primary dark:text-primary",
+  }[tone || "default"];
 
   return (
-    <Card className="flex items-center gap-3 p-3.5">
-      <div className="grid size-10 shrink-0 place-items-center rounded-lg bg-surface-2 text-text-muted">
-        <span className="material-symbols-outlined text-[20px]">{icon}</span>
-      </div>
-      <div className="min-w-0">
-        <p className="font-display text-xs font-medium text-text-muted">
+    <Card padding="none" className="flex items-center gap-2 p-2.5 pl-4">
+      <span className={`material-symbols-outlined !text-[18px] shrink-0 ${iconClass}`}>{icon}</span>
+      <div className="min-w-0 leading-none">
+        <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-text-muted leading-none">
           {label}
         </p>
-        <p className={`font-display text-xl font-bold leading-tight ${toneClass}`}>
+        <p className={`font-display text-sm font-bold leading-none mt-0.5 ${toneClass}`}>
           {value}
         </p>
-        {sub && <p className="truncate text-[11px] text-text-muted">{sub}</p>}
+        {sub && <p className="truncate text-[10px] text-text-muted leading-none mt-0.5">{sub}</p>}
       </div>
     </Card>
   );

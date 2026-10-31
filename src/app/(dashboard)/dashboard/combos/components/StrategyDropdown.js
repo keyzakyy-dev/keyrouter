@@ -34,7 +34,7 @@ export default function StrategyDropdown({ options, value, onChange, className }
         aria-expanded={open}
         className="flex h-9 w-full items-center gap-2 rounded-lg border border-border bg-surface-2 px-3 font-display text-sm text-text-main outline-none transition-colors hover:border-text-subtle focus-visible:ring-2 focus-visible:ring-text-subtle/60"
       >
-        <span className="material-symbols-outlined text-[16px] text-text-muted">
+        <span className="material-symbols-outlined text-[16px] text-primary dark:text-primary">
           {OPTION_META[value]?.icon || "label"}
         </span>
         <span className="flex-1 truncate text-left">{selected?.label}</span>
@@ -61,16 +61,16 @@ export default function StrategyDropdown({ options, value, onChange, className }
                   onChange(option.value);
                   setOpen(false);
                 }}
-                className={`flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm transition-colors ${
-                  active ? "bg-surface-2 text-text-main" : "text-text-muted hover:bg-surface-2 hover:text-text-main"
+                className={`group flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm transition-colors ${
+                  active ? "bg-surface-2 text-text-main" : "text-text-muted hover:text-primary dark:hover:text-primary"
                 }`}
               >
-                <span className={`material-symbols-outlined text-[18px] ${active ? "text-text-main" : "text-text-subtle"}`}>
+                <span className={`material-symbols-outlined text-[18px] ${active ? "text-text-main" : "text-text-subtle group-hover:text-primary dark:group-hover:text-primary"}`}>
                   {meta.icon}
                 </span>
                 <span className="flex-1 font-display">{option.label}</span>
                 {active && (
-                  <span className="material-symbols-outlined text-[18px] text-text-main">check</span>
+                  <span className="material-symbols-outlined text-[18px] text-primary dark:text-primary">check</span>
                 )}
               </button>
             );

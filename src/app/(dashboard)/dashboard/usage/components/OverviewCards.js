@@ -25,17 +25,12 @@ export default function OverviewCards({ stats }) {
           <span className="font-mono text-[10px] uppercase tracking-wider text-text-subtle">
             Est. Cost
           </span>
-          <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-primary text-white sm:hidden">
-            <span className="material-symbols-outlined text-[20px]">payments</span>
-          </span>
+          <span className="material-symbols-outlined text-[22px] shrink-0 text-primary dark:text-primary sm:hidden">payments</span>
         </div>
         <div className="flex items-center gap-3">
           <div className="font-display text-3xl font-bold tracking-tight text-text-main sm:text-4xl">
             {fmtCost(cost)}
           </div>
-          <span className="hidden size-9 shrink-0 place-items-center rounded-lg bg-surface-2 text-text-muted sm:grid">
-            <span className="material-symbols-outlined text-[20px]">payments</span>
-          </span>
         </div>
         <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted sm:max-w-[160px] sm:text-right">
           Estimated, not actual billing
@@ -52,9 +47,7 @@ export default function OverviewCards({ stats }) {
                 {fmt(stats[m.valueKey])}
               </div>
             </div>
-            <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-surface-2 text-text-muted">
-              <span className="material-symbols-outlined text-[18px]">{m.icon}</span>
-            </span>
+            <span className="material-symbols-outlined text-[22px] shrink-0 text-primary dark:text-primary">{m.icon}</span>
           </Card>
         ))}
       </div>

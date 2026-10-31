@@ -111,7 +111,7 @@ function ConnectionRow({ connection, proxyPools, isOAuth, isFirst, isLast, onMov
             <span className="material-symbols-outlined text-sm">keyboard_arrow_down</span>
           </button>
         </div>
-        <span className="material-symbols-outlined text-base text-text-muted">{isOAuth ? "lock" : "key"}</span>
+        <span className="material-symbols-outlined text-base text-primary dark:text-primary">{isOAuth ? "lock" : "key"}</span>
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium truncate">{displayName}</p>
           <div className="flex flex-wrap items-center gap-2 mt-1">
@@ -405,7 +405,7 @@ export default function ConnectionsCard({ providerId, isOAuth, loginProviderId =
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
           <h2 className="text-lg font-semibold">Connections</h2>
           <div className="flex flex-wrap items-center gap-2.5 rounded-lg border border-border bg-surface-2/40 px-3 py-2">
-            <span className="font-mono text-[10px] uppercase tracking-wider text-text-subtle">Round Robin</span>
+            <span className="font-mono text-[10px] uppercase tracking-wider text-text-muted">Round Robin</span>
             <Toggle
               checked={providerStrategy === "round-robin"}
               onChange={(enabled) => {

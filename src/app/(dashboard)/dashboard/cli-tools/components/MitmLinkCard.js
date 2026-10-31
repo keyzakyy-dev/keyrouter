@@ -31,7 +31,7 @@ export default function MitmLinkCard({ tool }) {
                 <h3 className="truncate font-display text-[13px] font-medium text-text-main">{tool.name}</h3>
                 <span className="rounded-full bg-surface-2 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-text-muted">MITM</span>
               </div>
-              <p className="truncate text-xs text-text-muted">{tool.description}</p>
+              <p className="font-display truncate text-xs text-text-muted">{tool.description}</p>
             </div>
           </div>
           <span className="material-symbols-outlined text-text-subtle text-[20px] opacity-40 transition-opacity group-hover:opacity-100">chevron_right</span>

@@ -63,7 +63,7 @@ function CollapsibleSection({ title, children, defaultOpen = false, icon = null 
         className="w-full flex items-center justify-between p-3 bg-bg-subtle/60 hover:bg-bg-subtle transition-colors"
       >
         <div className="flex items-center gap-2">
-          {icon && <span className="material-symbols-outlined text-[18px] text-text-muted">{icon}</span>}
+          {icon && <span className="material-symbols-outlined text-[18px] text-primary dark:text-primary">{icon}</span>}
           <span className="font-semibold text-sm text-text-main">{title}</span>
         </div>
         <span className={cn(
@@ -412,7 +412,7 @@ export default function RequestDetailsTab() {
             {selectedDetail.pxpipe && (
               <div className="rounded-lg border border-border-subtle p-4">
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="material-symbols-outlined text-[18px] text-text-muted">image</span>
+                  <span className="material-symbols-outlined text-[18px] text-primary dark:text-primary">image</span>
                   <span className="font-semibold text-sm text-text-main">PXPIPE</span>
                   <span className={cn(
                     "text-xs px-2 py-0.5 rounded",
@@ -481,7 +481,7 @@ export default function RequestDetailsTab() {
                 {selectedDetail.response?.thinking && (
                   <div className="mb-4">
                     <h4 className="font-semibold text-text-main mb-2 flex items-center gap-2 text-xs uppercase tracking-wide opacity-70">
-                      <span className="material-symbols-outlined text-[16px]">psychology</span>
+                      <span className="material-symbols-outlined text-[16px] text-primary dark:text-primary">psychology</span>
                       Thinking Process
                     </h4>
                     <pre className="max-h-[200px] max-w-full overflow-auto rounded-lg border border-warning/40 bg-warning/10 p-3 font-mono text-xs text-warning sm:p-4">

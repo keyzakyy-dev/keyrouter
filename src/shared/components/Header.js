@@ -53,13 +53,13 @@ export default function Header({ nav = null }) {
   };
 
   return (
-    <header className="shrink-0 z-20 flex flex-col bg-surface/60 backdrop-blur-xl lg:bg-transparent lg:backdrop-blur-none">
+    <header className="relative shrink-0 z-20 flex flex-col bg-surface/60 backdrop-blur-xl lg:bg-transparent lg:backdrop-blur-none">
       {/* Top navbar: brand + nav + actions */}
-      <div className="flex items-center gap-3 py-2.5">
-        <div className="mx-auto flex w-full max-w-7xl items-center gap-3 px-4 lg:px-8">
+      <div className="px-4 py-2.5 lg:px-8">
+        <div className="mx-auto flex w-full max-w-7xl items-center gap-3">
         {/* Brand / logo + name */}
         <Link href="/dashboard" className="group flex shrink-0 items-center gap-2.5" aria-label={`${APP_CONFIG.name} home`}>
-          <div className="grid size-9 shrink-0 place-items-center rounded-[10px] bg-brand-600 text-white shadow-[var(--shadow-warm)] transition-transform duration-150 group-hover:scale-[1.04]">
+          <div className="grid size-9 shrink-0 place-items-center rounded-[10px] bg-primary text-white shadow-[var(--shadow-warm)] transition-transform duration-150 group-hover:scale-[1.04] dark:bg-primary dark:text-black">
             <span className="material-symbols-outlined text-[18px]">route</span>
           </div>
           <div className="leading-tight">
@@ -94,10 +94,17 @@ export default function Header({ nav = null }) {
 
       {/* Nav row */}
       {nav && (
-        <div className="border-b border-border-subtle px-4 py-1.5 lg:px-8">
-          {nav}
+        <div className="border-b border-border-subtle">
+          <div className="px-4 lg:px-8">
+            <div className="mx-auto w-full max-w-7xl py-1.5">
+              {nav}
+            </div>
+          </div>
         </div>
       )}
+
+      {/* Mobile-only anchor for the update banner (below scroll menu) */}
+      <div id="header-update-anchor" className="md:hidden" />
     </header>
   );
 }

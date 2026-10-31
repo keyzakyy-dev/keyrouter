@@ -639,7 +639,7 @@ export default function ProxyPoolsPage() {
                     openCloudflareModal();
                     setShowRelayMenu(false);
                   }}
-                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-text-main transition-colors hover:bg-surface-2"
+                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-text-main transition-colors hover:text-primary dark:hover:text-primary"
                 >
                   <span className="material-symbols-outlined text-[18px] text-text-muted">cloud</span>
                   Cloudflare Relay
@@ -649,7 +649,7 @@ export default function ProxyPoolsPage() {
                     openVercelModal();
                     setShowRelayMenu(false);
                   }}
-                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-text-main transition-colors hover:bg-surface-2"
+                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-text-main transition-colors hover:text-primary dark:hover:text-primary"
                 >
                   <span className="material-symbols-outlined text-[18px] text-text-muted">cloud_upload</span>
                   Vercel Relay
@@ -659,7 +659,7 @@ export default function ProxyPoolsPage() {
                     openDenoModal();
                     setShowRelayMenu(false);
                   }}
-                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-text-main transition-colors hover:bg-surface-2"
+                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-text-main transition-colors hover:text-primary dark:hover:text-primary"
                 >
                   <span className="material-symbols-outlined text-[18px] text-text-muted">terminal</span>
                   Deno Relay
@@ -669,7 +669,7 @@ export default function ProxyPoolsPage() {
                     openNetlifyModal();
                     setShowRelayMenu(false);
                   }}
-                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-text-main transition-colors hover:bg-surface-2"
+                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-text-main transition-colors hover:text-primary dark:hover:text-primary"
                 >
                   <span className="material-symbols-outlined text-[18px] text-text-muted">deployed_code</span>
                   Netlify Relay
@@ -687,7 +687,7 @@ export default function ProxyPoolsPage() {
           </button>
           <button
             onClick={openCreateModal}
-            className="inline-flex h-8 items-center justify-center gap-1.5 rounded-lg bg-primary px-3.5 text-sm font-display font-medium text-white transition-colors hover:bg-primary-hover"
+            className="inline-flex h-8 items-center justify-center gap-1.5 rounded-lg bg-primary px-3.5 text-sm font-display font-medium text-white dark:text-amber-950 transition-colors hover:bg-primary-hover"
           >
             <span className="material-symbols-outlined text-[17px]">add</span>
             Add Proxy Pool
@@ -762,7 +762,7 @@ export default function ProxyPoolsPage() {
             </p>
             <button
               onClick={openCreateModal}
-              className="mt-6 inline-flex h-8 items-center justify-center gap-1.5 rounded-lg bg-primary px-3.5 text-sm font-display font-medium text-white transition-colors hover:bg-primary-hover"
+              className="mt-6 inline-flex h-8 items-center justify-center gap-1.5 rounded-lg bg-primary px-3.5 text-sm font-display font-medium text-white dark:text-amber-950 transition-colors hover:bg-primary-hover"
             >
               <span className="material-symbols-outlined text-[17px]">add</span>
               Add Proxy Pool

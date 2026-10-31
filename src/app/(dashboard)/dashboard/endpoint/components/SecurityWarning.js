@@ -8,8 +8,8 @@ export default function SecurityWarning({ message, action, title = "Security not
         <span className="material-symbols-outlined text-[19px]">warning</span>
       </span>
       <div className="min-w-0 flex-1">
-        <p className="text-[13px] font-semibold text-amber-700 dark:text-amber-300">{title}</p>
-        <p className="mt-0.5 text-xs leading-relaxed text-amber-700/80 dark:text-amber-400/80">{message}</p>
+        <p className="font-display text-[13px] font-semibold text-amber-700 dark:text-amber-300">{title}</p>
+        <p className="mt-0.5 font-mono text-[10px] uppercase tracking-wider leading-relaxed text-amber-700/80 dark:text-amber-400/80">{message}</p>
       </div>
       {action && (
         <a

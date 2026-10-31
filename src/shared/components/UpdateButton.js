@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { UPDATER_CONFIG } from "@/shared/constants/config";
 import { useCopyToClipboard } from "@/shared/hooks/useCopyToClipboard";
 import Button from "./Button";
@@ -68,13 +69,32 @@ export default function UpdateButton() {
       <button
         type="button"
         onClick={() => setShowUpdateModal(true)}
-        className="group inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full border border-amber-500/40 bg-amber-500/10 px-2.5 py-1 text-[11px] font-semibold text-amber-600 transition-colors hover:bg-amber-500/20 dark:text-amber-400"
+        className="group hidden md:inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full border border-amber-500/40 bg-amber-500/10 px-2.5 py-1 text-[11px] font-semibold text-amber-600 transition-colors hover:bg-amber-500/20 dark:text-amber-400"
         title={`Update KeyRouter to v${updateInfo.latestVersion}`}
       >
         <span className="material-symbols-outlined text-[13px]">arrow_upward</span>
         <span className="hidden sm:inline">Update available</span>
         <span className="font-mono">v{updateInfo.latestVersion}</span>
       </button>
+
+      {/* Mobile: update banner below the scroll menu (portal into header anchor) */}
+      {typeof document !== "undefined" &&
+        createPortal(
+          <div className="px-4 pt-1 pb-3">
+            <button
+              type="button"
+              onClick={() => setShowUpdateModal(true)}
+              className="group flex w-full cursor-pointer items-center justify-between gap-2 rounded-xl border border-amber-500/40 bg-amber-500/10 px-3.5 py-2 text-xs font-semibold text-amber-600 shadow-[var(--shadow-elev)] transition-colors hover:bg-amber-500/20 dark:text-amber-400"
+            >
+              <span className="flex min-w-0 items-center gap-2">
+                <span className="material-symbols-outlined shrink-0 text-[16px]">arrow_upward</span>
+                <span className="truncate">Update available</span>
+              </span>
+              <span className="shrink-0 font-mono text-[11px]">v{updateInfo.latestVersion}</span>
+            </button>
+          </div>,
+          document.getElementById("header-update-anchor") ?? document.body,
+        )}
 
       <ConfirmModal
         isOpen={showUpdateModal}

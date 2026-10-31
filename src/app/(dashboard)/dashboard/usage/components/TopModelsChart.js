@@ -103,7 +103,7 @@ export default function TopModelsChart({ byModel, bare = false }) {
       {/* Chart / empty */}
       {!chartData.length ? (
         <div className="h-44 flex flex-col items-center justify-center gap-1 text-text-muted">
-          <span className="material-symbols-outlined text-[26px] text-text-subtle">smart_toy</span>
+          <span className="material-symbols-outlined text-[26px] text-primary dark:text-primary">smart_toy</span>
           <span className="text-sm">No model usage yet</span>
         </div>
       ) : (

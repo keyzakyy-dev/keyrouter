@@ -6,7 +6,7 @@ import { useTheme } from "@/shared/hooks/useTheme";
 import { ConfirmModal } from "./Modal";
 
 const ICON_BTN_CLS =
-  "flex items-center justify-center p-2 rounded-lg text-text-muted hover:text-text-main hover:bg-black/5 dark:hover:bg-white/5 transition-all";
+  "flex items-center justify-center p-2 rounded-lg text-text-muted hover:text-primary transition-all";
 const DANGER_BTN_CLS = " hover:text-red-500 dark:hover:text-red-400";
 
 export default function HeaderMenu({ onLogout }) {

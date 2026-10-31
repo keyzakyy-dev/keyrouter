@@ -109,7 +109,7 @@ function RouterNode({ data }) {
       <Handle type="source" position={Position.Right} id="right" className="!bg-transparent !border-0 !w-0 !h-0" />
 
       <div
-        className={`mr-2 grid size-7 shrink-0 place-items-center rounded-lg bg-brand-600 text-white ${powering ? "topology-router-icon" : ""}`}
+        className={`mr-2 grid size-7 shrink-0 place-items-center rounded-lg bg-primary text-white ${powering ? "topology-router-icon" : ""} dark:bg-primary dark:text-black`}
       >
         <span className="material-symbols-outlined text-[16px]">route</span>
       </div>
@@ -117,7 +117,7 @@ function RouterNode({ data }) {
         KeyRouter
       </span>
       {data.activeCount > 0 && (
-        <span className="ml-2 rounded-full bg-primary px-2 py-0.5 font-mono text-[10px] font-bold text-white">
+        <span className="ml-2 rounded-full bg-primary px-2 py-0.5 font-mono text-[10px] font-bold text-white dark:text-amber-950">
           {data.activeCount}
         </span>
       )}

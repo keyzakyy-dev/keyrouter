@@ -106,16 +106,16 @@ export default function Dropdown({
                   setOpen(false);
                 }}
                 className={cn(
-                  "flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm transition-colors",
+                  "group flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm transition-colors",
                   itemDisabled
                     ? "cursor-not-allowed opacity-40"
                     : active
                       ? "bg-surface-2 text-text-main"
-                      : "text-text-muted hover:bg-surface-2 hover:text-text-main"
+                      : "text-text-muted hover:text-primary dark:hover:text-primary"
                 )}
               >
                 {option.icon && (
-                  <span className={cn("material-symbols-outlined text-[18px]", active ? "text-text-main" : "text-text-subtle")}>
+                  <span className={cn("material-symbols-outlined text-[18px]", active ? "text-text-main" : "text-text-subtle group-hover:text-primary dark:group-hover:text-primary")}>
                     {option.icon}
                   </span>
                 )}
@@ -124,7 +124,7 @@ export default function Dropdown({
                   <span className="text-[10px] uppercase tracking-wider text-text-subtle">{option.hint}</span>
                 )}
                 {active && (
-                  <span className="material-symbols-outlined text-[18px] text-text-main">check</span>
+                  <span className="material-symbols-outlined text-[18px] text-primary dark:text-primary">check</span>
                 )}
               </button>
             );

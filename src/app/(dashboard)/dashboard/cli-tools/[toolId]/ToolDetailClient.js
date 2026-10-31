@@ -182,8 +182,8 @@ export default function ToolDetailClient({ toolId, machineId }) {
   if (!tool) {
     return (
       <div className="flex w-full flex-col gap-4 px-1 sm:px-0">
-        <Link href="/dashboard/cli-tools" className="inline-flex items-center gap-1 text-sm text-text-muted hover:text-primary w-fit">
-          <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+        <Link href="/dashboard/cli-tools" className="mb-4 inline-flex h-8 items-center gap-1.5 rounded-lg border border-border bg-surface pl-1.5 pr-3 text-sm font-display font-medium text-text-main transition-colors hover:border-text-subtle hover:bg-surface-2 w-fit">
+          <span className="material-symbols-outlined text-[17px] text-text-muted">arrow_back</span>
           Back to CLI Tools
         </Link>
         <p className="text-sm text-text-muted">Tool not found or disabled.</p>
@@ -193,13 +193,13 @@ export default function ToolDetailClient({ toolId, machineId }) {
 
   return (
     <div className="flex w-full flex-col gap-4 px-1 sm:px-0">
-      <Link href="/dashboard/cli-tools" className="inline-flex items-center gap-1 text-sm text-text-muted hover:text-primary w-fit">
-        <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+      <Link href="/dashboard/cli-tools" className="mb-4 inline-flex h-8 items-center gap-1.5 rounded-lg border border-border bg-surface pl-1.5 pr-3 text-sm font-display font-medium text-text-main transition-colors hover:border-text-subtle hover:bg-surface-2 w-fit">
+        <span className="material-symbols-outlined text-[17px] text-text-muted">arrow_back</span>
         Back to CLI Tools
       </Link>
       <div className="flex flex-col gap-1">
         <h1 className="text-xl font-semibold text-text-main sm:text-2xl">{tool.name}</h1>
-        <p className="text-sm text-text-muted">{tool.description}</p>
+        <p className="font-display text-sm text-text-muted">{tool.description}</p>
       </div>
       {loading ? <CardSkeleton /> : renderToolCard()}
     </div>

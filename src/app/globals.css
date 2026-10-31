@@ -3,6 +3,82 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* ============================================================
+   Self-hosted Noto subsets for non-Latin locale display names.
+   Tiny (a few KB each): only the glyphs used in the language
+   switcher are included, so we avoid bundling full CJK fonts.
+   ============================================================ */
+@font-face {
+  font-family: "Locale CJK SC";
+  src: url("/fonts/sc-subset.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Locale CJK TC";
+  src: url("/fonts/tc-subset.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Locale CJK JP";
+  src: url("/fonts/jp-subset.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Locale Hangul";
+  src: url("/fonts/kr-subset.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Locale Hebrew";
+  src: url("/fonts/hebrew-subset.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Locale Arabic";
+  src: url("/fonts/arabic-subset.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Locale Thai";
+  src: url("/fonts/thai-subset.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Locale Khmer";
+  src: url("/fonts/khmer-subset.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Locale Devanagari";
+  src: url("/fonts/devanagari-subset.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Locale Bengali";
+  src: url("/fonts/bengali-subset.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Hide icon ligature text until font is ready */
 .material-symbols-outlined { opacity: 0; }
 .fonts-loaded .material-symbols-outlined { opacity: 1; transition: opacity .12s ease-out; }
@@ -24,9 +100,9 @@
   --color-brand-800: #262626;
   --color-brand-900: #171717;
 
-  /* Primary (legacy alias for backward compat with existing components) */
-  --color-primary: var(--color-brand-800);
-  --color-primary-hover: var(--color-brand-900);
+  /* Primary (accent = neutral gray in light mode; yellow reserved for dark) */
+  --color-primary: #525252;
+  --color-primary-hover: #3f3f46;
 
   /* Surfaces & backgrounds (light - instrument paper) */
   --color-bg: #f2f0e9;
@@ -75,50 +151,50 @@
 }
 
 .dark {
-  /* Brand scale (dark) - warm monochrome (inverted, tinted to match light cream theme) */
-  --color-brand-50: #191713;
-  --color-brand-100: #292520;
-  --color-brand-200: #3a352e;
-  --color-brand-300: #4d473e;
-  --color-brand-400: #6d665b;
-  --color-brand-500: #999288;
-  --color-brand-600: #cbc5ba;
-  --color-brand-700: #ddd7cc;
-  --color-brand-800: #efebe3;
-  --color-brand-900: #f6f3ec;
+  /* Brand scale (dark) - neutral gray (inverted for contrast on dark) */
+  --color-brand-50: #171717;
+  --color-brand-100: #262626;
+  --color-brand-200: #3a3a3a;
+  --color-brand-300: #4d4d4d;
+  --color-brand-400: #6b6b6b;
+  --color-brand-500: #969696;
+  --color-brand-600: #c4c4c4;
+  --color-brand-700: #d6d6d6;
+  --color-brand-800: #ebebeb;
+  --color-brand-900: #f4f4f4;
 
-  --color-primary: var(--color-brand-100);
-  --color-primary-hover: var(--color-brand-200);
+  --color-primary: #fbbf24;
+  --color-primary-hover: #f59e0b;
 
-  /* Surfaces (dark - warm neutral, matches light cream theme) */
-  --color-bg: #161410;
-  --color-bg-alt: #1d1a15;
-  --color-surface: #221f19;
-  --color-surface-2: #2b2720;
-  --color-surface-3: #353028;
-  --color-sidebar: rgba(29, 26, 21, 0.85);
+  /* Surfaces (dark - near-black neutral, deep but not pure black) */
+  --color-bg: #0f0f0f;
+  --color-bg-alt: #151515;
+  --color-surface: #1a1a1a;
+  --color-surface-2: #222222;
+  --color-surface-3: #2b2b2b;
+  --color-sidebar: rgba(18, 18, 18, 0.85);
 
-  --color-border: #332e26;
-  --color-border-subtle: #292520;
+  --color-border: #2e2e2e;
+  --color-border-subtle: #242424;
 
-  --color-text: #ece8df;
-  --color-text-main: #ece8df;
-  --color-text-muted: #a49d90;
-  --color-text-subtle: #7b7467;
+  --color-text: #ececec;
+  --color-text-main: #ececec;
+  --color-text-muted: #a3a3a3;
+  --color-text-subtle: #787878;
 
   --color-danger: #f19090;
   --color-success: #4ade80;
   --color-warning: #fbbf24;
   --color-info: #7fb4f8;
 
-  --shadow-soft: 0 1px 2px 0 rgba(0,0,0,0.3);
-  --shadow-warm: 0 2px 12px -2px rgba(0, 0, 0, 0.25);
-  --shadow-elevated: 0 12px 28px -4px rgba(0, 0, 0, 0.45);
+  --shadow-soft: 0 1px 2px 0 rgba(0,0,0,0.35);
+  --shadow-warm: 0 2px 12px -2px rgba(0, 0, 0, 0.3);
+  --shadow-elevated: 0 12px 28px -4px rgba(0, 0, 0, 0.5);
   --shadow-elev:
-    inset 0 1px 0 0 rgba(255,255,255,0.06),
-    0 1px 2px rgba(0,0,0,0.4),
-    0 16px 48px -8px rgba(0,0,0,0.55);
-  --shadow-focus: 0 0 0 3px rgba(0, 0, 0, 0.22);
+    inset 0 1px 0 0 rgba(255,255,255,0.05),
+    0 1px 2px rgba(0,0,0,0.45),
+    0 16px 48px -8px rgba(0,0,0,0.6);
+  --shadow-focus: 0 0 0 3px rgba(0, 0, 0, 0.25);
 
   /* Topology theming (dark) */
   --color-topo-core: #f8fafc;
@@ -183,7 +259,7 @@ select option {
   --color-text-main: var(--color-text-main);
   --color-text-muted: var(--color-text-muted);
   --color-text-subtle: var(--color-text-subtle);
-  --color-accent: var(--color-brand-500);
+  --color-accent: var(--color-primary);
   --color-danger: var(--color-danger);
   --color-success: var(--color-success);
   --color-warning: var(--color-warning);

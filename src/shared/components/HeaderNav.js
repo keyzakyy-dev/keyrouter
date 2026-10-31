@@ -18,11 +18,11 @@ import {
 import { MEDIA_PROVIDER_KINDS } from "@/shared/constants/providers";
 
 const NAV_ITEM_BASE =
-  "group flex shrink-0 items-center gap-2 rounded-lg px-3 py-1.5 font-display text-sm font-medium transition-colors duration-150";
-const NAV_ITEM_ACTIVE = "bg-surface-2 text-text-main";
-const NAV_ITEM_IDLE = "text-text-muted hover:text-text-main";
-const NAV_ICON_ACTIVE = "text-text-main";
-const NAV_ICON_IDLE = "text-text-subtle transition-colors group-hover:text-text-main";
+  "group flex shrink-0 items-center gap-2 rounded-lg px-2 py-1.5 font-display text-sm font-medium transition-colors duration-150";
+const NAV_ITEM_ACTIVE = "text-primary";
+const NAV_ITEM_IDLE = "text-text-muted hover:text-primary";
+const NAV_ICON_ACTIVE = "text-primary";
+const NAV_ICON_IDLE = "text-text-subtle transition-colors group-hover:text-primary";
 
 function NavLinkItem({ item, active }) {
   return (
@@ -40,9 +40,6 @@ function NavLinkItem({ item, active }) {
         {item.icon}
       </span>
       <span className="truncate">{item.label}</span>
-      {active && (
-        <span className="size-1 shrink-0 rounded-full bg-text-muted" />
-      )}
     </Link>
   );
 }
@@ -124,7 +121,7 @@ export default function HeaderNav() {
   return (
     <>
       <nav className="scrollbar-hide flex w-full items-center overflow-x-auto">
-        <div className="mx-auto flex items-center gap-1">
+        <div className="flex items-center gap-0.5">
           {items.map((item) => (
             <NavLinkItem key={item.href} item={item} active={isActive(item.href)} />
           ))}

@@ -275,7 +275,7 @@ export default function GrokBuildToolCard({
               {configStatus === "not_configured" && <span className="px-1.5 py-0.5 text-[10px] font-medium bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 rounded-full">Not configured</span>}
               {configStatus === "other" && <span className="px-1.5 py-0.5 text-[10px] font-medium bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-full">Other</span>}
             </div>
-            <p className="text-xs text-text-muted truncate">{tool.description}</p>
+            <p className="font-display text-xs text-text-muted truncate">{tool.description}</p>
           </div>
         </div>
         <span className={`material-symbols-outlined text-text-muted text-[20px] transition-transform ${isExpanded ? "rotate-180" : ""}`}>expand_more</span>
@@ -286,15 +286,15 @@ export default function GrokBuildToolCard({
           {checking && <div className="flex items-center gap-2 text-text-muted"><span className="material-symbols-outlined animate-spin">progress_activity</span><span>Checking Grok Build...</span></div>}
 
           {!checking && grokStatus && !grokStatus.installed && (
-            <div className="flex flex-col gap-3 p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
+            <div className="flex flex-col gap-3 p-4 bg-warning/5 border border-warning/25 rounded-lg">
               <div className="flex items-start gap-3">
-                <span className="material-symbols-outlined text-yellow-500">warning</span>
+                <span className="material-symbols-outlined !text-[18px] text-warning mt-0.5">warning</span>
                 <div className="flex-1">
-                  <p className="font-medium text-yellow-600 dark:text-yellow-400">Grok Build not detected locally</p>
+                  <p className="font-display font-medium text-warning">Grok Build not detected locally</p>
                   <code className="block mt-2 p-2 bg-black/20 rounded text-xs font-mono">curl -fsSL https://x.ai/cli/install.sh | bash</code>
                 </div>
               </div>
-              <Button variant="secondary" size="sm" onClick={() => setShowManualConfigModal(true)} className="w-full sm:w-auto"><span className="material-symbols-outlined text-[18px] mr-1">content_copy</span>Manual Config</Button>
+              <Button variant="outline" size="sm" onClick={() => setShowManualConfigModal(true)} className="w-full sm:w-auto font-mono uppercase text-[10px] tracking-wide"><span className="material-symbols-outlined text-[18px] mr-1">content_copy</span>Manual Config</Button>
             </div>
           )}
 
@@ -304,9 +304,9 @@ export default function GrokBuildToolCard({
                 {tool.notes?.length > 0 && (
                   <div className="mb-2 flex flex-col gap-2">
                     {tool.notes.map((note, index) => (
-                      <div key={index} className={`flex items-start gap-2 rounded p-2 text-xs ${note.type === "warning" ? "bg-yellow-500/10 text-yellow-600 dark:text-yellow-400" : "bg-blue-500/10 text-blue-600 dark:text-blue-400"}`}>
-                        <span className="material-symbols-outlined mt-0.5 text-[14px]">{note.type === "warning" ? "warning" : "info"}</span>
-                        <span>{note.text}</span>
+                      <div key={index} className={`flex items-start gap-2.5 rounded-lg border p-3 ${note.type === "warning" ? "bg-warning/5 border-warning/25 text-warning" : "bg-blue-500/10 border-blue-500/30 text-blue-600 dark:text-blue-400"}`}>
+                        <span className={`material-symbols-outlined !text-[16px] mt-0.5 ${note.type === "warning" ? "text-warning" : "text-blue-500"}`}>{note.type === "warning" ? "warning" : "info"}</span>
+                        <span className="font-display text-sm font-medium">{note.text}</span>
                       </div>
                     ))}
                   </div>

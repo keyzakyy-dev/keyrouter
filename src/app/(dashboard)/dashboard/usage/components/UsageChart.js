@@ -125,7 +125,7 @@ export default function UsageChart({ period = "7d", bare = false }) {
         </div>
       ) : !hasData ? (
         <div className="h-48 flex flex-col items-center justify-center gap-1 text-text-muted">
-          <span className="material-symbols-outlined text-[26px] text-text-subtle">monitoring</span>
+          <span className="material-symbols-outlined text-[26px] text-primary dark:text-primary">monitoring</span>
           <span className="text-sm">No data for this period</span>
         </div>
       ) : (

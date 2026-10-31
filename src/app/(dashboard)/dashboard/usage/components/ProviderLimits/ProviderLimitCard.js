@@ -97,7 +97,7 @@ export default function ProviderLimitCard({
           title="Refresh quota"
         >
           <span
-            className={`material-symbols-outlined text-[20px] text-text-muted ${
+            className={`material-symbols-outlined text-[20px] text-primary dark:text-primary ${
               refreshing || loading ? "animate-spin" : ""
             }`}
           >
@@ -176,7 +176,7 @@ export default function ProviderLimitCard({
       {/* Empty State */}
       {!loading && !error && !message && quotas?.length === 0 && (
         <div className="text-center py-8 text-text-muted">
-          <span className="material-symbols-outlined text-[48px] opacity-20">
+          <span className="material-symbols-outlined text-[48px] text-primary dark:text-primary">
             data_usage
           </span>
           <p className="text-sm mt-2">No quota data available</p>

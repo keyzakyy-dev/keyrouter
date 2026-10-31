@@ -82,6 +82,8 @@ export default function CombosPage() {
   const [selectedIds, setSelectedIds] = useState([]);
   const [bulkBusy, setBulkBusy] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const COMBO_PAGE_SIZE = 3;
   const { copied, copy } = useCopyToClipboard();
 
   useEffect(() => {
@@ -93,6 +95,11 @@ export default function CombosPage() {
     const alive = new Set(combos.map((c) => c.id));
     setSelectedIds((prev) => prev.filter((id) => alive.has(id)));
   }, [combos]);
+
+  // Reset to page 1 when the search query or combo list changes.
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, combos]);
 
   const selectedCombos = combos.filter((c) => selectedIds.includes(c.id));
   const someSelected = selectedIds.length > 0;
@@ -106,6 +113,11 @@ export default function CombosPage() {
         return (c.models || []).some((m) => String(m).toLowerCase().includes(normalizedQuery));
       })
     : combos;
+
+  // Pagination — show at most 3 combos per page.
+  const totalPages = Math.max(1, Math.ceil(filteredCombos.length / COMBO_PAGE_SIZE));
+  const safePage = Math.min(currentPage, totalPages);
+  const pagedCombos = filteredCombos.slice((safePage - 1) * COMBO_PAGE_SIZE, safePage * COMBO_PAGE_SIZE);
 
   // Select-all follows the search: with a query active it must only reach the
   // rows on screen, otherwise the bulk Delete would take out hidden combos.
@@ -401,7 +413,7 @@ export default function CombosPage() {
           </p>
         </div>
         <div className="flex w-full flex-col gap-2 sm:w-auto sm:items-stretch">
-          <Button icon="add" onClick={() => setShowCreateModal(true)} className="w-full sm:w-auto whitespace-nowrap">
+          <Button icon="add" onClick={() => setShowCreateModal(true)} className="w-full sm:w-auto whitespace-nowrap font-display">
             Create Combo
           </Button>
           <div className="hidden">
@@ -440,9 +452,7 @@ export default function CombosPage() {
           { name: "Fusion", desc: "Runs all models, a judge synthesizes", icon: "all_inclusive" },
         ].map((s) => (
           <div key={s.name} className="flex items-start gap-2.5 rounded-xl border border-border bg-surface px-3.5 py-3">
-            <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-surface-2 text-text-muted">
-              <span className="material-symbols-outlined text-[18px]">{s.icon}</span>
-            </span>
+            <span className="material-symbols-outlined text-[20px] shrink-0 text-primary dark:text-primary">{s.icon}</span>
             <span className="min-w-0">
               <span className="block font-display text-[13px] font-semibold text-text-main">{s.name}</span>
               <span className="mt-0.5 block font-display text-xs leading-snug text-text-muted">{s.desc}</span>
@@ -455,12 +465,10 @@ export default function CombosPage() {
       {combos.length === 0 ? (
         <Card>
           <div className="text-center py-12">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-surface-2 text-text-muted mb-4">
-              <span className="material-symbols-outlined text-[32px]">layers</span>
-            </div>
+            <span className="material-symbols-outlined text-[32px] text-primary dark:text-primary mb-4 block">layers</span>
             <p className="text-text-main font-display font-medium mb-1">No combos yet</p>
             <p className="text-sm text-text-muted mb-4">Create model combos with fallback support</p>
-            <Button icon="add" onClick={() => setShowCreateModal(true)} className="w-full sm:w-auto">
+            <Button icon="add" onClick={() => setShowCreateModal(true)} className="w-full sm:w-auto font-display">
               Create Combo
             </Button>
           </div>
@@ -572,7 +580,7 @@ export default function CombosPage() {
                   </Card>
                 );
               }
-              return filteredCombos.map((combo) => (
+              return pagedCombos.map((combo) => (
                 <ComboCard
                   key={combo.id}
                   combo={combo}
@@ -590,6 +598,44 @@ export default function CombosPage() {
                 />
               ));
             })()}
+
+          {/* Pagination — max 3 combos per page */}
+          {totalPages > 1 && (
+            <div className="mt-1 flex items-center justify-center gap-1.5">
+              <button
+                type="button"
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={safePage <= 1}
+                aria-label="Previous page"
+                className="grid size-8 place-items-center rounded-lg border border-border bg-surface text-text-muted transition-colors hover:text-text-main disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                <span className="material-symbols-outlined text-[16px]">chevron_left</span>
+              </button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((pg) => (
+                <button
+                  key={pg}
+                  type="button"
+                  onClick={() => setCurrentPage(pg)}
+                  className={`grid size-8 min-w-8 place-items-center rounded-lg border px-2 font-mono text-[11px] uppercase tracking-wider transition-colors ${
+                    pg === safePage
+                      ? "border-primary bg-primary text-white dark:text-amber-950"
+                      : "border-border bg-surface text-text-muted hover:text-text-main"
+                  }`}
+                >
+                  {pg}
+                </button>
+              ))}
+              <button
+                type="button"
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                disabled={safePage >= totalPages}
+                aria-label="Next page"
+                className="grid size-8 place-items-center rounded-lg border border-border bg-surface text-text-muted transition-colors hover:text-text-main disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                <span className="material-symbols-outlined text-[16px]">chevron_right</span>
+              </button>
+            </div>
+          )}
           </div>
         </div>
       )}
@@ -698,9 +744,7 @@ function ComboCard({ combo, getCaps, comboByName = {}, activeProviders = [], cop
               aria-label={`Select ${combo.name}`}
             />
           </label>
-          <div className="size-8 rounded-lg bg-surface-2 flex items-center justify-center shrink-0">
-            <span className="material-symbols-outlined text-text-muted text-[18px]">layers</span>
-          </div>
+          <span className="material-symbols-outlined text-[20px] text-primary dark:text-primary shrink-0">layers</span>
           <div className="min-w-0 flex-1">
             <code className="block truncate font-display text-sm font-semibold text-text-main">{combo.name}</code>
             <div className="mt-1 flex min-w-0 flex-wrap items-center gap-1">
@@ -896,7 +940,7 @@ function CapacityAdapterSection({ capacityAdapter, onChange, activeProviders, ge
           </p>
         </div>
       </div>
-      <div className="flex flex-col gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {CAPACITY_ADAPTER_CAPS.map((cap) => (
           <CapacityAdapterCap
             key={cap.key}
@@ -948,9 +992,7 @@ function CapacityAdapterCap({ cap, entry, onChange, activeProviders, getCaps }) 
       <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         {/* Identity: icon + label + master toggle */}
         <div className="flex min-w-0 flex-1 items-center gap-3">
-          <div className="grid size-10 shrink-0 place-items-center rounded-xl bg-surface-2 text-text-muted">
-            <span className="material-symbols-outlined text-[20px]">{cap.icon}</span>
-          </div>
+          <span className="material-symbols-outlined text-[22px] shrink-0 text-primary dark:text-primary">{cap.icon}</span>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2.5">
               <h3 className="font-display text-sm font-semibold text-text-main">{cap.label}</h3>
@@ -989,7 +1031,7 @@ function CapacityAdapterCap({ cap, entry, onChange, activeProviders, getCaps }) 
             aria-pressed={roundRobin}
             className={`inline-flex items-center justify-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider transition-colors ${
               roundRobin
-                ? "border-primary bg-primary text-white"
+                ? "border-primary bg-primary text-white dark:text-amber-950"
                 : enabled
                   ? "border-border bg-surface text-text-muted hover:border-text-subtle hover:text-text-main"
                   : "cursor-not-allowed border-border bg-surface-2 text-text-muted/40"
@@ -1329,7 +1371,7 @@ function ComboFormModal({ isOpen, combo, onClose, onSave, activeProviders, kindF
 
             {models.length === 0 ? (
               <div className="text-center py-4 border border-dashed border-border rounded-lg bg-surface-2/50">
-                <span className="material-symbols-outlined text-text-muted text-xl mb-1">layers</span>
+                <span className="material-symbols-outlined text-xl text-primary dark:text-primary mb-1">layers</span>
                 <p className="font-mono text-[11px] uppercase tracking-wider text-text-muted">No models added yet</p>
               </div>
             ) : (

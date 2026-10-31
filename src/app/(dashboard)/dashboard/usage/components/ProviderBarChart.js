@@ -107,7 +107,7 @@ export default function ProviderBarChart({ byProvider, bare = false, providerLab
       {/* Chart / empty */}
       {!chartData.length ? (
         <div className="h-44 flex flex-col items-center justify-center gap-1 text-text-muted">
-          <span className="material-symbols-outlined text-[26px] text-text-subtle">candlestick_chart</span>
+          <span className="material-symbols-outlined text-[26px] text-primary dark:text-primary">candlestick_chart</span>
           <span className="text-sm">No provider usage yet</span>
         </div>
       ) : (

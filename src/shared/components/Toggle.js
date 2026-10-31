@@ -39,7 +39,7 @@ export default function Toggle({
           "relative inline-flex shrink-0 cursor-pointer rounded-full",
           "transition-colors duration-200 ease-in-out",
           "focus:outline-none focus:ring-2 focus:ring-text-subtle/50",
-          checked ? "bg-[#1a1a1a]" : "bg-surface-3",
+          checked ? "bg-primary dark:bg-primary" : "bg-surface-3 dark:bg-surface-2",
           sizes[size].track,
           disabled && "cursor-not-allowed"
         )}
@@ -57,7 +57,7 @@ export default function Toggle({
       {(label || description) && (
         <div className="flex flex-col">
           {label && (
-            <span className="text-sm font-medium text-text-main">{label}</span>
+            <span className="font-display text-sm font-semibold text-text-main">{label}</span>
           )}
           {description && (
             <span className="text-xs text-text-muted">{description}</span>

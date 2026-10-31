@@ -72,8 +72,7 @@ export default function ModelRow({ model, fullModel, alias, copied, onCopy, test
           ) : onDisable ? (
             <button
               onClick={onDisable}
-              className="rounded p-0.5 text-text-muted opacity-100 transition-opacity hover:bg-danger/10 hover:text-danger sm:opacity-0 sm:group-hover:opacity-100"
-              title="Disable this model"
+              className="rounded p-0.5 text-text-muted transition-colors hover:text-danger"
             >
               <span className="material-symbols-outlined text-sm">close</span>
             </button>

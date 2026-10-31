@@ -252,7 +252,7 @@ export default function AntigravityToolCard({
                 <Badge variant="default" size="sm">Inactive</Badge>
               )}
             </div>
-            <p className="text-xs text-text-muted truncate">{tool.description}</p>
+            <p className="font-display text-xs text-text-muted truncate">{tool.description}</p>
           </div>
         </div>
         <span className={`material-symbols-outlined text-text-muted text-[20px] transition-transform ${isExpanded ? "rotate-180" : ""}`}>expand_more</span>
@@ -387,8 +387,8 @@ export default function AntigravityToolCard({
 
           {/* Windows admin warning */}
           {!isRunning && serverIsWindows && (
-            <div className="flex items-center gap-2 px-2 py-1.5 rounded text-xs bg-yellow-500/10 text-yellow-600 border border-yellow-500/20">
-              <span className="material-symbols-outlined text-[14px]">warning</span>
+            <div className="flex items-center gap-2 px-2 py-1.5 rounded text-xs bg-warning/5 text-warning border border-warning/25">
+              <span className="material-symbols-outlined !text-[14px] text-warning">warning</span>
               <span>Windows: Run terminal (KeyRouter) as Administrator to enable MITM</span>
             </div>
           )}
@@ -421,8 +421,8 @@ export default function AntigravityToolCard({
         size="sm"
       >
         <div className="flex flex-col gap-4">
-          <div className="flex items-start gap-3 p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
-            <span className="material-symbols-outlined text-yellow-500 text-[20px]">warning</span>
+          <div className="flex items-start gap-3 p-3 bg-warning/5 border border-warning/25 rounded-lg">
+            <span className="material-symbols-outlined !text-[20px] text-warning">warning</span>
             <p className="text-xs text-text-muted">Required for SSL certificate and DNS configuration</p>
           </div>
 

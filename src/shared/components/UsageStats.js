@@ -57,7 +57,7 @@ function RecentRequests({ requests = [], providerLabels = {} }) {
 
       {!requests.length ? (
         <div className="flex-1 flex flex-col items-center justify-center gap-2 text-text-muted">
-          <span className="material-symbols-outlined text-[32px] text-text-subtle">inbox</span>
+          <span className="material-symbols-outlined text-[32px] text-primary dark:text-primary">inbox</span>
           <span className="font-mono text-xs uppercase tracking-wider">No requests yet.</span>
         </div>
       ) : (
@@ -491,7 +491,7 @@ export default function UsageStats({ period: periodProp, setPeriod: setPeriodPro
                 key={p.value}
                 onClick={() => setPeriod(p.value)}
                 disabled={fetching}
-                className={`rounded-md px-3 py-1 text-sm font-medium transition-colors ${period === p.value ? "bg-primary text-white" : "text-text-muted hover:bg-bg-hover hover:text-text"}`}
+                className={`rounded-md px-3 py-1 text-sm font-medium transition-colors ${period === p.value ? "bg-primary text-white dark:text-amber-950" : "text-text-muted hover:bg-bg-hover hover:text-text"}`}
               >
                 {p.label}
               </button>
@@ -531,11 +531,11 @@ export default function UsageStats({ period: periodProp, setPeriod: setPeriodPro
               onClick={() => setSectionTab(t.id)}
               className={`flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.5 font-display text-[13px] font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-text-subtle/60 focus-visible:ring-offset-1 focus-visible:ring-offset-surface-2 ${
                 active
-                  ? "bg-surface text-text-main shadow-[var(--shadow-soft)]"
+                  ? "bg-surface text-primary shadow-[var(--shadow-soft)] dark:text-primary"
                   : "text-text-muted hover:text-text-main"
               }`}
             >
-              <span className={`material-symbols-outlined text-[15px] ${active ? "text-text-main" : "text-text-subtle"}`}>
+              <span className={`material-symbols-outlined text-[15px] ${active ? "text-primary dark:text-primary" : "text-text-subtle"}`}>
                 {t.icon}
               </span>
               {t.label}
@@ -572,13 +572,13 @@ export default function UsageStats({ period: periodProp, setPeriod: setPeriodPro
                     <div className="grid grid-cols-2 items-center gap-1 rounded-lg border border-border bg-bg-subtle p-1 sm:flex">
                       <button
                         onClick={() => setViewMode("costs")}
-                        className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${viewMode === "costs" ? "bg-primary text-white" : "text-text-muted hover:text-text hover:bg-bg-hover"}`}
+                        className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${viewMode === "costs" ? "bg-primary text-white dark:text-amber-950" : "text-text-muted hover:text-text hover:bg-bg-hover"}`}
                       >
                         Costs
                       </button>
                       <button
                         onClick={() => setViewMode("tokens")}
-                        className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${viewMode === "tokens" ? "bg-primary text-white" : "text-text-muted hover:text-text hover:bg-bg-hover"}`}
+                        className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${viewMode === "tokens" ? "bg-primary text-white dark:text-amber-950" : "text-text-muted hover:text-text hover:bg-bg-hover"}`}
                       >
                         Tokens
                       </button>

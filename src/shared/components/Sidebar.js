@@ -48,12 +48,12 @@ const debugItems = [
 
 const NAV_ITEM_BASE =
   "group relative flex items-center rounded-lg font-display font-medium transition-colors duration-150";
-const NAV_ITEM_ACTIVE = "bg-brand-500/10 text-brand-700 dark:text-brand-300";
-const NAV_ITEM_IDLE = "text-text-muted hover:bg-surface-2 hover:text-text-main";
-const NAV_ICON_ACTIVE = "text-brand-600 dark:text-brand-400";
-const NAV_ICON_IDLE = "text-text-subtle transition-colors group-hover:text-text-main";
+const NAV_ITEM_ACTIVE = "text-primary dark:text-primary";
+const NAV_ITEM_IDLE = "text-text-muted hover:text-text-main";
+const NAV_ICON_ACTIVE = "text-amber-700 dark:text-amber-300";
+const NAV_ICON_IDLE = "text-amber-600/60 dark:text-amber-400/60 transition-colors group-hover:text-amber-700 dark:group-hover:text-amber-300";
 const NAV_ACTIVE_BAR =
-  "absolute left-0 top-1/2 h-4 w-[3px] -translate-y-1/2 rounded-full bg-brand-500";
+  "absolute left-0 top-1/2 h-4 w-[3px] -translate-y-1/2 rounded-full bg-primary";
 
 const COLLAPSE_STORAGE_KEY = "keyrouter.sidebar.collapsed";
 
@@ -352,7 +352,7 @@ export default function Sidebar({ onClose, collapsible = true }) {
             href="/dashboard"
             className={cn("group flex items-center", isCollapsed ? "justify-center" : "gap-3")}
           >
-            <div className="grid size-10 shrink-0 place-items-center rounded-[10px] bg-brand-600 text-white shadow-[var(--shadow-warm)] transition-transform duration-150 group-hover:scale-[1.04]">
+            <div className="grid size-10 shrink-0 place-items-center rounded-[10px] bg-primary text-white shadow-[var(--shadow-warm)] transition-transform duration-150 group-hover:scale-[1.04] dark:bg-primary dark:text-black">
               <span className="material-symbols-outlined text-[20px]">hub</span>
             </div>
             {!isCollapsed && (
@@ -375,7 +375,7 @@ export default function Sidebar({ onClose, collapsible = true }) {
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setShowUpdateModal(true)}
-                  className="cursor-pointer rounded-md bg-brand-600 px-2.5 py-1 text-[11px] font-semibold text-white shadow-sm transition-colors hover:bg-brand-700"
+                  className="cursor-pointer rounded-md bg-primary px-2.5 py-1 text-[11px] font-semibold text-white shadow-sm transition-colors hover:bg-primary-hover dark:bg-primary dark:text-black dark:hover:bg-primary-hover"
                 >
                   Update now
                 </button>

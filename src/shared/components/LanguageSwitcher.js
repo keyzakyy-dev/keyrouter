@@ -56,6 +56,23 @@ const getLocaleInfo = (locale) => {
   return locales[locale] || { name: locale, flag: "🌐" };
 };
 
+// Font family for scripts that aren't covered by the base system font stack.
+// Self-hosted Noto subsets live in /fonts/*.ttf (see globals.css @font-face).
+const LOCALE_FONT = {
+  "zh-CN": '"Locale CJK SC", "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", system-ui, sans-serif',
+  "zh-TW": '"Locale CJK TC", "PingFang TC", "Microsoft JhengHei", "Noto Sans CJK TC", system-ui, sans-serif',
+  ja: '"Locale CJK JP", "Hiragino Kaku Gothic ProN", "Noto Sans JP", system-ui, sans-serif',
+  ko: '"Locale Hangul", "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif',
+  he: '"Locale Hebrew", "Noto Sans Hebrew", system-ui, sans-serif',
+  ar: '"Locale Arabic", "Noto Sans Arabic", system-ui, sans-serif',
+  ur: '"Locale Arabic", "Noto Sans Arabic", system-ui, sans-serif',
+  fa: '"Locale Arabic", "Noto Sans Arabic", system-ui, sans-serif',
+  th: '"Locale Thai", "Noto Sans Thai", system-ui, sans-serif',
+  km: '"Locale Khmer", "Noto Sans Khmer", system-ui, sans-serif',
+  hi: '"Locale Devanagari", "Noto Sans Devanagari", system-ui, sans-serif',
+  bn: '"Locale Bengali", "Noto Sans Bengali", system-ui, sans-serif',
+};
+
 export default function LanguageSwitcher({ className = "", isOpen: controlledOpen, onClose, hideTrigger = false }) {
   const [locale, setLocale] = useState("en");
   const [isPending, setIsPending] = useState(false);
@@ -133,21 +150,21 @@ export default function LanguageSwitcher({ className = "", isOpen: controlledOpe
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" data-i18n-skip="true">
           {/* Overlay */}
           <div
-            className="absolute inset-0 bg-black/30 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/50 backdrop-blur-[2px] fade-in"
             onClick={() => setIsOpen(false)}
           />
 
           {/* Modal content */}
           <div
             ref={modalRef}
-            className="relative w-full bg-surface border border-black/10 dark:border-white/10 rounded-xl shadow-2xl animate-in fade-in zoom-in-95 duration-200 max-w-2xl flex flex-col max-h-[80vh]"
+            className="relative w-full bg-surface border border-border-subtle rounded-[14px] shadow-[var(--shadow-elev)] fade-in max-w-2xl flex flex-col max-h-[80vh]"
           >
             {/* Modal header */}
-            <div className="flex items-center justify-between p-3 border-b border-black/5 dark:border-white/5">
-              <h2 className="text-lg font-semibold text-text-main">Select Language</h2>
+            <div className="flex items-center justify-between p-3 border-b border-border-subtle">
+              <h2 className="font-display text-lg font-semibold text-text-main">Select Language</h2>
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-1.5 rounded-lg text-text-muted hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                className="p-1.5 rounded-[10px] text-text-muted hover:bg-surface-2 hover:text-text-main transition-colors"
                 aria-label="Close"
               >
                 <span className="material-symbols-outlined text-[20px]">close</span>
@@ -167,14 +184,23 @@ export default function LanguageSwitcher({ className = "", isOpen: controlledOpe
                       disabled={isPending}
                       className={`flex flex-col items-center justify-start gap-1 px-2 py-3 rounded-lg text-xs font-medium transition-colors w-full ${
                         active
-                          ? "bg-primary/15 text-primary ring-2 ring-primary"
-                          : "text-text-main hover:bg-black/5 dark:hover:bg-white/5"
+                          ? "bg-primary/10 text-primary dark:text-primary ring-2 ring-primary/40"
+                          : "text-text-main hover:text-primary dark:hover:text-primary"
                       } ${isPending ? "opacity-70 cursor-wait" : ""}`}
                       title={info.name}
                     >
                       <span className="text-2xl">{info.flag}</span>
                       {/* Fixed 2-line height so all cards are uniform */}
-                      <span className="text-center leading-tight line-clamp-2 h-8 flex items-center">{info.name}</span>
+                      <span
+                        className="text-center leading-tight line-clamp-2 h-8 flex items-center"
+                        style={{
+                          fontFamily:
+                            LOCALE_FONT[item] ||
+                            "ui-sans-serif, -apple-system, 'Segoe UI', system-ui, sans-serif",
+                        }}
+                      >
+                        {info.name}
+                      </span>
                       {active && (
                         <span className="material-symbols-outlined text-sm">check</span>
                       )}

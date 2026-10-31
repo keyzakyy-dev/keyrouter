@@ -3,12 +3,15 @@
 import { cn } from "@/shared/utils/cn";
 
 const variants = {
-  primary: "bg-[#1a1a1a] hover:bg-[#000] text-[#f7f5ef] shadow-sm disabled:bg-surface-3 disabled:text-text-muted",
+  primary:
+    "bg-primary text-white hover:bg-primary-hover shadow-sm disabled:bg-surface-3 disabled:text-text-muted dark:bg-primary dark:text-black dark:hover:bg-primary-hover",
   secondary: "bg-surface-2 hover:bg-surface-3 text-text-main border border-border disabled:opacity-50",
   outline: "border border-border text-text-main hover:bg-surface-2 hover:border-text-subtle",
   ghost: "text-text-muted hover:bg-surface-2 hover:text-text-main",
-  danger: "bg-red-600 hover:bg-red-700 text-white shadow-sm disabled:bg-surface-3 disabled:text-text-muted",
-  success: "bg-green-700 hover:bg-green-800 text-white shadow-sm disabled:bg-surface-3 disabled:text-text-muted",
+  danger:
+    "bg-red-600 hover:bg-red-700 text-white shadow-sm disabled:bg-surface-3 disabled:text-text-muted dark:bg-red-500 dark:hover:bg-red-400 dark:text-white",
+  success:
+    "bg-green-700 hover:bg-green-800 text-white shadow-sm disabled:bg-surface-3 disabled:text-text-muted dark:bg-green-500 dark:hover:bg-green-400 dark:text-white",
 };
 
 const sizes = {

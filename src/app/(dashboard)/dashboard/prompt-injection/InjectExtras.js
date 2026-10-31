@@ -196,7 +196,7 @@ export function InjectionTester() {
 
   const segBtn = (active) =>
     `px-3 py-1.5 font-display font-medium transition-colors ${
-      active ? "bg-primary text-white" : "bg-surface text-text-muted hover:text-text-main"
+      active ? "bg-primary text-white dark:text-amber-950" : "bg-surface text-text-muted hover:text-text-main"
     }`;
   const modelField = (label, value, setValue, which) => (
     <label className="flex flex-col gap-1 text-sm">

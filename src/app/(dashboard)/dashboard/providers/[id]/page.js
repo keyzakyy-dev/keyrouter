@@ -6,7 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { getProviderIconSrc, markProviderIconMissing } from "@/shared/utils/providerIcon";
-import { Card, Button, Badge, Input, Modal, CardSkeleton, OAuthModal, KiroOAuthWrapper, CursorAuthModal, ZedAuthModal, XiaomiMimoAuthModal, IFlowCookieModal, GitLabAuthModal, Toggle, Select, EditConnectionModal, NoAuthProxyCard, ConfirmModal } from "@/shared/components";
+import { Card, Button, Badge, Input, Modal, CardSkeleton, OAuthModal, KiroOAuthWrapper, CursorAuthModal, ZedAuthModal, XiaomiMimoAuthModal, IFlowCookieModal, GitLabAuthModal, Toggle, Checkbox, Select, EditConnectionModal, NoAuthProxyCard, ConfirmModal } from "@/shared/components";
 import Dropdown from "@/shared/components/Dropdown";
 import { OAUTH_PROVIDERS, APIKEY_PROVIDERS, FREE_PROVIDERS, FREE_TIER_PROVIDERS, WEB_COOKIE_PROVIDERS, getProviderAlias, isOpenAICompatibleProvider, isAnthropicCompatibleProvider, AI_PROVIDERS } from "@/shared/constants/providers";
 import { getModelsByProviderId, getModelKind } from "@/shared/constants/models";
@@ -1047,12 +1047,7 @@ export default function ProviderDetailPage() {
         .map((conn, index) => (
           <div key={conn.id} className="flex min-w-0 items-stretch">
             <div className="flex shrink-0 items-center pl-1 sm:pl-2">
-              <input
-                type="checkbox"
-                checked={isSelected(conn.id)}
-                onChange={() => toggleSelectConnection(conn.id)}
-                className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-              />
+              <Checkbox checked={isSelected(conn.id)} onChange={() => toggleSelectConnection(conn.id)} />
             </div>
             <div className="flex-1 min-w-0 ml-2 sm:ml-4">
               <ConnectionRow
@@ -1406,7 +1401,7 @@ export default function ProviderDetailPage() {
 
   return (
     <div className="flex min-w-0 flex-col gap-6 px-1 sm:gap-8 sm:px-0">
-      {/* Header hero */}
+      {/* Back link */}
       <div className="min-w-0">
         <Link
           href="/dashboard/providers"
@@ -1415,24 +1410,28 @@ export default function ProviderDetailPage() {
           <span className="material-symbols-outlined text-[17px] text-text-muted">arrow_back</span>
           Back to Providers
         </Link>
-        <div className="relative overflow-hidden rounded-xl border border-border-subtle bg-surface/60">
-          <div className="flex items-center gap-4 p-4 sm:p-5">
+      </div>
+
+      {/* Provider header + summary bento: 1 kiri, 4 kanan */}
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <div className="relative overflow-hidden rounded-xl border border-border-subtle bg-surface/60 col-span-2 lg:col-span-2 lg:row-span-2">
+          <div className="flex h-full items-center gap-3 p-3 sm:p-3.5">
             <div
-              className="grid size-14 shrink-0 place-items-center rounded-xl border border-border bg-surface-2 sm:size-16"
+              className="grid size-11 shrink-0 place-items-center rounded-lg border border-border bg-surface-2 sm:size-12"
               style={{ backgroundColor: `${providerInfo.color}12` }}
             >
               {headerImgError || !getHeaderIconPath() ? (
-                <span className="text-lg font-bold sm:text-xl" style={{ color: providerInfo.color }}>
+                <span className="text-base font-bold sm:text-lg" style={{ color: providerInfo.color }}>
                   {providerInfo.textIcon || providerInfo.id.slice(0, 2).toUpperCase()}
                 </span>
               ) : (
                 <Image
                   src={getHeaderIconPath()}
                   alt={providerInfo.name}
-                  width={56}
-                  height={56}
-                  className="max-h-14 max-w-14 rounded-lg object-contain sm:max-h-16 sm:max-w-16"
-                  sizes="56px"
+                  width={44}
+                  height={44}
+                  className="max-h-11 max-w-11 rounded-lg object-contain sm:max-h-12 sm:max-w-12"
+                  sizes="44px"
                   onError={() => {
                     markProviderIconMissing(providerInfo.id);
                     setHeaderImgError(true);
@@ -1444,14 +1443,14 @@ export default function ProviderDetailPage() {
             </div>
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2 flex-wrap">
-                <h1 className="truncate font-display text-2xl font-bold tracking-tight sm:text-3xl">
+                <h1 className="truncate font-display text-xl font-bold tracking-tight sm:text-2xl">
                   {providerInfo.name}
                 </h1>
                 <Badge variant="default" size="sm">
                   {isCompatible ? "Compatible" : isFreeNoAuth ? "Free" : supportsApiKeyAuth && isOAuth ? "Dual Auth" : isOAuth ? "OAuth" : "API Key"}
                 </Badge>
               </div>
-              <p className="mt-1 text-sm text-text-muted">
+              <p className="mt-0.5 font-mono text-[11px] uppercase tracking-wide text-text-muted">
                 {summary.total} connection{summary.total === 1 ? "" : "s"}
                 {summary.total > 0 && ` · ${summary.connected} connected`}
               </p>
@@ -1460,7 +1459,7 @@ export default function ProviderDetailPage() {
                   href={providerInfo.notice?.apiKeyUrl || providerInfo.notice?.signupUrl || providerInfo.website}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-2 inline-flex items-center gap-1 text-xs text-primary hover:underline"
+                  className="mt-1 inline-flex items-center gap-1 text-xs text-primary hover:underline"
                 >
                   <span className="material-symbols-outlined text-sm">open_in_new</span>
                   {providerInfo.notice?.apiKeyUrl ? "Get API Key" : "Sign up / Learn more"}
@@ -1469,25 +1468,47 @@ export default function ProviderDetailPage() {
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Summary ribbon */}
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <SummaryStat icon="hub" label="Total koneksi" value={summary.total} />
-        <SummaryStat icon="check_circle" label="Connected" value={summary.connected} tone="success" />
-        <SummaryStat icon="error" label="Error" value={summary.errors} tone="danger" />
         <SummaryStat
+          className="lg:col-span-1"
+          icon="hub"
+          label="Total koneksi"
+          value={summary.total}
+        />
+        <SummaryStat
+          className="lg:col-span-1"
+          icon="check_circle"
+          label="Connected"
+          value={summary.connected}
+          tone="success"
+        />
+        <SummaryStat
+          className="lg:col-span-1"
+          icon="error"
+          label="Error"
+          value={summary.errors}
+          tone="danger"
+        />
+        <SummaryStat
+          className="lg:col-span-1"
           icon="toggle_on"
           label="Aktif"
           value={summary.active}
-          sub={summary.total > 0 ? `dari ${summary.total} koneksi` : null}
         />
       </div>
 
       {providerInfo.deprecated && (
-        <div className="flex items-center gap-2.5 rounded-lg border border-danger/25 bg-danger/5 px-3 py-2.5">
-          <span className="material-symbols-outlined text-[16px] text-danger shrink-0">warning</span>
-          <p className="text-xs text-danger leading-relaxed">{providerInfo.deprecationNotice}</p>
+        <div className="rounded-lg border border-warning/25 bg-warning/5 px-3.5 py-3">
+          <div className="flex items-start gap-2.5">
+            <span className="material-symbols-outlined text-[16px] text-warning shrink-0 mt-px">warning</span>
+            <div className="min-w-0 flex-1">
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-warning">
+                Risk Notice
+              </p>
+              <p className="mt-1 text-xs leading-relaxed text-warning">
+                {providerInfo.deprecationNotice}
+              </p>
+            </div>
+          </div>
         </div>
       )}
 
@@ -1500,7 +1521,7 @@ export default function ProviderDetailPage() {
               href={providerInfo.notice.apiKeyUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex h-7 items-center justify-center rounded-lg bg-primary px-3 text-xs font-display font-medium text-white transition-colors hover:bg-primary-hover sm:py-0"
+              className="inline-flex h-7 items-center justify-center rounded-lg bg-primary px-3 text-xs font-display font-medium text-white dark:text-amber-950 transition-colors hover:bg-primary-hover sm:py-0"
             >
               Get API Key →
             </a>
@@ -1597,8 +1618,9 @@ export default function ProviderDetailPage() {
                   {selectedConnectionIds.length > 0 && (
                     <Button
                       size="sm"
-                      variant="danger"
+                      variant="outline"
                       icon="delete"
+                      className="!h-[42px] border-danger/40 text-danger! hover:bg-danger/5 hover:border-danger dark:border-danger/40 dark:text-danger! dark:hover:bg-danger/10 font-mono text-[10px] uppercase tracking-wider"
                       onClick={handleBulkDelete}
                     >
                       Delete Selected ({selectedConnectionIds.length})
@@ -1606,8 +1628,9 @@ export default function ProviderDetailPage() {
                   )}
                   <Button
                     size="sm"
-                    variant="secondary"
+                    variant="outline"
                     icon="sync"
+                    className="!h-[42px] border-primary/40 text-primary! hover:bg-primary/5 hover:border-primary dark:border-primary/40 dark:text-primary! dark:hover:bg-primary/10 font-mono text-[10px] uppercase tracking-wider"
                     onClick={handleRunOneByOneTest}
                     disabled={oneByOneRunning}
                   >
@@ -1628,7 +1651,7 @@ export default function ProviderDetailPage() {
               )}
               {/* Round Robin toggle */}
               <div className="flex flex-wrap items-center gap-2.5 rounded-lg border border-border bg-surface-2/40 px-3 py-2">
-                <span className="font-mono text-[10px] uppercase tracking-wider text-text-subtle">Round Robin</span>
+                <span className="font-mono text-[10px] uppercase tracking-wider text-text-muted">Round Robin</span>
                 <Toggle
                   checked={providerStrategy === "round-robin"}
                   onChange={handleRoundRobinToggle}
@@ -1653,9 +1676,7 @@ export default function ProviderDetailPage() {
           {connections.length === 0 ? (
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-3">
-                <div className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-primary/10 text-primary shrink-0">
-                  <span className="material-symbols-outlined text-[18px]">{isOAuth ? "lock" : "key"}</span>
-                </div>
+                <span className="material-symbols-outlined text-[18px] text-primary dark:text-primary">{isOAuth ? "lock" : "key"}</span>
                 <div className="min-w-0">
                   <p className="text-sm text-text-muted">No connections yet</p>
                   {hasDualAuthModes && (
@@ -1677,7 +1698,7 @@ export default function ProviderDetailPage() {
                     </button>
                     <button
                       onClick={triggerApiKeyConnection}
-                      className="inline-flex h-8 items-center justify-center gap-2 rounded-lg bg-primary px-3.5 text-sm font-display font-medium text-white transition-colors hover:bg-primary-hover"
+                      className="inline-flex h-8 items-center justify-center gap-2 rounded-lg bg-primary px-3.5 text-sm font-display font-medium text-white dark:text-amber-950 transition-colors hover:bg-primary-hover"
                     >
                       <span className="material-symbols-outlined text-[17px]">key</span>
                       {apiKeyConnectionLabel}
@@ -1736,16 +1757,14 @@ export default function ProviderDetailPage() {
                 </div>
               )}
               {connections.length > 0 && (
-                <div className="mb-3 flex items-center gap-2 border-b border-black/[0.03] pb-2 dark:border-white/[0.03]">
-                  <label className="flex cursor-pointer items-center gap-1.5 text-xs text-text-muted hover:text-primary">
-                    <input
-                      type="checkbox"
-                      checked={allSelected}
-                      onChange={toggleSelectAllConnections}
-                      className="h-3.5 w-3.5 rounded border-gray-300 text-primary focus:ring-primary"
-                    />
+                <div className="mb-3 flex items-center gap-1.5 border-b border-black/[0.03] pb-2 dark:border-white/[0.03]">
+                  <Checkbox size="sm" checked={allSelected} onChange={() => toggleSelectAllConnections()} />
+                  <span
+                    className="cursor-pointer select-none text-xs text-text-muted hover:text-primary"
+                    onClick={() => toggleSelectAllConnections()}
+                  >
                     Select All
-                  </label>
+                  </span>
                 </div>
               )}
               {connectionsList}
@@ -1804,7 +1823,7 @@ export default function ProviderDetailPage() {
                       </button>
                       <button
                         onClick={triggerApiKeyConnection}
-                        className="inline-flex h-8 items-center justify-center gap-2 rounded-lg bg-primary px-3.5 text-sm font-display font-medium text-white transition-colors hover:bg-primary-hover w-full sm:w-auto"
+                        className="inline-flex h-8 items-center justify-center gap-2 rounded-lg bg-primary px-3.5 text-sm font-display font-medium text-white dark:text-amber-950 transition-colors hover:bg-primary-hover w-full sm:w-auto"
                       >
                         <span className="material-symbols-outlined text-[17px]">key</span>
                         {apiKeyConnectionLabel}
@@ -1837,9 +1856,6 @@ export default function ProviderDetailPage() {
             <h2 className="font-display text-lg font-semibold text-text-main">
               {"Available Models"}
             </h2>
-            <p className="font-mono text-[10px] uppercase tracking-wider text-text-subtle">
-              Model IDs served by this provider
-            </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             {providerThinkingLevels && (
@@ -2067,6 +2083,7 @@ export default function ProviderDetailPage() {
         confirmText="I Understand, Continue"
         cancelText="Cancel"
         variant="danger"
+        messageClassName="text-xs leading-relaxed text-warning text-center"
       />
 
       {/* Confirm Modal */}
@@ -2082,25 +2099,36 @@ export default function ProviderDetailPage() {
   );
 }
 
-function SummaryStat({ icon, label, value, sub, tone }) {
+function SummaryStat({ icon, label, value, sub, tone, hero, className }) {
   const toneClass = {
     default: "text-text-main",
     success: "text-success",
     danger: "text-danger",
     brand: "text-text-main",
   }[tone || "default"];
+  const iconClass = {
+    default: "text-primary dark:text-primary",
+    success: "text-success",
+    danger: "text-danger",
+    brand: "text-primary dark:text-primary",
+  }[tone || "default"];
 
   return (
-    <Card className="flex items-center gap-3 p-3.5">
-      <div className="grid size-10 shrink-0 place-items-center rounded-lg bg-surface-2 text-text-muted">
-        <span className="material-symbols-outlined text-[20px]">{icon}</span>
-      </div>
-      <div className="min-w-0">
-        <p className="font-mono text-[10px] uppercase tracking-[0.15em] text-text-subtle">
-          {label}
-        </p>
-        <p className={`font-display text-xl font-bold leading-tight ${toneClass}`}>
+    <Card
+      padding="none"
+      className={`flex items-center gap-3 ${hero ? "p-3.5" : "p-2.5"} ${className ?? ""}`}
+    >
+      <span
+        className={`material-symbols-outlined shrink-0 ${hero ? "text-[26px]" : "text-[21px]"} ${iconClass}`}
+      >
+        {icon}
+      </span>
+      <div className="min-w-0 flex-1">
+        <p className={`font-display font-bold leading-tight ${toneClass} ${hero ? "text-2xl" : "text-base"}`}>
           {value}
+        </p>
+        <p className={`truncate font-mono uppercase tracking-[0.12em] text-text-muted ${hero ? "text-[10px]" : "text-[10px]"}`}>
+          {label}
         </p>
         {sub && <p className="truncate text-[11px] text-text-muted">{sub}</p>}
       </div>

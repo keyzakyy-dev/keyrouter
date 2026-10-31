@@ -237,7 +237,7 @@ export default function McpMarketplaceModal({ isOpen, onClose, onAdd, addedNames
                       )}
                       <button
                         onClick={() => confirmAdd(s)}
-                        className="self-end px-2 py-1 rounded text-[10px] font-medium bg-primary text-white hover:bg-primary/90"
+                        className="self-end px-2 py-1 rounded text-[10px] font-medium bg-primary text-white dark:text-amber-950 hover:bg-primary/90"
                       >
                         ✓ Confirm Add
                       </button>

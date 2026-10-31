@@ -770,9 +770,7 @@ export default function ProfilePage() {
         <Card>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
             <div className="flex items-center gap-3 sm:gap-4">
-              <div className="size-10 sm:size-12 rounded-lg bg-green-500/10 text-green-500 flex items-center justify-center shrink-0">
-                <span className="material-symbols-outlined text-xl sm:text-2xl">computer</span>
-              </div>
+              <span className="material-symbols-outlined text-2xl shrink-0 text-primary dark:text-primary">computer</span>
               <div>
                 <h2 className="font-display text-lg sm:text-xl font-semibold text-text-main">Local Mode</h2>
                 <p className="mt-0.5 font-mono text-[10px] uppercase tracking-wider text-text-subtle">Running on your machine</p>
@@ -835,9 +833,7 @@ export default function ProfilePage() {
         {/* Security */}
         <Card>
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 rounded-lg bg-teal-500/10 text-teal-500 shrink-0">
-              <span className="material-symbols-outlined text-[20px]">shield</span>
-            </div>
+            <span className="material-symbols-outlined text-[24px] shrink-0 text-primary dark:text-primary">shield</span>
             <h3 className="font-display text-base sm:text-lg font-semibold text-text-main">Security</h3>
           </div>
           <div className="flex flex-col gap-4">
@@ -921,9 +917,7 @@ export default function ProfilePage() {
             onClick={() => setOidcExpanded((v) => !v)}
             className="w-full flex items-center gap-3 text-left"
           >
-            <div className="p-2 rounded-lg bg-surface-2 text-text-muted shrink-0">
-              <span className="material-symbols-outlined text-[20px]">lock_open</span>
-            </div>
+            <span className="material-symbols-outlined text-[24px] shrink-0 text-primary dark:text-primary">lock_open</span>
             <div className="flex-1 min-w-0">
               <h3 className="font-display text-base sm:text-lg font-semibold text-text-main">Single Sign-On (SSO)</h3>
               <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted">
@@ -1035,7 +1029,7 @@ export default function ProfilePage() {
                       className="w-full p-3 flex items-center justify-between gap-2 text-left hover:bg-surface/50 transition-colors"
                     >
                       <div className="flex items-center gap-2">
-                        <span className="material-symbols-outlined text-primary text-lg">menu_book</span>
+                        <span className="material-symbols-outlined text-primary dark:text-primary text-lg">menu_book</span>
                         <div>
                           <p className="font-display text-xs sm:text-sm font-semibold text-text-main">
                             IdP Setup Guidelines & Provider Configuration Instructions
@@ -1413,9 +1407,7 @@ export default function ProfilePage() {
         {/* Language */}
         <Card className="xl:col-span-2">
           <div className="flex items-center gap-3 mb-4">
-            <div className="size-10 rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center shrink-0">
-              <span className="material-symbols-outlined text-[20px]">language</span>
-            </div>
+            <span className="material-symbols-outlined text-[24px] shrink-0 text-primary dark:text-primary">language</span>
             <h3 className="font-display text-base sm:text-lg font-semibold text-text-main">Language</h3>
           </div>
           <button
@@ -1431,9 +1423,7 @@ export default function ProfilePage() {
         {/* Routing Preferences */}
         <Card className="xl:col-span-4">
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 rounded-lg bg-blue-500/10 text-blue-500 shrink-0">
-              <span className="material-symbols-outlined text-[20px]">route</span>
-            </div>
+            <span className="material-symbols-outlined text-[24px] shrink-0 text-primary dark:text-primary">route</span>
             <h3 className="font-display text-base sm:text-lg font-semibold text-text-main">Routing Strategy</h3>
           </div>
           <div className="flex flex-col gap-4">
@@ -1522,9 +1512,7 @@ export default function ProfilePage() {
         {/* Network */}
         <Card className="xl:col-span-2">
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 rounded-lg bg-purple-500/10 text-purple-500 shrink-0">
-              <span className="material-symbols-outlined text-[20px]">wifi</span>
-            </div>
+            <span className="material-symbols-outlined text-[24px] shrink-0 text-primary dark:text-primary">wifi</span>
             <h3 className="font-display text-base sm:text-lg font-semibold text-text-main">Network</h3>
           </div>
 
@@ -1594,9 +1582,7 @@ export default function ProfilePage() {
         {/* Observability Settings */}
         <Card className="xl:col-span-4">
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 rounded-lg bg-warning/10 text-warning shrink-0">
-              <span className="material-symbols-outlined text-[20px]">monitoring</span>
-            </div>
+            <span className="material-symbols-outlined text-[24px] shrink-0 text-primary dark:text-primary">monitoring</span>
             <h3 className="font-display text-base sm:text-lg font-semibold text-text-main">Observability</h3>
           </div>
           <div className="flex items-start sm:items-center justify-between gap-4">
@@ -1631,7 +1617,7 @@ export default function ProfilePage() {
             fullWidth
             icon="logout"
             onClick={handleLogout}
-            className="font-display"
+            className="font-display text-primary dark:text-primary hover:border-primary/60"
           >
             Logout
           </Button>

@@ -210,7 +210,7 @@ export default function ConnectionRow({ connection, proxyPools, isOAuth, isFirst
             <span className="material-symbols-outlined text-sm">keyboard_arrow_down</span>
           </button>
         </div>
-        <span className="material-symbols-outlined shrink-0 text-base text-text-muted">
+        <span className="material-symbols-outlined shrink-0 text-base text-primary dark:text-primary">
           {authIcon}
         </span>
         <div className="flex-1 min-w-0">

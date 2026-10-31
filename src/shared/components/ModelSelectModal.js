@@ -762,9 +762,9 @@ export default function ModelSelectModal({
                     className={`
                       rounded-xl border px-2.5 py-1.5 text-xs font-medium transition-all hover:cursor-pointer flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40
                       ${isSelected
-                        ? "bg-primary text-white border-primary"
+                        ? "bg-primary text-white dark:text-amber-950 border-primary"
                         : addedModelValues.includes(combo.name)
-                          ? "bg-primary border-primary text-white hover:bg-primary-hover"
+                          ? "bg-primary border-primary text-white dark:text-amber-950 hover:bg-primary-hover"
                           : "bg-surface border-border text-text-main hover:border-primary/50 hover:bg-primary/5"
                       }
                     `}
@@ -795,9 +795,9 @@ export default function ModelSelectModal({
                     className={`
                       rounded-xl border px-2.5 py-1.5 text-xs font-medium transition-all hover:cursor-pointer flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40
                       ${isSelected
-                        ? "bg-primary text-white border-primary"
+                        ? "bg-primary text-white dark:text-amber-950 border-primary"
                         : addedModelValues.includes(v.value)
-                          ? "bg-primary border-primary text-white hover:bg-primary-hover"
+                          ? "bg-primary border-primary text-white dark:text-amber-950 hover:bg-primary-hover"
                           : "bg-surface border-border text-text-main hover:border-primary/50 hover:bg-primary/5"
                       }
                     `}
@@ -838,7 +838,7 @@ export default function ModelSelectModal({
                     title={isWildcardAdded ? `Click to remove wildcard ${wildcardValue}` : `Click to allow all models from ${group.name} (${wildcardValue})`}
                     className={`inline-flex min-w-0 items-center gap-1.5 rounded-lg px-2 py-1 text-[13px] font-medium transition-all cursor-pointer border ${
                       isWildcardAdded
-                        ? "bg-primary text-white border-primary shadow-2xs hover:bg-primary-hover"
+                        ? "bg-primary text-white dark:text-amber-950 border-primary shadow-2xs hover:bg-primary-hover"
                         : "text-primary border-transparent hover:bg-primary/10 hover:border-primary/20"
                     }`}
                   >
@@ -874,9 +874,9 @@ export default function ModelSelectModal({
                       ${isPlaceholder
                         ? "border-dashed border-border text-text-muted hover:border-primary/50 hover:text-primary bg-surface italic"
                         : isSelected
-                          ? "bg-primary text-white border-primary"
+                          ? "bg-primary text-white dark:text-amber-950 border-primary"
                           : addedModelValues.includes(model.value)
-                            ? "bg-primary border-primary text-white hover:bg-primary-hover"
+                            ? "bg-primary border-primary text-white dark:text-amber-950 hover:bg-primary-hover"
                             : "bg-surface border-border text-text-main hover:border-primary/50 hover:bg-primary/5"
                       }
                     `}
