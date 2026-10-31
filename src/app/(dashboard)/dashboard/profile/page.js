@@ -854,7 +854,7 @@ export default function ProfilePage() {
             className="flex items-center justify-between w-full p-3 rounded-lg bg-bg border border-border hover:border-primary/50 transition-colors"
             data-i18n-skip="true"
           >
-            <span className="text-sm text-text-muted">Display language</span>
+            <span className="font-mono text-[10px] uppercase tracking-wider text-text-muted">Display language</span>
             <span className="text-2xl">{LOCALE_FLAGS[locale] || "🌐"}</span>
           </button>
         </Card>
@@ -871,7 +871,7 @@ export default function ProfilePage() {
             <div className="flex items-start sm:items-center justify-between gap-4">
               <div className="flex-1 min-w-0">
                 <p className="font-display text-sm sm:text-base font-semibold text-text-main">Require login</p>
-                <p className="text-xs sm:text-sm text-text-muted">
+                <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted">
                   When ON, dashboard requires password. When OFF, access without login.
                 </p>
               </div>
@@ -953,7 +953,7 @@ export default function ProfilePage() {
             </div>
             <div className="flex-1 min-w-0">
               <h3 className="font-display text-base sm:text-lg font-semibold text-text-main">Single Sign-On (SSO)</h3>
-              <p className="text-xs text-text-muted">
+              <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted">
                 {settings.authMode === "sso" || settings.authMode === "oidc" || settings.authMode === "saml"
                   ? `${settings.ssoType === "saml" ? "SAML 2.0" : "OIDC"} SSO active`
                   : settings.authMode === "both"
@@ -967,7 +967,7 @@ export default function ProfilePage() {
           </button>
           {oidcExpanded && (
             <div className="flex flex-col gap-4 mt-4">
-              <p className="text-xs sm:text-sm text-text-muted">
+              <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted">
                 Configure enterprise Single Sign-On (SSO) for dashboard access using SAML 2.0 or OIDC.
               </p>
 
@@ -1044,7 +1044,7 @@ export default function ProfilePage() {
                         disabled={loading || oidcLoading || samlLoading}
                       >
                         <p className="font-display text-sm sm:text-base font-semibold text-text-main">{option.title}</p>
-                        <p className="text-xs sm:text-sm text-text-muted mt-1">{option.desc}</p>
+                        <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted mt-1">{option.desc}</p>
                       </button>
                     );
                   })}
@@ -1067,7 +1067,7 @@ export default function ProfilePage() {
                           <p className="font-display text-xs sm:text-sm font-semibold text-text-main">
                             IdP Setup Guidelines & Provider Configuration Instructions
                           </p>
-                          <p className="text-[11px] text-text-muted">
+                          <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted">
                             Click to view setup steps for AWS IAM Identity Center, Okta, Entra ID, Keycloak, & Authentik
                           </p>
                         </div>
@@ -1160,7 +1160,7 @@ export default function ProfilePage() {
                   <div className="p-3 rounded-lg border border-dashed border-primary/40 bg-primary/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
                       <p className="font-display text-sm font-semibold text-text-main">1-Click IdP Metadata XML Import</p>
-                      <p className="text-xs text-text-muted">Auto-fill SSO URL, Issuer & Cert from XML metadata</p>
+                      <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted">Auto-fill SSO URL, Issuer & Cert from XML metadata</p>
                     </div>
                     <Button
                       type="button"
@@ -1229,7 +1229,7 @@ export default function ProfilePage() {
                         className="w-full p-2.5 rounded-lg border border-border bg-bg text-xs font-mono text-text-main focus:outline-none focus:border-primary"
                         disabled={loading || samlLoading}
                       />
-                      <p className="text-xs text-text-muted">Paste raw Base64 certificate or PEM block.</p>
+                      <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted">Paste raw Base64 certificate or PEM block.</p>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -1368,7 +1368,7 @@ export default function ProfilePage() {
                         onChange={(e) => setOidcClientSecret(e.target.value)}
                         disabled={loading || oidcLoading}
                       />
-                      <p className="text-xs sm:text-sm text-text-muted">This value is write-only after saving.</p>
+                      <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted">This value is write-only after saving.</p>
                     </div>
 
                     <div className="flex flex-col gap-2">
@@ -1447,7 +1447,7 @@ export default function ProfilePage() {
             <div className="flex items-start sm:items-center justify-between gap-4">
               <div className="flex-1 min-w-0">
                 <p className="font-display text-sm sm:text-base font-semibold text-text-main">Round Robin</p>
-                <p className="text-xs sm:text-sm text-text-muted">
+                <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted">
                   Cycle through accounts to distribute load
                 </p>
               </div>
@@ -1463,7 +1463,7 @@ export default function ProfilePage() {
               <div className="flex items-start sm:items-center justify-between gap-4 pt-2 border-t border-border/50">
                 <div className="flex-1 min-w-0">
                   <p className="font-display text-sm sm:text-base font-semibold text-text-main">Sticky Limit</p>
-                  <p className="text-xs sm:text-sm text-text-muted">
+                  <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted">
                     Calls per account before switching
                   </p>
                 </div>
@@ -1483,7 +1483,7 @@ export default function ProfilePage() {
             <div className="flex items-start sm:items-center justify-between gap-4 pt-4 border-t border-border/50">
               <div className="flex-1 min-w-0">
                 <p className="font-display text-sm sm:text-base font-semibold text-text-main">Combo Round Robin</p>
-                <p className="text-xs sm:text-sm text-text-muted">
+                <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted">
                   Cycle through providers in combos instead of always starting with first
                 </p>
               </div>
@@ -1499,7 +1499,7 @@ export default function ProfilePage() {
               <div className="flex items-center justify-between pt-2 border-t border-border/50">
                 <div>
                   <p className="font-display text-sm font-semibold text-text-main">Combo Sticky Limit</p>
-                  <p className="text-sm text-text-muted">
+                  <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted">
                     Calls per combo model before switching
                   </p>
                 </div>
@@ -1515,7 +1515,7 @@ export default function ProfilePage() {
               </div>
             )}
 
-            <p className="text-xs text-text-muted italic pt-2 border-t border-border/50">
+            <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted italic pt-2 border-t border-border/50">
               {settings.fallbackStrategy === "round-robin"
                 ? `Currently distributing requests across all available accounts with ${settings.stickyRoundRobinLimit || 3} calls per account.`
                 : "Currently using accounts in priority order (Fill First)."}
@@ -1539,7 +1539,7 @@ export default function ProfilePage() {
             <div className="flex items-start sm:items-center justify-between gap-4">
               <div className="flex-1 min-w-0">
                 <p className="font-display text-sm sm:text-base font-semibold text-text-main">Outbound Proxy</p>
-                <p className="text-xs sm:text-sm text-text-muted">Enable proxy for OAuth + provider outbound requests.</p>
+                <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted">Enable proxy for OAuth + provider outbound requests.</p>
               </div>
               <Toggle
                 checked={settings.outboundProxyEnabled === true}
@@ -1558,7 +1558,7 @@ export default function ProfilePage() {
                     onChange={(e) => setProxyForm((prev) => ({ ...prev, outboundProxyUrl: e.target.value }))}
                     disabled={loading || proxyLoading}
                   />
-                  <p className="text-xs sm:text-sm text-text-muted">Leave empty to inherit existing env proxy (if any).</p>
+                  <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted">Leave empty to inherit existing env proxy (if any).</p>
                 </div>
 
                 <div className="flex flex-col gap-2 pt-2 border-t border-border/50">
@@ -1569,7 +1569,7 @@ export default function ProfilePage() {
                     onChange={(e) => setProxyForm((prev) => ({ ...prev, outboundNoProxy: e.target.value }))}
                     disabled={loading || proxyLoading}
                   />
-                  <p className="text-xs sm:text-sm text-text-muted">Comma-separated hostnames/domains to bypass the proxy.</p>
+                  <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted">Comma-separated hostnames/domains to bypass the proxy.</p>
                 </div>
 
                 <div className="pt-2 border-t border-border/50 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
@@ -1609,7 +1609,7 @@ export default function ProfilePage() {
           <div className="flex items-start sm:items-center justify-between gap-4">
             <div className="flex-1 min-w-0">
               <p className="font-display text-sm sm:text-base font-semibold text-text-main">Enable Observability</p>
-              <p className="text-xs sm:text-sm text-text-muted">
+              <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted">
                 Record request details for inspection in the logs view
               </p>
             </div>
@@ -1685,7 +1685,7 @@ export default function ProfilePage() {
           </>
         }
       >
-        <p className="text-text-muted mb-3 text-sm">
+        <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-3">
           Enter your current password to {dbAuth.mode === "export" ? "export" : "import"} the database.
         </p>
         <Input
