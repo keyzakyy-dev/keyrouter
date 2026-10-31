@@ -1180,7 +1180,7 @@ export default function APIPageClient({ machineId }) {
           <div className="flex items-start gap-3 rounded-xl bg-surface-2/50 px-4 py-3.5">
             <span className="material-symbols-outlined mt-0.5 text-[20px] text-text-muted">shield_lock</span>
             <div className="min-w-0">
-              <p className="text-sm font-medium text-text-main">Restrict a key</p>
+              <p className="font-display text-sm font-semibold text-text-main">Restrict a key</p>
               <p className="mt-0.5 font-mono text-[10px] leading-relaxed text-text-muted">
                 Toggle "Restrict access" under a key to limit it to specific combos
                 and models. Until you add at least one allowed target, a restricted
@@ -1391,7 +1391,7 @@ export default function APIPageClient({ machineId }) {
             <div className="flex items-start gap-3">
               <span className="material-symbols-outlined text-text-muted">cloud_upload</span>
               <div>
-                <p className="text-sm text-text-main font-medium mb-1">
+                <p className="font-display text-sm font-semibold text-text-main mb-1">
                   Cloudflare Tunnel
                 </p>
                 <p className="text-sm text-text-muted">
@@ -1406,14 +1406,14 @@ export default function APIPageClient({ machineId }) {
               <div key={benefit.title} className="flex items-start gap-2.5 rounded-md border border-border-subtle bg-bg px-3 py-2.5">
                 <span className="material-symbols-outlined text-[16px] text-text-muted">{benefit.icon}</span>
                 <div className="min-w-0">
-                  <p className="text-xs font-semibold text-text-main">{benefit.title}</p>
+                  <p className="font-display text-sm font-semibold text-text-main">{benefit.title}</p>
                   <p className="text-[11px] leading-relaxed text-text-muted">{benefit.desc}</p>
                 </div>
               </div>
             ))}
           </div>
 
-          <p className="text-xs text-text-muted">
+          <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted">
             Requires outbound port 7844 (TCP/UDP). Connection may take 10-30s.
           </p>
 
