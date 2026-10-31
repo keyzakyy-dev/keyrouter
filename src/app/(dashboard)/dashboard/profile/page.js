@@ -803,16 +803,16 @@ export default function ProfilePage() {
                 icon="download"
                 onClick={() => setDbAuth({ open: true, mode: "export", password: "" })}
                 loading={dbLoading}
-                className="w-full sm:w-auto"
+                className="w-full sm:w-auto font-display"
               >
                 Download Backup
               </Button>
               <Button
-                variant="outline"
+                variant="secondary"
                 icon="upload"
                 onClick={() => importFileRef.current?.click()}
                 disabled={dbLoading}
-                className="w-full sm:w-auto"
+                className="w-full sm:w-auto font-display"
               >
                 Import Backup
               </Button>
@@ -905,7 +905,7 @@ export default function ProfilePage() {
                 )}
 
                 <div className="pt-2">
-                  <Button type="submit" variant="primary" loading={passLoading} className="w-full sm:w-auto">
+                  <Button type="submit" variant="primary" loading={passLoading} className="w-full sm:w-auto font-display">
                     {settings.hasPassword ? "Update Password" : "Set Password"}
                   </Button>
                 </div>
