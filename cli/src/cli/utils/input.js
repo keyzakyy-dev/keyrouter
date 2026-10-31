@@ -101,24 +101,31 @@ async function selectMenu(title, items, defaultIndex = 0, subtitle = "", headerC
       if (!isActive) return;
       process.stdout.write("\x1b[2J\x1b[H");
       const width = Math.min(process.stdout.columns || 40, 40);
-      console.log(`\n${COLORS.terracotta}${"=".repeat(width)}${COLORS.reset}`);
-      console.log(`  ${COLORS.bright}${COLORS.terracotta}${title}${COLORS.reset}`);
-      if (subtitle) console.log(`  ${COLORS.dim}${subtitle}${COLORS.reset}`);
-      console.log(`${COLORS.terracotta}${"=".repeat(width)}${COLORS.reset}`);
-      if (breadcrumb.length > 0) console.log(`  ${COLORS.dim}${breadcrumb.join(" > ")}${COLORS.reset}`);
-      console.log();
-      if (headerContent) { console.log(headerContent); console.log(); }
-
       const isWin = process.platform === "win32";
+      const hz = isWin ? "=" : "─";
+      const tl  = isWin ? "=" : "┌";
+      const tr  = isWin ? "=" : "┐";
+      const bl  = isWin ? "=" : "└";
+      const br  = isWin ? "=" : "┘";
+      const bar = hz.repeat(Math.max(width - 2, 0));
+
+      console.log(`\n${COLORS.cyan}${tl}${bar}${tr}${COLORS.reset}`);
+      console.log(`${COLORS.cyan}│${COLORS.reset}  ${COLORS.bright}${COLORS.cyan}${title}${COLORS.reset}`);
+      if (breadcrumb.length > 0) console.log(`${COLORS.cyan}│${COLORS.reset}  ${COLORS.dim}${breadcrumb.join(" > ")}${COLORS.reset}`);
+      if (subtitle) console.log(`${COLORS.cyan}│${COLORS.reset}  ${COLORS.dim}${subtitle}${COLORS.reset}`);
+      console.log(`${COLORS.cyan}│${COLORS.reset}`);
+      if (headerContent) { console.log(headerContent); }
+
       items.forEach((item, index) => {
         const isSelected = index === selectedIndex;
-        const icon = isSelected ? (isWin ? ">" : "★") : (isWin ? " " : "☆");
+        const icon = isSelected ? (isWin ? ">" : "▶") : (isWin ? " " : "○");
         if (isSelected) {
-          console.log(` ${COLORS.reverse}${COLORS.bright}${icon} ${item.label}${COLORS.reset}`);
+          console.log(`${COLORS.cyan}│${COLORS.reset}  ${COLORS.bright}${COLORS.bgBlue}${icon} ${item.label}${COLORS.reset}`);
         } else {
-          console.log(`  ${icon} ${item.label}`);
+          console.log(`${COLORS.cyan}│${COLORS.reset}    ${COLORS.dim}${icon}${COLORS.reset} ${item.label}`);
         }
       });
+      console.log(`${COLORS.cyan}${bl}${bar}${br}${COLORS.reset}`);
     };
 
     const cleanup = () => {

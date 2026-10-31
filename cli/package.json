@@ -1,6 +1,6 @@
 {
   "name": "keyrouter",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "KeyRouter CLI - Start and manage KeyRouter server",
   "bin": {
     "keyrouter": "./cli.js"

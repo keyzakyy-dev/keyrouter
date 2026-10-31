@@ -590,13 +590,13 @@ async function showInterfaceMenu(latestVersion) {
   }
 
   menuItems.push(
-    { label: "Web UI (Open in Browser)", icon: "🌐" },
-    { label: "Terminal UI (Interactive CLI)", icon: "💻" },
-    { label: "Hide to Tray (Background)", icon: "🔔" },
-    { label: "Exit", icon: "🚪" }
+    { label: "Web UI (Open in Browser)", icon: "🖥️" },
+    { label: "Terminal UI (Interactive CLI)", icon: "⌨️" },
+    { label: "Hide to Tray (Background)", icon: "🗔" },
+    { label: "Exit", icon: "✕" }
   );
 
-  const selected = await selectMenu(`Choose Interface (v${pkg.version})`, menuItems, 0, subtitle);
+  const selected = await selectMenu(`⚡ KeyRouter — Choose Interface  [v${pkg.version}]`, menuItems, 0, subtitle);
 
   const offset = latestVersion ? 1 : 0;
 

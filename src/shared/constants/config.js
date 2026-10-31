@@ -23,7 +23,7 @@ export const UPDATER_CONFIG = {
   installCmdLatest: "npm i -g keyrouter@latest --prefer-online",
   shutdownCountdownSec: 3,
   exitDelayMs: 500,
-  statusPort: 20129,
+  statusPort: 20132,
   statusPollIntervalMs: 1000,
   statusLogTailLines: 8,
   installRetries: 3,
