@@ -42,7 +42,7 @@ export default function Input({
           disabled={disabled}
           className={cn(
             "w-full py-2.5 px-3 text-sm text-text-main bg-surface rounded-[4px]",
-            "border border-border placeholder:text-text-muted/70",
+            "border border-border placeholder:text-text-muted/70 placeholder:font-mono",
             "focus:outline-none focus:ring-1 focus:ring-text-subtle focus:border-text-subtle",
             "transition-all duration-150 ease-out disabled:opacity-50 disabled:cursor-not-allowed",
             // iOS zoom fix

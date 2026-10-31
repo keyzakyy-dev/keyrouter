@@ -947,14 +947,14 @@ export default function ProfilePage() {
               {/* SSO Protocol Switcher Tabs */}
               <div className="flex flex-col gap-2">
                 <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">SSO Protocol</label>
-                <div className="flex p-1 rounded-lg bg-black/5 dark:bg-white/5 border border-border">
+                <div className="inline-flex p-1 rounded-full bg-surface-2 w-full overflow-hidden">
                   <button
                     type="button"
                     onClick={() => setSsoTypeTab("saml")}
                     className={cn(
-                      "flex-1 py-1.5 px-3 rounded-md font-medium text-xs sm:text-sm transition-all text-center",
+                      "flex-1 inline-flex items-center justify-center rounded-full px-3 py-1.5 font-display font-medium text-sm whitespace-nowrap transition-all",
                       ssoTypeTab === "saml"
-                        ? "bg-white dark:bg-white/10 text-text-main shadow-sm"
+                        ? "bg-surface text-text-main shadow-[var(--shadow-soft)]"
                         : "text-text-muted hover:text-text-main"
                     )}
                   >
@@ -964,9 +964,9 @@ export default function ProfilePage() {
                     type="button"
                     onClick={() => setSsoTypeTab("oidc")}
                     className={cn(
-                      "flex-1 py-1.5 px-3 rounded-md font-medium text-xs sm:text-sm transition-all text-center",
+                      "flex-1 inline-flex items-center justify-center rounded-full px-3 py-1.5 font-display font-medium text-sm whitespace-nowrap transition-all",
                       ssoTypeTab === "oidc"
-                        ? "bg-white dark:bg-white/10 text-text-main shadow-sm"
+                        ? "bg-surface text-text-main shadow-[var(--shadow-soft)]"
                         : "text-text-muted hover:text-text-main"
                     )}
                   >
@@ -1281,16 +1281,16 @@ export default function ProfilePage() {
                       variant="primary"
                       loading={samlLoading}
                       onClick={() => saveSamlSettings(oidcForm.authMode)}
-                      className="w-full sm:w-auto"
+                      className="w-full sm:w-auto font-display"
                     >
                       Save SAML settings
                     </Button>
                     <Button
                       type="button"
-                      variant="outline"
+                      variant="secondary"
                       loading={samlTestLoading}
                       onClick={testSamlConnection}
-                      className="w-full sm:w-auto"
+                      className="w-full sm:w-auto font-display"
                     >
                       Test SAML settings
                     </Button>
@@ -1371,10 +1371,10 @@ export default function ProfilePage() {
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-2 pt-2 border-t border-border/50">
-                    <Button type="button" variant="primary" loading={oidcLoading} onClick={() => saveOidcSettings()} className="w-full sm:w-auto">
+                    <Button type="button" variant="primary" loading={oidcLoading} onClick={() => saveOidcSettings()} className="w-full sm:w-auto font-display">
                       Save OIDC settings
                     </Button>
-                    <Button type="button" variant="outline" loading={oidcTestLoading} onClick={testOidcConnection} className="w-full sm:w-auto">
+                    <Button type="button" variant="secondary" loading={oidcTestLoading} onClick={testOidcConnection} className="w-full sm:w-auto font-display">
                       Test connection
                     </Button>
                   </div>
@@ -1622,7 +1622,7 @@ export default function ProfilePage() {
             fullWidth
             icon="power_settings_new"
             onClick={() => setShutdownOpen(true)}
-            className="text-red-500 border-red-200 hover:bg-red-50 hover:border-red-300"
+            className="text-red-500 border-red-200 hover:bg-red-50 hover:border-red-300 font-display"
           >
             Shutdown
           </Button>
@@ -1631,6 +1631,7 @@ export default function ProfilePage() {
             fullWidth
             icon="logout"
             onClick={handleLogout}
+            className="font-display"
           >
             Logout
           </Button>
