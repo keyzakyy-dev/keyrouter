@@ -841,24 +841,6 @@ export default function ProfilePage() {
           </div>
         </Card>
 
-        {/* Language */}
-        <Card>
-          <div className="flex items-center gap-3 mb-4">
-            <div className="size-10 rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center shrink-0">
-              <span className="material-symbols-outlined text-[20px]">language</span>
-            </div>
-            <h3 className="font-display text-base sm:text-lg font-semibold text-text-main">Language</h3>
-          </div>
-          <button
-            onClick={() => setLangOpen(true)}
-            className="flex items-center justify-between w-full p-3 rounded-lg bg-bg border border-border hover:border-primary/50 transition-colors"
-            data-i18n-skip="true"
-          >
-            <span className="font-mono text-[10px] uppercase tracking-wider text-text-muted">Display language</span>
-            <span className="text-2xl">{LOCALE_FLAGS[locale] || "🌐"}</span>
-          </button>
-        </Card>
-
         {/* Security */}
         <Card>
           <div className="flex items-center gap-3 mb-4">
@@ -1435,8 +1417,28 @@ export default function ProfilePage() {
           )}
         </Card>
 
+        {/* Bento box: Language + Routing + Network + Observability */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-6">
+        {/* Language */}
+        <Card className="xl:col-span-2">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="size-10 rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center shrink-0">
+              <span className="material-symbols-outlined text-[20px]">language</span>
+            </div>
+            <h3 className="font-display text-base sm:text-lg font-semibold text-text-main">Language</h3>
+          </div>
+          <button
+            onClick={() => setLangOpen(true)}
+            className="flex items-center justify-between w-full p-3 rounded-lg bg-bg border border-border hover:border-primary/50 transition-colors"
+            data-i18n-skip="true"
+          >
+            <span className="font-mono text-[10px] uppercase tracking-wider text-text-muted">Display language</span>
+            <span className="text-2xl">{LOCALE_FLAGS[locale] || "🌐"}</span>
+          </button>
+        </Card>
+
         {/* Routing Preferences */}
-        <Card>
+        <Card className="xl:col-span-4">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 rounded-lg bg-blue-500/10 text-blue-500 shrink-0">
               <span className="material-symbols-outlined text-[20px]">route</span>
@@ -1527,7 +1529,7 @@ export default function ProfilePage() {
         </Card>
 
         {/* Network */}
-        <Card>
+        <Card className="xl:col-span-2">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 rounded-lg bg-purple-500/10 text-purple-500 shrink-0">
               <span className="material-symbols-outlined text-[20px]">wifi</span>
@@ -1599,7 +1601,7 @@ export default function ProfilePage() {
         </Card>
 
         {/* Observability Settings */}
-        <Card>
+        <Card className="xl:col-span-4">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 rounded-lg bg-warning/10 text-warning shrink-0">
               <span className="material-symbols-outlined text-[20px]">monitoring</span>
@@ -1620,6 +1622,7 @@ export default function ProfilePage() {
             />
           </div>
         </Card>
+        </div>
 
         {/* Account actions */}
         <div className="flex flex-col sm:flex-row gap-2">
