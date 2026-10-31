@@ -774,7 +774,7 @@ export default function ProfilePage() {
                 <span className="material-symbols-outlined text-xl sm:text-2xl">computer</span>
               </div>
               <div>
-                <h2 className="text-lg sm:text-xl font-semibold">Local Mode</h2>
+                <h2 className="font-display text-lg sm:text-xl font-semibold text-text-main">Local Mode</h2>
                 <p className="text-sm text-text-muted">Running on your machine</p>
               </div>
             </div>
@@ -847,7 +847,7 @@ export default function ProfilePage() {
             <div className="size-10 rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center shrink-0">
               <span className="material-symbols-outlined text-[20px]">language</span>
             </div>
-            <h3 className="text-base sm:text-lg font-semibold">Language</h3>
+            <h3 className="font-display text-base sm:text-lg font-semibold text-text-main">Language</h3>
           </div>
           <button
             onClick={() => setLangOpen(true)}
@@ -865,7 +865,7 @@ export default function ProfilePage() {
             <div className="p-2 rounded-lg bg-primary/10 text-primary shrink-0">
               <span className="material-symbols-outlined text-[20px]">shield</span>
             </div>
-            <h3 className="text-base sm:text-lg font-semibold">Security</h3>
+            <h3 className="font-display text-base sm:text-lg font-semibold text-text-main">Security</h3>
           </div>
           <div className="flex flex-col gap-4">
             <div className="flex items-start sm:items-center justify-between gap-4">
@@ -885,7 +885,7 @@ export default function ProfilePage() {
               <form onSubmit={handlePasswordChange} className="flex flex-col gap-4 pt-4 border-t border-border/50">
                 {settings.hasPassword && (
                   <div className="flex flex-col gap-2">
-                    <label className="text-xs sm:text-sm font-medium">Current Password</label>
+                    <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">Current Password</label>
                     <Input
                       type="password"
                       placeholder="Enter current password"
@@ -904,7 +904,7 @@ export default function ProfilePage() {
                 )} */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="flex flex-col gap-2">
-                    <label className="text-xs sm:text-sm font-medium">New Password</label>
+                    <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">New Password</label>
                     <Input
                       type="password"
                       placeholder="Enter new password"
@@ -914,7 +914,7 @@ export default function ProfilePage() {
                     />
                   </div>
                   <div className="flex flex-col gap-2">
-                    <label className="text-xs sm:text-sm font-medium">Confirm New Password</label>
+                    <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">Confirm New Password</label>
                     <Input
                       type="password"
                       placeholder="Confirm new password"
@@ -952,7 +952,7 @@ export default function ProfilePage() {
               <span className="material-symbols-outlined text-[20px]">lock_open</span>
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="text-base sm:text-lg font-semibold">Single Sign-On (SSO)</h3>
+              <h3 className="font-display text-base sm:text-lg font-semibold text-text-main">Single Sign-On (SSO)</h3>
               <p className="text-xs text-text-muted">
                 {settings.authMode === "sso" || settings.authMode === "oidc" || settings.authMode === "saml"
                   ? `${settings.ssoType === "saml" ? "SAML 2.0" : "OIDC"} SSO active`
@@ -973,7 +973,7 @@ export default function ProfilePage() {
 
               {/* SSO Protocol Switcher Tabs */}
               <div className="flex flex-col gap-2">
-                <label className="font-medium text-sm sm:text-base">SSO Protocol</label>
+                <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">SSO Protocol</label>
                 <div className="flex p-1 rounded-lg bg-black/5 dark:bg-white/5 border border-border">
                   <button
                     type="button"
@@ -1004,7 +1004,7 @@ export default function ProfilePage() {
 
               {/* Auth Mode selection */}
               <div className="flex flex-col gap-2">
-                <label className="font-medium text-sm sm:text-base">Auth Mode</label>
+                <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">Auth Mode</label>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                   {[
                     {
@@ -1182,7 +1182,7 @@ export default function ProfilePage() {
 
                   <div className="grid grid-cols-1 gap-4">
                     <div className="flex flex-col gap-2">
-                      <label className="font-medium text-sm sm:text-base">Single Sign-On Service URL (samlEntryPoint)</label>
+                      <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">Single Sign-On Service URL (samlEntryPoint)</label>
                       <Input
                         placeholder="https://idp.example.com/app/saml/sso/..."
                         value={samlForm.samlEntryPoint}
@@ -1192,7 +1192,7 @@ export default function ProfilePage() {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <label className="font-medium text-sm sm:text-base">SP Entity ID / Audience (samlIssuer)</label>
+                      <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">SP Entity ID / Audience (samlIssuer)</label>
                       <Input
                         placeholder="urn:keyrouter:sp"
                         value={samlForm.samlIssuer}
@@ -1203,7 +1203,7 @@ export default function ProfilePage() {
 
                     <div className="flex flex-col gap-2">
                       <div className="flex items-center justify-between">
-                        <label className="font-medium text-sm sm:text-base">IdP X.509 Certificate (samlCert)</label>
+                        <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">IdP X.509 Certificate (samlCert)</label>
                         <Button
                           type="button"
                           variant="outline"
@@ -1234,7 +1234,7 @@ export default function ProfilePage() {
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       <div className="flex flex-col gap-2">
-                        <label className="font-medium text-sm sm:text-base">Login Button Label</label>
+                        <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">Login Button Label</label>
                         <Input
                           placeholder="Sign in with SAML SSO"
                           value={samlForm.samlLoginLabel}
@@ -1244,7 +1244,7 @@ export default function ProfilePage() {
                       </div>
 
                       <div className="flex flex-col gap-2">
-                        <label className="font-medium text-sm sm:text-base">Email Claim Attribute</label>
+                        <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">Email Claim Attribute</label>
                         <Input
                           placeholder="email"
                           value={samlForm.samlAttributeEmail}
@@ -1254,7 +1254,7 @@ export default function ProfilePage() {
                       </div>
 
                       <div className="flex flex-col gap-2">
-                        <label className="font-medium text-sm sm:text-base">Display Name Claim</label>
+                        <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">Display Name Claim</label>
                         <Input
                           placeholder="name"
                           value={samlForm.samlAttributeName}
@@ -1340,7 +1340,7 @@ export default function ProfilePage() {
                 <div className="flex flex-col gap-4 pt-2 border-t border-border/50">
                   <div className="grid grid-cols-1 gap-4">
                     <div className="flex flex-col gap-2">
-                      <label className="font-medium text-sm sm:text-base">Issuer URL</label>
+                      <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">Issuer URL</label>
                       <Input
                         placeholder="https://auth.example.com/application/o/keyrouter/"
                         value={oidcForm.oidcIssuerUrl}
@@ -1350,7 +1350,7 @@ export default function ProfilePage() {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <label className="font-medium text-sm sm:text-base">Client ID</label>
+                      <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">Client ID</label>
                       <Input
                         placeholder="keyrouter-dashboard"
                         value={oidcForm.oidcClientId}
@@ -1360,7 +1360,7 @@ export default function ProfilePage() {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <label className="font-medium text-sm sm:text-base">Client Secret</label>
+                      <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">Client Secret</label>
                       <Input
                         type="password"
                         placeholder="Leave blank to keep existing secret"
@@ -1372,7 +1372,7 @@ export default function ProfilePage() {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <label className="font-medium text-sm sm:text-base">Scopes</label>
+                      <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">Scopes</label>
                       <Input
                         placeholder="openid profile email"
                         value={oidcForm.oidcScopes}
@@ -1382,7 +1382,7 @@ export default function ProfilePage() {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <label className="font-medium text-sm sm:text-base">Login Button Label</label>
+                      <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">Login Button Label</label>
                       <Input
                         placeholder="Sign in with OIDC"
                         value={oidcForm.oidcLoginLabel}
@@ -1441,7 +1441,7 @@ export default function ProfilePage() {
             <div className="p-2 rounded-lg bg-blue-500/10 text-blue-500 shrink-0">
               <span className="material-symbols-outlined text-[20px]">route</span>
             </div>
-            <h3 className="text-base sm:text-lg font-semibold">Routing Strategy</h3>
+            <h3 className="font-display text-base sm:text-lg font-semibold text-text-main">Routing Strategy</h3>
           </div>
           <div className="flex flex-col gap-4">
             <div className="flex items-start sm:items-center justify-between gap-4">
@@ -1532,7 +1532,7 @@ export default function ProfilePage() {
             <div className="p-2 rounded-lg bg-purple-500/10 text-purple-500 shrink-0">
               <span className="material-symbols-outlined text-[20px]">wifi</span>
             </div>
-            <h3 className="text-base sm:text-lg font-semibold">Network</h3>
+            <h3 className="font-display text-base sm:text-lg font-semibold text-text-main">Network</h3>
           </div>
 
           <div className="flex flex-col gap-4">
@@ -1551,7 +1551,7 @@ export default function ProfilePage() {
             {settings.outboundProxyEnabled === true && (
               <form onSubmit={updateOutboundProxy} className="flex flex-col gap-4 pt-2 border-t border-border/50">
                 <div className="flex flex-col gap-2">
-                  <label className="font-medium text-sm sm:text-base">Proxy URL</label>
+                  <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">Proxy URL</label>
                   <Input
                     placeholder="http://127.0.0.1:7897"
                     value={proxyForm.outboundProxyUrl}
@@ -1562,7 +1562,7 @@ export default function ProfilePage() {
                 </div>
 
                 <div className="flex flex-col gap-2 pt-2 border-t border-border/50">
-                  <label className="font-medium text-sm sm:text-base">No Proxy</label>
+                  <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">No Proxy</label>
                   <Input
                     placeholder="localhost,127.0.0.1"
                     value={proxyForm.outboundNoProxy}
@@ -1604,7 +1604,7 @@ export default function ProfilePage() {
             <div className="p-2 rounded-lg bg-warning/10 text-warning shrink-0">
               <span className="material-symbols-outlined text-[20px]">monitoring</span>
             </div>
-            <h3 className="text-base sm:text-lg font-semibold">Observability</h3>
+            <h3 className="font-display text-base sm:text-lg font-semibold text-text-main">Observability</h3>
           </div>
           <div className="flex items-start sm:items-center justify-between gap-4">
             <div className="flex-1 min-w-0">
