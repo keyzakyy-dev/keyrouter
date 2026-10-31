@@ -775,7 +775,7 @@ export default function ProfilePage() {
               </div>
               <div>
                 <h2 className="font-display text-lg sm:text-xl font-semibold text-text-main">Local Mode</h2>
-                <p className="text-sm text-text-muted">Running on your machine</p>
+                <p className="mt-0.5 font-mono text-[10px] uppercase tracking-wider text-text-subtle">Running on your machine</p>
               </div>
             </div>
             <div className="inline-flex p-1 rounded-lg bg-black/5 dark:bg-white/5 w-full sm:w-auto">
@@ -802,7 +802,7 @@ export default function ProfilePage() {
           <div className="flex flex-col gap-3 pt-4 border-t border-border">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 rounded-lg bg-bg border border-border gap-2">
               <div>
-                <p className="font-medium text-sm sm:text-base">Database Location</p>
+                <p className="font-display text-sm sm:text-base font-semibold text-text-main">Database Location</p>
                 <p className="text-xs sm:text-sm text-text-muted font-mono break-all">~/.keyrouter/db/data.sqlite</p>
               </div>
             </div>
@@ -870,7 +870,7 @@ export default function ProfilePage() {
           <div className="flex flex-col gap-4">
             <div className="flex items-start sm:items-center justify-between gap-4">
               <div className="flex-1 min-w-0">
-                <p className="font-medium text-sm sm:text-base">Require login</p>
+                <p className="font-display text-sm sm:text-base font-semibold text-text-main">Require login</p>
                 <p className="text-xs sm:text-sm text-text-muted">
                   When ON, dashboard requires password. When OFF, access without login.
                 </p>
@@ -1043,7 +1043,7 @@ export default function ProfilePage() {
                         )}
                         disabled={loading || oidcLoading || samlLoading}
                       >
-                        <p className="font-medium text-sm sm:text-base">{option.title}</p>
+                        <p className="font-display text-sm sm:text-base font-semibold text-text-main">{option.title}</p>
                         <p className="text-xs sm:text-sm text-text-muted mt-1">{option.desc}</p>
                       </button>
                     );
@@ -1064,7 +1064,7 @@ export default function ProfilePage() {
                       <div className="flex items-center gap-2">
                         <span className="material-symbols-outlined text-primary text-lg">menu_book</span>
                         <div>
-                          <p className="font-semibold text-xs sm:text-sm text-text-main">
+                          <p className="font-display text-xs sm:text-sm font-semibold text-text-main">
                             IdP Setup Guidelines & Provider Configuration Instructions
                           </p>
                           <p className="text-[11px] text-text-muted">
@@ -1083,7 +1083,7 @@ export default function ProfilePage() {
                     {showSamlGuide && (
                       <div className="p-4 border-t border-border bg-surface/30 text-xs text-text-main flex flex-col gap-3">
                         <div className="p-2.5 rounded border border-primary/20 bg-primary/5 text-primary text-xs">
-                          <p className="font-semibold mb-1">🔑 Required Service Provider (SP) Values for your IdP Setup:</p>
+                          <p className="font-display text-sm font-semibold mb-1">🔑 Required Service Provider (SP) Values for your IdP Setup:</p>
                           <ul className="list-disc pl-4 space-y-1 font-mono text-[11px]">
                             <li>
                               <b>Assertion Consumer Service (ACS) URL:</b>{" "}
@@ -1102,7 +1102,7 @@ export default function ProfilePage() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
                           <div className="p-3 rounded border border-border bg-bg/50 flex flex-col gap-1.5">
-                            <p className="font-semibold text-text-main flex items-center gap-1.5">
+                            <p className="font-display text-sm font-semibold text-text-main flex items-center gap-1.5">
                               <span>☁️</span> AWS IAM Identity Center
                             </p>
                             <ol className="list-decimal pl-4 text-text-muted space-y-1">
@@ -1115,7 +1115,7 @@ export default function ProfilePage() {
                           </div>
 
                           <div className="p-3 rounded border border-border bg-bg/50 flex flex-col gap-1.5">
-                            <p className="font-semibold text-text-main flex items-center gap-1.5">
+                            <p className="font-display text-sm font-semibold text-text-main flex items-center gap-1.5">
                               <span>🔷</span> Microsoft Entra ID (Azure AD)
                             </p>
                             <ol className="list-decimal pl-4 text-text-muted space-y-1">
@@ -1128,7 +1128,7 @@ export default function ProfilePage() {
                           </div>
 
                           <div className="p-3 rounded border border-border bg-bg/50 flex flex-col gap-1.5">
-                            <p className="font-semibold text-text-main flex items-center gap-1.5">
+                            <p className="font-display text-sm font-semibold text-text-main flex items-center gap-1.5">
                               <span>🟢</span> Okta / Auth0
                             </p>
                             <ol className="list-decimal pl-4 text-text-muted space-y-1">
@@ -1141,7 +1141,7 @@ export default function ProfilePage() {
                           </div>
 
                           <div className="p-3 rounded border border-border bg-bg/50 flex flex-col gap-1.5">
-                            <p className="font-semibold text-text-main flex items-center gap-1.5">
+                            <p className="font-display text-sm font-semibold text-text-main flex items-center gap-1.5">
                               <span>🛡️</span> Keycloak / Authentik
                             </p>
                             <ol className="list-decimal pl-4 text-text-muted space-y-1">
@@ -1159,7 +1159,7 @@ export default function ProfilePage() {
                   {/* Quick Import Card */}
                   <div className="p-3 rounded-lg border border-dashed border-primary/40 bg-primary/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                      <p className="font-medium text-sm text-text-main">1-Click IdP Metadata XML Import</p>
+                      <p className="font-display text-sm font-semibold text-text-main">1-Click IdP Metadata XML Import</p>
                       <p className="text-xs text-text-muted">Auto-fill SSO URL, Issuer & Cert from XML metadata</p>
                     </div>
                     <Button
@@ -1268,7 +1268,7 @@ export default function ProfilePage() {
                   <div className="flex flex-col gap-2 p-3 rounded-lg border border-border bg-bg text-xs sm:text-sm text-text-muted">
                     <div className="flex items-center justify-between gap-2">
                       <div>
-                        <p className="font-medium text-text-main">ACS Callback URL</p>
+                        <p className="font-display text-sm font-semibold text-text-main">ACS Callback URL</p>
                         <code className="block break-all font-mono text-xs">{samlAcsUrl}</code>
                       </div>
                       <Button
@@ -1286,7 +1286,7 @@ export default function ProfilePage() {
                     </div>
                     <div className="flex items-center justify-between gap-2 pt-2 border-t border-border/50">
                       <div>
-                        <p className="font-medium text-text-main">SP XML Metadata</p>
+                        <p className="font-display text-sm font-semibold text-text-main">SP XML Metadata</p>
                         <code className="block break-all font-mono text-xs">{samlMetadataUrl}</code>
                       </div>
                       <a
@@ -1393,7 +1393,7 @@ export default function ProfilePage() {
                   </div>
 
                   <div className="rounded-lg border border-border bg-bg p-3 text-xs sm:text-sm text-text-muted">
-                    <p className="font-medium text-text-main mb-1">Redirect URI</p>
+                    <p className="font-display text-sm font-semibold text-text-main mb-1">Redirect URI</p>
                     <code className="block break-all font-mono">{oidcRedirectUri}</code>
                   </div>
 
@@ -1446,7 +1446,7 @@ export default function ProfilePage() {
           <div className="flex flex-col gap-4">
             <div className="flex items-start sm:items-center justify-between gap-4">
               <div className="flex-1 min-w-0">
-                <p className="font-medium text-sm sm:text-base">Round Robin</p>
+                <p className="font-display text-sm sm:text-base font-semibold text-text-main">Round Robin</p>
                 <p className="text-xs sm:text-sm text-text-muted">
                   Cycle through accounts to distribute load
                 </p>
@@ -1462,7 +1462,7 @@ export default function ProfilePage() {
             {settings.fallbackStrategy === "round-robin" && (
               <div className="flex items-start sm:items-center justify-between gap-4 pt-2 border-t border-border/50">
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-sm sm:text-base">Sticky Limit</p>
+                  <p className="font-display text-sm sm:text-base font-semibold text-text-main">Sticky Limit</p>
                   <p className="text-xs sm:text-sm text-text-muted">
                     Calls per account before switching
                   </p>
@@ -1482,7 +1482,7 @@ export default function ProfilePage() {
             {/* Combo Round Robin */}
             <div className="flex items-start sm:items-center justify-between gap-4 pt-4 border-t border-border/50">
               <div className="flex-1 min-w-0">
-                <p className="font-medium text-sm sm:text-base">Combo Round Robin</p>
+                <p className="font-display text-sm sm:text-base font-semibold text-text-main">Combo Round Robin</p>
                 <p className="text-xs sm:text-sm text-text-muted">
                   Cycle through providers in combos instead of always starting with first
                 </p>
@@ -1498,7 +1498,7 @@ export default function ProfilePage() {
             {settings.comboStrategy === "round-robin" && (
               <div className="flex items-center justify-between pt-2 border-t border-border/50">
                 <div>
-                  <p className="font-medium">Combo Sticky Limit</p>
+                  <p className="font-display text-sm font-semibold text-text-main">Combo Sticky Limit</p>
                   <p className="text-sm text-text-muted">
                     Calls per combo model before switching
                   </p>
@@ -1538,7 +1538,7 @@ export default function ProfilePage() {
           <div className="flex flex-col gap-4">
             <div className="flex items-start sm:items-center justify-between gap-4">
               <div className="flex-1 min-w-0">
-                <p className="font-medium text-sm sm:text-base">Outbound Proxy</p>
+                <p className="font-display text-sm sm:text-base font-semibold text-text-main">Outbound Proxy</p>
                 <p className="text-xs sm:text-sm text-text-muted">Enable proxy for OAuth + provider outbound requests.</p>
               </div>
               <Toggle
@@ -1608,7 +1608,7 @@ export default function ProfilePage() {
           </div>
           <div className="flex items-start sm:items-center justify-between gap-4">
             <div className="flex-1 min-w-0">
-              <p className="font-medium text-sm sm:text-base">Enable Observability</p>
+              <p className="font-display text-sm sm:text-base font-semibold text-text-main">Enable Observability</p>
               <p className="text-xs sm:text-sm text-text-muted">
                 Record request details for inspection in the logs view
               </p>
