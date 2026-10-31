@@ -75,41 +75,41 @@
 }
 
 .dark {
-  /* Brand scale (dark) - monochrome near-black (inverted for contrast on dark) */
-  --color-brand-50: #171717;
-  --color-brand-100: #262626;
-  --color-brand-200: #404040;
-  --color-brand-300: #525252;
-  --color-brand-400: #737373;
-  --color-brand-500: #a3a3a3;
-  --color-brand-600: #d4d4d4;
-  --color-brand-700: #e5e5e5;
-  --color-brand-800: #f5f5f5;
-  --color-brand-900: #fafafa;
+  /* Brand scale (dark) - warm monochrome (inverted, tinted to match light cream theme) */
+  --color-brand-50: #191713;
+  --color-brand-100: #292520;
+  --color-brand-200: #3a352e;
+  --color-brand-300: #4d473e;
+  --color-brand-400: #6d665b;
+  --color-brand-500: #999288;
+  --color-brand-600: #cbc5ba;
+  --color-brand-700: #ddd7cc;
+  --color-brand-800: #efebe3;
+  --color-brand-900: #f6f3ec;
 
   --color-primary: var(--color-brand-100);
   --color-primary-hover: var(--color-brand-200);
 
-  /* Surfaces (dark - cool neutral) */
-  --color-bg: #121218;
-  --color-bg-alt: #181820;
-  --color-surface: #1d1d26;
-  --color-surface-2: #262631;
-  --color-surface-3: #30303c;
-  --color-sidebar: rgba(24, 24, 32, 0.85);
+  /* Surfaces (dark - warm neutral, matches light cream theme) */
+  --color-bg: #161410;
+  --color-bg-alt: #1d1a15;
+  --color-surface: #221f19;
+  --color-surface-2: #2b2720;
+  --color-surface-3: #353028;
+  --color-sidebar: rgba(29, 26, 21, 0.85);
 
-  --color-border: #2c2c38;
-  --color-border-subtle: #23232d;
+  --color-border: #332e26;
+  --color-border-subtle: #292520;
 
-  --color-text: #ececf2;
-  --color-text-main: #ececf2;
-  --color-text-muted: #9a9db0;
-  --color-text-subtle: #6f7288;
+  --color-text: #ece8df;
+  --color-text-main: #ece8df;
+  --color-text-muted: #a49d90;
+  --color-text-subtle: #7b7467;
 
-  --color-danger: #f87171;
-  --color-success: #34d399;
+  --color-danger: #f19090;
+  --color-success: #4ade80;
   --color-warning: #fbbf24;
-  --color-info: #60a5fa;
+  --color-info: #7fb4f8;
 
   --shadow-soft: 0 1px 2px 0 rgba(0,0,0,0.3);
   --shadow-warm: 0 2px 12px -2px rgba(0, 0, 0, 0.25);
