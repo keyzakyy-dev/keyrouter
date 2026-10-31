@@ -269,7 +269,7 @@ export default function LoginPage() {
         <div className="rounded-2xl border border-border-subtle bg-surface p-7 shadow-[var(--shadow-elev)] sm:p-10">
           {/* Brand — centered */}
           <div className="mb-8 flex flex-col items-center text-center">
-            <div className="grid size-14 place-items-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 text-white shadow-[var(--shadow-warm)]">
+            <div className="grid size-14 place-items-center rounded-2xl bg-brand-600 text-white shadow-[var(--shadow-warm)]">
               <span className="material-symbols-outlined text-[26px]">hub</span>
             </div>
             <h1 className="mt-4 font-display text-2xl font-semibold tracking-tight text-text-main">

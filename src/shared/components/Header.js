@@ -59,7 +59,7 @@ export default function Header({ nav = null }) {
         <div className="mx-auto flex w-full max-w-7xl items-center gap-3 px-4 lg:px-8">
         {/* Brand / logo + name */}
         <Link href="/dashboard" className="group flex shrink-0 items-center gap-2.5" aria-label={`${APP_CONFIG.name} home`}>
-          <div className="grid size-9 shrink-0 place-items-center rounded-[10px] bg-gradient-to-br from-brand-500 to-brand-700 text-white shadow-[var(--shadow-warm)] transition-transform duration-150 group-hover:scale-[1.04]">
+          <div className="grid size-9 shrink-0 place-items-center rounded-[10px] bg-brand-600 text-white shadow-[var(--shadow-warm)] transition-transform duration-150 group-hover:scale-[1.04]">
             <span className="material-symbols-outlined text-[18px]">route</span>
           </div>
           <div className="leading-tight">

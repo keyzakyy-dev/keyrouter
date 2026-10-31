@@ -16,7 +16,7 @@ export default function Navigation() {
           onClick={() => router.push("/")}
           aria-label="Navigate to home"
         >
-          <div className="size-8 rounded bg-linear-to-br from-white to-[#d4d4d4] flex items-center justify-center text-[#14141b]">
+          <div className="size-8 rounded bg-[#d4d4d4] flex items-center justify-center text-[#14141b]">
             <span className="material-symbols-outlined text-[20px]">hub</span>
           </div>
           <h2 className="text-white text-xl font-bold tracking-tight">KeyRouter</h2>

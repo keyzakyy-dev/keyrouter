@@ -479,7 +479,7 @@ export default function TokenSaverClient() {
       <Card className="relative overflow-hidden">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
-            <div className="grid size-11 shrink-0 place-items-center rounded-[12px] bg-gradient-to-br from-brand-500 to-brand-700 text-white shadow-[var(--shadow-warm)]">
+            <div className="grid size-11 shrink-0 place-items-center rounded-[12px] bg-brand-600 text-white shadow-[var(--shadow-warm)]">
               <span className="material-symbols-outlined text-[22px]">savings</span>
             </div>
             <div>
@@ -505,7 +505,7 @@ export default function TokenSaverClient() {
         <Card id="rtk" className="flex flex-col gap-4">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="grid size-9 shrink-0 place-items-center rounded-lg bg-surface-2 text-primary">
+              <div className="grid size-9 shrink-0 place-items-center rounded-lg bg-surface-2 text-primary dark:text-text-main">
                 <span className="material-symbols-outlined text-[18px]">bolt</span>
               </div>
               <div>
@@ -515,7 +515,7 @@ export default function TokenSaverClient() {
                     href="https://github.com/rtk-ai/rtk"
                     target="_blank"
                     rel="noreferrer"
-                    className="text-xs text-primary underline hover:opacity-80"
+                    className="text-xs text-primary underline dark:text-text-main hover:opacity-80"
                   >
                     docs
                   </a>
@@ -544,7 +544,7 @@ export default function TokenSaverClient() {
         <Card className="flex flex-col gap-4">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="grid size-9 shrink-0 place-items-center rounded-lg bg-surface-2 text-primary">
+              <div className="grid size-9 shrink-0 place-items-center rounded-lg bg-surface-2 text-primary dark:text-text-main">
                 <span className="material-symbols-outlined text-[18px]">compress</span>
               </div>
               <div>
@@ -554,7 +554,7 @@ export default function TokenSaverClient() {
                     href="https://github.com/chopratejas/headroom"
                     target="_blank"
                     rel="noreferrer"
-                    className="text-xs text-primary underline hover:opacity-80"
+                    className="text-xs text-primary underline dark:text-text-main hover:opacity-80"
                   >
                     docs
                   </a>
@@ -581,7 +581,7 @@ export default function TokenSaverClient() {
             <button
               type="button"
               onClick={() => setShowHeadroomInstallModal(true)}
-              className="text-xs text-primary underline hover:opacity-80"
+              className="text-xs text-primary underline dark:text-text-main hover:opacity-80"
             >
               {headroomRunning ? "Manage" : "Setup"}
             </button>
@@ -641,7 +641,7 @@ export default function TokenSaverClient() {
                       key={extra}
                       className={`flex items-center gap-1.5 text-xs px-2 py-1 rounded border cursor-pointer transition-colors ${
                         pending
-                          ? "border-primary bg-primary/10 text-primary"
+                          ? "border-primary bg-primary/10 text-primary dark:text-text-main"
                           : "border-border text-text-muted hover:bg-surface-2"
                       }`}
                       title={extraTitle}
@@ -697,7 +697,7 @@ export default function TokenSaverClient() {
         <Card className="flex flex-col gap-4">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="grid size-9 shrink-0 place-items-center rounded-lg bg-surface-2 text-primary">
+              <div className="grid size-9 shrink-0 place-items-center rounded-lg bg-surface-2 text-primary dark:text-text-main">
                 <span className="material-symbols-outlined text-[18px]">format_quote</span>
               </div>
               <div>
@@ -707,7 +707,7 @@ export default function TokenSaverClient() {
                     href="https://github.com/JuliusBrussee/caveman"
                     target="_blank"
                     rel="noreferrer"
-                    className="text-xs text-primary underline hover:opacity-80"
+                    className="text-xs text-primary underline dark:text-text-main hover:opacity-80"
                   >
                     docs
                   </a>
@@ -745,7 +745,7 @@ export default function TokenSaverClient() {
                   </button>
                 ))}
               </div>
-              <p className="text-xs text-primary">
+              <p className="text-xs text-primary dark:text-text-main">
                 {CAVEMAN_LEVELS.find((lvl) => lvl.id === cavemanLevel)?.desc}
               </p>
             </div>
@@ -756,7 +756,7 @@ export default function TokenSaverClient() {
         <Card className="flex flex-col gap-4">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="grid size-9 shrink-0 place-items-center rounded-lg bg-surface-2 text-primary">
+              <div className="grid size-9 shrink-0 place-items-center rounded-lg bg-surface-2 text-primary dark:text-text-main">
                 <span className="material-symbols-outlined text-[18px]">content_cut</span>
               </div>
               <div>
@@ -766,7 +766,7 @@ export default function TokenSaverClient() {
                     href="https://github.com/DietrichGebert/ponytail"
                     target="_blank"
                     rel="noreferrer"
-                    className="text-xs text-primary underline hover:opacity-80"
+                    className="text-xs text-primary underline dark:text-text-main hover:opacity-80"
                   >
                     docs
                   </a>
@@ -805,7 +805,7 @@ export default function TokenSaverClient() {
                   </button>
                 ))}
               </div>
-              <p className="text-xs text-primary">
+              <p className="text-xs text-primary dark:text-text-main">
                 {PONYTAIL_LEVELS.find((lvl) => lvl.id === ponytailLevel)?.desc}
               </p>
             </div>

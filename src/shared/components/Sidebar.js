@@ -352,7 +352,7 @@ export default function Sidebar({ onClose, collapsible = true }) {
             href="/dashboard"
             className={cn("group flex items-center", isCollapsed ? "justify-center" : "gap-3")}
           >
-            <div className="grid size-10 shrink-0 place-items-center rounded-[10px] bg-gradient-to-br from-brand-500 to-brand-700 text-white shadow-[var(--shadow-warm)] transition-transform duration-150 group-hover:scale-[1.04]">
+            <div className="grid size-10 shrink-0 place-items-center rounded-[10px] bg-brand-600 text-white shadow-[var(--shadow-warm)] transition-transform duration-150 group-hover:scale-[1.04]">
               <span className="material-symbols-outlined text-[20px]">hub</span>
             </div>
             {!isCollapsed && (

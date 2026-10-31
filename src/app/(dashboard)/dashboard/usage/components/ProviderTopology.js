@@ -109,7 +109,7 @@ function RouterNode({ data }) {
       <Handle type="source" position={Position.Right} id="right" className="!bg-transparent !border-0 !w-0 !h-0" />
 
       <div
-        className={`mr-2 grid size-7 shrink-0 place-items-center rounded-lg bg-gradient-to-br from-brand-500 to-brand-700 text-white ${powering ? "topology-router-icon" : ""}`}
+        className={`mr-2 grid size-7 shrink-0 place-items-center rounded-lg bg-brand-600 text-white ${powering ? "topology-router-icon" : ""}`}
       >
         <span className="material-symbols-outlined text-[16px]">route</span>
       </div>
