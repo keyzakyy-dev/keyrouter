@@ -862,7 +862,7 @@ export default function ProfilePage() {
         {/* Security */}
         <Card>
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 rounded-lg bg-primary/10 text-primary shrink-0">
+            <div className="p-2 rounded-lg bg-teal-500/10 text-teal-500 shrink-0">
               <span className="material-symbols-outlined text-[20px]">shield</span>
             </div>
             <h3 className="font-display text-base sm:text-lg font-semibold text-text-main">Security</h3>
