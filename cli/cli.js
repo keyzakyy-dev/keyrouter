@@ -264,6 +264,58 @@ function killCloudflaredByAppPort(appPort) {
   return pids;
 }
 
+// Build a pid -> {ppid, cmd} map of running processes (single query per platform).
+function buildProcessTree() {
+  const tree = new Map();
+  try {
+    if (process.platform === "win32") {
+      const psCmd = `powershell -NonInteractive -WindowStyle Hidden -Command "Get-WmiObject Win32_Process -Filter 'Name=\\"node.exe\\"' | Select-Object ProcessId,ParentProcessId,CommandLine | ConvertTo-Csv -NoTypeInformation"`;
+      const output = execSync(psCmd, { encoding: "utf8", windowsHide: true, timeout: 5000 });
+      output.split("\n").slice(1).filter(l => l.trim()).forEach(line => {
+        const m = line.match(/^"(\d+)","(\d+)","(.*)$/);
+        if (m && m[1] && m[2]) {
+          tree.set(m[1], { ppid: m[2], cmd: (m[3] || "").toLowerCase() });
+        }
+      });
+    } else {
+      const output = execSync("ps -eo pid,ppid,cmd 2>/dev/null", { encoding: "utf8", timeout: 5000 });
+      output.split("\n").forEach(line => {
+        const parts = line.trim().split(/\s+/);
+        if (parts.length >= 3 && parts[0] && !isNaN(parts[0])) {
+          const cmd = line.slice(line.indexOf(parts[2])).toLowerCase();
+          tree.set(parts[0], { ppid: parts[1], cmd });
+        }
+      });
+    }
+  } catch (e) { /* ignore */ }
+  return tree;
+}
+
+// Walk up the parent chain of `pid`; return true if any ancestor is THIS app's
+// cli.js process (so a next-server belonging to another app is never killed).
+function isOwnAppProcess(tree, pid) {
+  const selfPath = path.basename(__filename).toLowerCase(); // "cli.js"
+  const selfFull = path.resolve(__filename).toLowerCase();   // absolute path used to launch
+  let cur = String(pid);
+  let hops = 0;
+  while (cur && hops < 20) {
+    const node = tree.get(cur);
+    if (!node) break;
+    const cmd = node.cmd;
+    // Ancestor is this app's cli.js if its cmdline contains our own script path
+    // (robust in both global-install and local checkout launch).
+    if (
+      (selfFull && cmd.includes(selfFull)) ||
+      cmd.includes("keyrouter")
+    ) {
+      return true;
+    }
+    cur = node.ppid;
+    hops++;
+  }
+  return false;
+}
+
 // Kill all keyrouter processes
 function killAllAppProcesses(appPort) {
   return new Promise((resolve) => {
@@ -283,25 +335,20 @@ function killAllAppProcesses(appPort) {
       if (platform === "win32") {
         // Windows: use WMI to get full CommandLine (tasklist /V doesn't include it)
         try {
-          const psCmd = `powershell -NonInteractive -WindowStyle Hidden -Command "Get-WmiObject Win32_Process -Filter 'Name=\\"node.exe\\"' | Select-Object ProcessId,CommandLine | ConvertTo-Csv -NoTypeInformation"`;
-          const output = execSync(psCmd, {
-            encoding: "utf8",
-            windowsHide: true,
-            timeout: 5000
+          const tree = buildProcessTree();
+          // Own app cli.js processes (precise cmdline match).
+          Array.from(tree.entries()).forEach(([pid, node]) => {
+            if (pid === process.pid.toString()) return;
+            const cmd = node.cmd || "";
+            if (cmd.includes("node") && cmd.includes("keyrouter") && (cmd.includes("cli.js") || cmd.includes("\\keyrouter") || cmd.includes("/keyrouter"))) {
+              pids.push(pid);
+            }
           });
-          const lines = output.split("\n").slice(1).filter(l => l.trim());
-          lines.forEach(line => {
-            // Whitelist: real node process running keyrouter/cli.js, or next-server.
-            // Avoids killing editors/grep/strace/cursor that just have "keyrouter" in cmdline.
-            const cmd = line.toLowerCase();
-            const isAppProcess =
-              (cmd.includes("node") && cmd.includes("keyrouter") && (cmd.includes("cli.js") || cmd.includes("\\keyrouter") || cmd.includes("/keyrouter")))
-              || cmd.includes("next-server");
-            if (isAppProcess) {
-              const match = line.match(/^"(\d+)"/);
-              if (match && match[1] && match[1] !== process.pid.toString()) {
-                pids.push(match[1]);
-              }
+          // Only kill next-server processes whose ancestor is this app's cli.js.
+          Array.from(tree.entries()).forEach(([pid, node]) => {
+            if (pid === process.pid.toString()) return;
+            if ((node.cmd || "").includes("next-server") && isOwnAppProcess(tree, pid)) {
+              pids.push(pid);
             }
           });
         } catch (e) {
@@ -310,25 +357,19 @@ function killAllAppProcesses(appPort) {
       } else {
         // macOS/Linux: use ps to find all matching processes
         try {
-          const output = execSync('ps aux 2>/dev/null', {
-            encoding: 'utf8',
-            timeout: 5000
+          const tree = buildProcessTree();
+          Array.from(tree.entries()).forEach(([pid, node]) => {
+            if (pid === process.pid.toString()) return;
+            const cmd = node.cmd || "";
+            if (cmd.includes("node") && cmd.includes("keyrouter") && (cmd.includes("cli.js") || cmd.includes("/keyrouter"))) {
+              pids.push(pid);
+            }
           });
-          const lines = output.split('\n');
-
-          lines.forEach(line => {
-            // Whitelist: real node process running keyrouter/cli.js, or next-server.
-            // Avoids killing grep/strace/editors/cursor that incidentally match "keyrouter".
-            const cmd = line.toLowerCase();
-            const isAppProcess =
-              (cmd.includes("node") && cmd.includes("keyrouter") && (cmd.includes("cli.js") || cmd.includes("/keyrouter")))
-              || cmd.includes("next-server");
-            if (isAppProcess) {
-              const parts = line.trim().split(/\s+/);
-              const pid = parts[1];
-              if (pid && !isNaN(pid) && pid !== process.pid.toString()) {
-                pids.push(pid);
-              }
+          // Only kill next-server processes owned by this app (ancestor cli.js).
+          Array.from(tree.entries()).forEach(([pid, node]) => {
+            if (pid === process.pid.toString()) return;
+            if ((node.cmd || "").includes("next-server") && isOwnAppProcess(tree, pid)) {
+              pids.push(pid);
             }
           });
         } catch (e) {

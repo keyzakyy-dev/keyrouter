@@ -5,9 +5,9 @@ export const APP_CONFIG = {
   name: "KeyRouter Proxy",
   description: "AI Infrastructure Management",
   version: pkg.version,
-  // Display label for this build — first release, so we surface a clean
-  // numeric version (v1.0) instead of the raw semver bump (e.g. 0.5.112).
-  versionLabel: "1.0",
+  // Display label for this build — mirrors the exact package semver (e.g.
+  // 1.0.3) so the header matches the version that is actually installed.
+  versionLabel: pkg.version,
 };
 
 // GitHub configuration

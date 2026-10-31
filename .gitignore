@@ -109,3 +109,6 @@ CLAUDE.md
 
 # Playwright MCP artifacts
 .playwright-mcp/
+
+# Local AI-agent context doc (never committed / published)
+PROJECT_CONTEXT.md

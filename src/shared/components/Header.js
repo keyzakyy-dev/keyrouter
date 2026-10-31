@@ -6,6 +6,7 @@ import Link from "next/link";
 import PropTypes from "prop-types";
 import HeaderMenu from "@/shared/components/HeaderMenu";
 import HeaderLanguage from "@/shared/components/HeaderLanguage";
+import UpdateButton from "@/shared/components/UpdateButton";
 import { useHeaderSearchStore } from "@/store/headerSearchStore";
 import { APP_CONFIG } from "@/shared/constants/config";
 
@@ -71,6 +72,7 @@ export default function Header({ nav = null }) {
 
         {/* Right actions */}
         <div className="flex items-center gap-1 shrink-0">
+          <UpdateButton />
           {displayName && (loginMethod === "OIDC" || loginMethod === "SAML") && (
             <div
               className="hidden sm:flex items-center max-w-[220px] px-3 py-1.5 rounded-full border border-border bg-surface/70 text-xs text-text-muted truncate"

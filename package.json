@@ -1,6 +1,6 @@
 {
   "name": "keyrouter-app",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "KeyRouter web dashboard",
   "private": true,
   "scripts": {
