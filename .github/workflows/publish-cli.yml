@@ -1,0 +1,61 @@
+name: Publish CLI to npm
+
+# Trusted publishing (OIDC): no long-lived npm token in CI. npm accepts the
+# publish because this exact workflow is registered as a trusted publisher on
+# npmjs.com → keyrouter → Settings (owner, repo, filename must match).
+#
+# The build is the same one `npm run cli:publish` runs locally: build-cli.js
+# bundles the web app into cli/app, then `npm publish` runs from cli/.
+#
+# Optional deps are omitted: root optionalDependencies include better-sqlite3
+# (lazily imported SQLite fallback) which needs node-gyp on 24.04 runners, while
+# the published tarball never carries it — it installs into ~/.keyrouter/runtime
+# on the user's machine.
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+  id-token: write # OIDC token exchange with the npm registry
+
+concurrency:
+  group: publish-cli-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Build and publish keyrouter
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          package-manager-cache: false # never cache release builds
+
+      - name: Validate version matches tag
+        run: |
+          node -e '
+            const tag = process.env.GITHUB_REF_NAME.replace(/^v/, "");
+            const root = require("./package.json").version;
+            const cli = require("./cli/package.json").version;
+            if (root !== tag || cli !== tag) {
+              console.error(`tag ${tag} != root ${root} / cli ${cli}`);
+              process.exit(1);
+            }
+            console.log(`publishing ${tag}`);
+          '
+
+      - run: npm ci --omit=optional
+      - run: npm ci --omit=optional
+        working-directory: cli
+
+      # Same build as `npm publish` locally (prepublishOnly → build-cli.js).
+      - run: npm publish
+        working-directory: cli
