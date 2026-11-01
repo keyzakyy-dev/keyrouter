@@ -6,57 +6,59 @@
 
 **One endpoint. Every AI you already pay for. Zero wasted tokens.**
 
-Connect Claude Code, Codex, Cursor, Gemini, OpenCode, Cline, and other coding tools to
-40+ providers and 100+ models through a single self-hosted API. KeyRouter routes each
-request to the best available model, falls back automatically, and shrinks your token
-bill while you keep your subscriptions.
-
 [![npm](https://img.shields.io/npm/v/keyrouter.svg)](https://www.npmjs.com/package/keyrouter)
 [![Downloads](https://img.shields.io/npm/dm/keyrouter.svg)](https://www.npmjs.com/package/keyrouter)
-[![License](https://img.shields.io/npm/l/keyrouter.svg)](https://github.com/keyzakyy-dev/keyrouter/blob/main/LICENSE)
+[![Docker Pulls](https://img.shields.io/docker/pulls/keyzakyy/keyrouter.svg?logo=docker&label=docker%20pulls)](https://hub.docker.com/r/keyzakyy/keyrouter)
+[![Publish](https://github.com/keyzakyy-dev/keyrouter/actions/workflows/publish-cli.yml/badge.svg)](https://github.com/keyzakyy-dev/keyrouter/actions/workflows/publish-cli.yml)
+[![License](https://img.shields.io/npm/l/keyrouter.svg)](LICENSE)
 [![Stars](https://img.shields.io/github/stars/keyzakyy-dev/keyrouter?style=social)](https://github.com/keyzakyy-dev/keyrouter)
 
-**[⚡ Quick Start](#quick-start) · [🧠 How it works](#how-it-works) · [✨ Features](#features) · [📖 Documentation](#documentation) · [🌐 Website](https://github.com/keyzakyy-dev/keyrouter)**
+**[⚡ Quick Start](#-quick-start)** · **[🎯 Which install path?](#-which-install-path-do-i-need)** · **[🔌 Connect a tool](#-connect-a-tool-in-3-lines)** · **[✨ Features](#-features)** · **[🛠 CLI](#-cli)** · **[❓ FAQ](#-faq)**
 
 </div>
 
 ---
 
-## Overview
+## 📌 At a glance
 
-KeyRouter is a privacy-first AI router you host yourself. It sits between your coding
-tools and AI providers, then handles the tedious parts so you can just keep coding:
+| | |
+| --- | --- |
+| **What it is** | A self-hosted router that sits between your AI coding tools and 40+ providers (100+ models) |
+| **Install** | `npm i -g keyrouter` — no account, no signup, no cloud lock-in |
+| **Endpoint** | `http://localhost:20131/v1` — speaks OpenAI **and** Claude API |
+| **Runs on** | Node.js ≥ 22.23 (24 LTS recommended) · Linux · macOS · Windows · Docker `amd64`/`arm64` |
+| **Data** | 100% local in `~/.keyrouter` (SQLite) — keys, logs, usage never leave your machine |
+| **Cost for the router itself** | Free, MIT-licensed. You keep paying (or not paying — free tiers work) your providers |
 
-- **One API key and endpoint** for every tool, instead of a different config per provider.
-- **Smart routing** that picks a model for each request and falls back across tiers.
-- **Token savings** that reduce how much you send and how much you spend.
-- **Self-hosted by design** so your keys and traffic stay under your control.
+> [!TIP]
+> **60-second try:** `npx keyrouter` → dashboard opens → **Providers → Kiro AI** (free Claude, no login) → point Claude Code at `http://localhost:20131/v1`. That's it — you're routing.
 
-Start in minutes with `npx keyrouter`. No account, no signup, no cloud lock-in.
+```bash
+# 1. route-all-the-things in one line
+npx keyrouter
+
+# 2. wire the CLI tools on this machine to it (backs up configs once as *.bak-keyrouter)
+npx keyrouter connect http://localhost:20131 --tools claude,codex,cline
+
+# 3. see what it changed
+keyrouter show claude
+```
 
 ---
 
-## Quick Start
+## 🚀 Quick Start
 
-### Option 1: npm (recommended for desktop)
-
-Install the global CLI, then run it:
+### Option 1 · npm (desktop, recommended)
 
 ```bash
 npm install -g keyrouter
 keyrouter
+# → dashboard at http://localhost:20131 (default password: 123456 — change it)
 ```
 
-Or run directly without installing anything:
+Or skip the install entirely: `npx keyrouter`
 
-```bash
-npx keyrouter
-```
-
-The dashboard opens at <http://localhost:20131>. Log in with the password you set
-(the default is `123456`; change it after first login).
-
-### Option 2: Docker (server / VPS)
+### Option 2 · Docker (server / VPS)
 
 ```bash
 docker run -d --name keyrouter \
@@ -66,214 +68,268 @@ docker run -d --name keyrouter \
   keyzakyy/keyrouter:latest
 ```
 
-Published images are available on [Docker Hub](https://hub.docker.com/r/keyzakyy/keyrouter)
-and [GHCR](https://github.com/keyzakyy-dev/keyrouter/pkgs/container/keyrouter) for
-amd64 and arm64.
+Images for `amd64` + `arm64` on [Docker Hub](https://hub.docker.com/r/keyzakyy/keyrouter) and [GHCR](https://github.com/keyzakyy-dev/keyrouter/pkgs/container/keyrouter). Version pinning, tags, and upgrades: [`DOCKER.md`](DOCKER.md).
 
-### Option 3: from source
+### Option 3 · from source
 
 ```bash
 git clone https://github.com/keyzakyy-dev/keyrouter.git
-cd keyrouter
-cp .env.example .env
-npm install
-npm run build
+cd keyrouter && cp .env.example .env
+npm install && npm run build
 npm run start
 ```
 
-### Connect your first provider
+Full contributor setup (tests, lint, dev server on `:20127`): [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
-1. Open the dashboard.
-2. Go to **Providers**, then connect a free provider such as **Kiro AI** (free Claude)
-   or **OpenCode Free** (no login) to try it immediately.
-3. Add any paid providers you subscribe to.
+---
 
-### Point a CLI tool at KeyRouter
+## 🤔 Which install path do I need?
+
+| You are… | Use | Why |
+| --- | --- | --- |
+| Coding on a laptop/desktop | **npm** (Option 1) | Auto-updates itself, tray icon, zero config |
+| Deploying on a VPS/homelab | **Docker** (Option 2) | Persistent volume, restart policy, arm64 OK |
+| Hacking on the router itself | **source** (Option 3) | Dev server, hot reload, tests |
+| Just testing once | `npx keyrouter` | Nothing installed, throwaway |
+
+---
+
+## 🔌 Connect a tool in 3 lines
+
+Every tool that speaks the OpenAI or Claude API works out of the box:
 
 ```text
-Claude Code / Codex / OpenClaw / Cursor / Cline settings:
-  Endpoint : http://localhost:20131/v1
-  API Key  : [copy from dashboard]
-  Model    : kr/claude-sonnet-4.5
+Endpoint : http://localhost:20131/v1
+API Key  : (copy from the dashboard → API Keys)
+Model    : kr/claude-sonnet-4.5
 ```
 
-All tools that speak the OpenAI or Claude API work out of the box.
+Or let KeyRouter write the configs for you — it backs up each tool's file once as `*.bak-keyrouter`:
+
+```bash
+npx keyrouter connect http://localhost:20131                       # pick tools interactively
+npx keyrouter connect http://localhost:20131 --tools claude,codex  # choose in advance
+npx keyrouter connect --reset --tools claude,codex                 # undo
+```
+
+<details>
+<summary><b>Supported tools for <code>keyrouter connect</code></b> (click to expand)</summary>
+
+`claude` · `codex` · `opencode` · `droid` · `crush` · `kilo` · `cline` · `pi` · `omp` · `all`
+
+Cursor and other GUI tools: paste the endpoint + key manually per the table above.
+</details>
 
 ---
 
-## Why KeyRouter?
+## 🧠 Why KeyRouter?
 
-**You are probably paying for more than you use:**
+**The problem you already have:**
 
-- Subscription quotas expire at the end of every month, even when unused.
-- Rate limits hit you in the middle of a task, forcing you to wait.
-- Tool output such as `git diff`, `grep`, and `ls` burns input tokens on every turn.
-- Each provider needs its own API key, endpoint, and setup to stay working.
-- Switching between providers manually is slow and easy to get wrong.
+- Subscription quotas expire monthly, even unused.
+- Rate limits hit mid-task; you wait or switch manually.
+- `git diff` / `grep` / `ls` output burns input tokens on *every* turn.
+- Every provider = another key, endpoint and config to babysit.
 
-**KeyRouter removes the friction:**
+**KeyRouter's answers:**
 
-- **RTK Token Saver** compresses tool results before they reach the model, reducing
-  input tokens by 20-40% per request.
-- **Quota tracking** tells you how much of each subscription is left, so you can use
-  every bit before it resets.
-- **Automatic fallback** moves you from subscription to cheap to free, in order, with
-  no downtime and no manual intervention.
-- **Multi-account support** spreads requests across several accounts for the same
-  provider, giving you more headroom.
-- **One setup** works across every OpenAI/Claude-compatible CLI tool.
+| | |
+| --- | --- |
+| 🔥 **RTK Token Saver** | Compresses tool output before it reaches the model — **20–40% fewer input tokens** per request |
+| 🪜 **3-tier fallback** | Subscription → cheap (GLM, MiniMax) → free (Kiro, OpenCode Free), automatically, mid-request |
+| 📊 **Quota tracking** | Know what's left on every subscription; drain it before it resets |
+| 👥 **Multi-account** | Several accounts per provider, load-spread |
+| 🔁 **Auto token refresh** | OAuth stays alive in the background; no re-login marathons |
+| 🎛 **Custom combos** | Unlimited `kr/*` model mixes with your own routing strategy |
 
 ---
 
-## How It Works
+## 🗺 How it works
 
 ```text
 ┌──────────────────┐
-│   Your CLI tool  │   Claude Code, Codex, OpenClaw, Cursor, Cline…
-│                  │
+│   Your CLI tool  │   Claude Code, Codex, Cursor, Cline, Droid, Crush…
 └────────┬─────────┘
          │  http://localhost:20131/v1
          ▼
-┌──────────────────────────────────────────────┐
-│              KeyRouter (router)               │
-│  • RTK Token Saver: compress tool output      │
-│  • Format translation: OpenAI ↔ Claude        │
-│  • Quota tracking and auto token refresh      │
-└────────┬─────────────────────────────────────┘
+┌─────────────────────────────────────────────┐
+│              KeyRouter (router)             │
+│  1. Auth your API key (+ per-key limits)    │
+│  2. RTK Token Saver compresses tool output  │
+│  3. Translate format: OpenAI ↔ Claude ↔     │
+│     Gemini ↔ Kiro ↔ Vertex ↔ Cursor         │
+│  4. Log, meter and fall back as needed      │
+└────────┬────────────────────────────────────┘
          │
-         ├─→ Tier 1: Subscription (Claude Code, Codex, Copilot)
-         │        when quota runs out…
-         ├─→ Tier 2: Cheap (GLM, MiniMax)
-         │        when budget is exceeded…
-         └─→ Tier 3: Free (Kiro, OpenCode Free, Vertex)
+         ├─→ Tier 1: subscription (Claude, Codex, Copilot)
+         ├─→ Tier 2: cheap (GLM, MiniMax, …)
+         └─→ Tier 3: free (Kiro, OpenCode Free, Vertex, …)
 ```
 
-Result: you keep coding, spend less per request, and never hit a hard stop.
+Deep dive (executors, streaming, OAuth flows, DB schema): [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md). Full docs site: [`gitbook/content/en/`](gitbook/content/en/index.md).
 
 ---
 
-## Features
+## ✨ Features
 
 | Area | What it does | Why it matters |
 | --- | --- | --- |
-| **RTK Token Saver** | Compresses `git diff`, `grep`, `ls`, and other tool output before it reaches the LLM | Cuts input tokens by 20-40% per request |
-| **Smart 3-tier fallback** | Routes subscription → cheap → free automatically | Keeps you moving with zero downtime |
-| **Format translation** | Converts between OpenAI, Claude, Gemini, Cursor, Kiro, and Vertex | One endpoint works with any CLI tool |
-| **Multi-account** | Manages several accounts per provider | Balances load and adds redundancy |
-| **Auto token refresh** | Renews OAuth tokens in the background | No manual re-login |
-| **Custom combos** | Build unlimited model combinations with a routing strategy | Tailor fallback to your workload |
-| **Request logging** | Live console log with per-request detail | Makes troubleshooting easy |
-| **Usage analytics** | Tracks tokens, cost, and trends over time | Find where to optimize |
-| **Per-key limits** | Token budget and request rates per API key | Resell access safely with HTTP 429 |
-| **Prompt injection** | Injects system prompts or chat scripts per global, key, or model | Adds personas at the router level |
-| **Proxy pools** | Server-side health checks, rotation, dead-pool cleanup | Keeps a large key fleet healthy |
-| **Deploy anywhere** | Localhost, VPS, Docker, Kubernetes | Fits your hosting preferences |
+| **RTK Token Saver** | Compresses `git diff`, `grep`, `ls` and friends in-place | 20–40% cheaper requests, fail-open (never breaks your call) |
+| **Format translation** | OpenAI ↔ Claude ↔ Gemini ↔ Kiro ↔ Vertex ↔ Cursor | One endpoint into any CLI tool |
+| **Usage analytics** | Tokens, cost, latency per request — filterable, exportable | See exactly where money goes |
+| **Per-key limits** | Token budgets + request rate per API key (HTTP 429) | Share with a team or resell safely |
+| **Prompt injection** | System prompts / chat scripts per key, model or global | Router-level personas, no tool config needed |
+| **Proxy pools** | Health checks, rotation, dead-pool cleanup | Keeps big key fleets alive |
+| **Request log** | Live console with per-request detail and redaction | Debug any call in seconds |
+| **Update button** | In-dashboard "update available" with copy-install command | No surprise versions |
 
 ---
 
-## CLI
-
-### Common commands
+## 🛠 CLI
 
 ```bash
-keyrouter                    # start with default settings
-keyrouter --port 8080        # use a custom port
-keyrouter --no-browser       # do not open the browser
+keyrouter                    # start with defaults
+keyrouter --port 8080        # custom port
+keyrouter --no-browser       # don't open the dashboard
 keyrouter --skip-update      # skip the auto-update check
-keyrouter --help             # show all options
-```
-
-### Connect to a remote KeyRouter
-
-Already have KeyRouter on a team server? Point your local CLI tools at it without
-starting a local server:
-
-```bash
-npx keyrouter connect http://<server>:20131                       # pick tools interactively
-npx keyrouter connect http://<server>:20131 --tools claude,codex  # choose in advance
-npx keyrouter connect --reset --tools claude,codex                # undo
-```
-
-This logs in with the dashboard password, creates an API key named `cli-<hostname>`,
-and writes each tool's config while backing up the original once as `*.bak-keyrouter`.
-
-Supported tools: `claude`, `codex`, `opencode`, `droid`, `crush`, `kilo`, `cline`,
-`pi`, `omp`, or `all`.
-
-### Inspect local config
-
-```bash
-keyrouter show                # every supported tool
-keyrouter show claude         # one tool
-keyrouter show claude --json  # machine-readable (key masked)
+keyrouter show claude        # inspect a tool's config (try --json)
+keyrouter connect --help     # remote-connect options
+keyrouter --help             # everything else
 ```
 
 ---
 
-## Environment Variables
+## ⚙️ Environment & Data
+
+<details>
+<summary><b>Environment variables</b> (click to expand — defaults are fine for local use)</summary>
 
 | Variable | Required | Description |
 | --- | --- | --- |
 | `JWT_SECRET` | Yes | Long random secret for session signing |
-| `INITIAL_PASSWORD` | Yes | Initial dashboard password, change after first login |
-| `DATA_DIR` | Yes | Data directory, defaults to `~/.keyrouter` |
-| `PORT` | No | Server port, defaults to `20131` |
+| `INITIAL_PASSWORD` | Yes | First dashboard password — change after login |
+| `DATA_DIR` | Yes | Data directory (default `~/.keyrouter`) |
+| `PORT` | No | Server port (default `20131`) |
 | `API_KEY_SECRET` | No | Secret for API keys issued by the endpoint proxy |
 | `MACHINE_ID_SALT` | No | Salt for machine identity |
-| `CLOUD_URL` | No | Cloud sync endpoint, defaults to off (set your own domain to enable) |
+| `CLOUD_URL` | No | Cloud sync endpoint — off unless you set it |
 | `BASE_URL` | No | Public base URL of this instance |
-| `HTTP_PROXY` / `HTTPS_PROXY` | No | Optional outbound proxy for upstream calls |
+| `HTTP_PROXY` / `HTTPS_PROXY` | No | Outbound proxy for upstream calls |
 
-See [`.env.example`](.env.example) for the full list and examples.
+Full list + examples: [`.env.example`](.env.example)
+</details>
 
-**Data location**
+<details>
+<summary><b>Where my data lives?</b> (click to expand)</summary>
 
-- macOS/Linux: `~/.keyrouter/db/data.sqlite`
-- Windows: `%APPDATA%/keyrouter/db/data.sqlite`
-- Docker: `/app/data/db/data.sqlite` (mount `$HOME/.keyrouter` to persist)
+- **macOS / Linux:** `~/.keyrouter/db/data.sqlite`
+- **Windows:** `%APPDATA%/keyrouter/db/data.sqlite`
+- **Docker:** `/app/data/db/data.sqlite` — mount `$HOME/.keyrouter` to persist it
+- Everything (keys, logs, usage, settings) is in that one SQLite file. Back it up = back up KeyRouter.
+</details>
+
+<details>
+<summary><b>How updates work</b> (click to expand)</summary>
+
+The CLI and web assets update via [`src/lib/updater/`](src/lib/updater) — when a new version exists, the dashboard shows an **Update available** button with a copy-install command; nothing auto-installs without your click. Docker users: pull the new tag and recreate the container (data stays in the mounted volume).
+</details>
 
 ---
 
-## Development
+## 🩹 Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| Port `20131` already in use | `keyrouter --port 8080` (and update the endpoint in your tools) |
+| `401` from KeyRouter | Key mismatch — re-copy the API key from the dashboard |
+| Tool can't connect after upgrade | `npx keyrouter connect --reset --tools <tools>` then reconnect |
+| OAuth token expired mid-use | Shouldn't happen (auto-refresh); force reconnect the provider in **Providers** |
+| Docker: data gone after recreate | You didn't mount `-v "$HOME/.keyrouter:/app/data"` — data lives in the volume, not the image |
+
+More: [`gitbook/content/en/troubleshooting.md`](gitbook/content/en/troubleshooting.md) · [Discussions](https://github.com/keyzakyy-dev/keyrouter/discussions)
+
+---
+
+## ❓ FAQ
+
+<details>
+<summary><b>Do my API keys / prompts leave my machine?</b></summary>
+
+No. KeyRouter is fully self-contained — requests go from your tools to your local (or your own VPS's) KeyRouter process straight to the provider. No telemetry, no middleman. The only network calls are the ones you configure: providers, optional proxy pools, and the optional `CLOUD_URL` sync (off by default).
+</details>
+
+<details>
+<summary><b>Is <code>kr/&lt;model&gt;</code> special syntax?</b></summary>
+
+Yes — `kr/` prefixes a **combo**: a KeyRouter-defined model mix with its own fallback strategy (e.g. `kr/claude-sonnet-4.5` → falls back to a cheaper Claude, then a subscription Codex, then a free tier). Build your own in the dashboard → **Combos**.
+</details>
+
+<details>
+<summary><b>Can I run it on a shared server and keep it private?</b></summary>
+
+Yes — that's exactly what per-key limits + `INITIAL_PASSWORD` + `BASE_URL` + HTTPS (put it behind nginx/Caddy) are for. Authentication is session-based for the dashboard and API-key-based for `/v1`.
+</details>
+
+<details>
+<summary><b>Does it really work with free providers?</b></summary>
+
+Yes — **Kiro AI** (free Claude) and **OpenCode Free** work without any login, as Tier-3 fallback or standalone. The dashboard marks every provider free/paid/subscription so the router picks in the right order.
+</details>
+
+---
+
+## 🗺 Roadmap
+
+- [x] `keyrouter connect` one-shot tool config
+- [x] Per-key token budgets & rate limits
+- [x] Trusted publishing (releases are provenance-signed from CI)
+- [ ] Cloud sync dashboard for multi-instance deployments (`CLOUD_URL`)
+- [ ] Request replay / diff between two providers for the same payload
+
+---
+
+## 🤝 Contributing
 
 ```bash
 npm install
-npm run dev            # Next.js dev server on port 20127
-npm run build          # production build
-npm run start          # production start on port 20127
-npm run cli:pack       # build the global CLI package (npm pack)
-npm run cli:publish    # build and publish the CLI to npm
+npm run dev                                  # hot-reload dev server on :20127
+npm run build                                # production standalone build
+npm run cli:pack                             # build the publishable CLI tarball
+npm run release:dry                          # preview the next version bump (no writes)
+node tests/__baseline__/verify-no-regression.mjs   # regression check vs baseline
+
+# lint the files you touched (repo-wide eslint has pre-existing failures):
+npx eslint path/to/changed-file.js
 ```
 
-Stack: Next.js 16, React 19, Tailwind CSS 4, SQLite (sql.js + better-sqlite3).
+The test suite is intentionally not all-green on a bare checkout (~938 pass / ~64 known-fail, tracked in `tests/__baseline__/known-fails.txt`) — use `verify-no-regression.mjs` to judge *your* change, not the raw count. Unit tests for the embeddings endpoint live in `tests/` (own `package.json`). Full conventions: [`CLAUDE.md`](CLAUDE.md) & [`AGENTS.md`](AGENTS.md).
+
+Please read [`gitbook/content/en/faq.md`](gitbook/content/en/faq.md) for common questions before opening an issue, and [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) before touching routing, fallback, OAuth or DB code. PRs that touch auth, keys, headers or SSRF surfaces will get extra scrutiny.
+
+For bugs → [Issues](https://github.com/keyzakyy-dev/keyrouter/issues) · Questions → [Discussions](https://github.com/keyzakyy-dev/keyrouter/discussions)
 
 ---
 
-## Documentation
+## 📚 Documentation
 
-- Full Docker guide, image tags, and publishing: [`DOCKER.md`](DOCKER.md)
-- Project website: <https://github.com/keyzakyy-dev/keyrouter>
-- npm package: <https://www.npmjs.com/package/keyrouter>
-
----
-
-## Acknowledgments
-
-KeyRouter is a derivative and rebrand of [9Router](https://github.com/decolua/9router)
-by [decolua](https://github.com/decolua), released under the MIT license. The original
-copyright notice and license terms are preserved in [LICENSE](LICENSE).
-
-The token-saving pipeline builds on ideas from several open-source projects:
-
-- [RTK](https://github.com/rtk-ai/rtk): a Rust token saver whose compression approach
-  inspired the JavaScript implementation in KeyRouter.
-- [CLIProxyAPI](https://github.com/router-for-me/CLIProxyAPI): the original Go
-  implementation that inspired this JavaScript port.
-
-Many thanks to their authors.
+| Doc | What's in it |
+| --- | --- |
+| [`DOCKER.md`](DOCKER.md) | Docker & docker-compose, image tags, verified digests, publishing |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Executors, streaming pipeline, OAuth, DB schema, env matrix |
+| [`gitbook/content/en/index.md`](gitbook/content/en/index.md) | Full documentation site (EN, plus JA / ZH / ES / PT / FA) |
+| [`CHANGELOG.md`](CHANGELOG.md) | Every release, auto-generated from commits |
+| npm | <https://www.npmjs.com/package/keyrouter> |
 
 ---
 
-## License
+## 🙏 Acknowledgments
 
-MIT License. See [LICENSE](LICENSE).
+KeyRouter is a derivative and rebrand of [9Router](https://github.com/decolua/9router) by [decolua](https://github.com/decolua), released under the MIT license. The original copyright notice and license terms are preserved in [LICENSE](LICENSE).
+
+The token-saving pipeline builds on ideas from [RTK](https://github.com/rtk-ai/rtk) (Rust token saver) and [CLIProxyAPI](https://github.com/router-for-me/CLIProxyAPI) (the Go implementation that inspired this JavaScript port). Many thanks to their authors.
+
+---
+
+## 📄 License
+
+MIT — see [LICENSE](LICENSE).
