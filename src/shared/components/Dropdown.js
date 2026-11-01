@@ -85,7 +85,7 @@ export default function Dropdown({
         <div
           role="listbox"
           className={cn(
-            "absolute z-30 mt-2 overflow-hidden rounded-xl border border-border bg-surface p-1 shadow-[var(--shadow-elevated)]",
+            "absolute z-30 mt-2 min-w-full w-max max-w-[280px] overflow-hidden rounded-xl border border-border bg-surface p-1 shadow-[var(--shadow-elevated)]",
             align === "right" ? "right-0" : "left-0",
             menuClassName
           )}

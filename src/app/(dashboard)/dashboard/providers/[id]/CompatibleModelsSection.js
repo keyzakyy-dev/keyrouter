@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import PropTypes from "prop-types";
-import { Button } from "@/shared/components";
+import { Button, Modal } from "@/shared/components";
 import { getProviderCustomModelRows } from "@/shared/utils/providerCustomModels";
 function CompatibleModelRow({ modelId, fullModel, copied, onCopy, onDeleteAlias, onTest, testStatus, isTesting }) {
   const borderColor = testStatus === "ok"
@@ -77,6 +77,9 @@ export default function CompatibleModelsSection({ providerStorageAlias, provider
   const [importing, setImporting] = useState(false);
   const [testingModelId, setTestingModelId] = useState(null);
   const [modelTestResults, setModelTestResults] = useState({});
+  // Single dialog state drives every /models import outcome (success, empty, error)
+  // so the section never falls back to the browser's native alert().
+  const [importDialog, setImportDialog] = useState(null);
 
   const handleTestModel = async (modelId) => {
     if (testingModelId) return;
@@ -107,7 +110,7 @@ export default function CompatibleModelsSection({ providerStorageAlias, provider
     if (!newModel.trim() || adding) return;
     const modelId = newModel.trim();
     if (allModels.some((model) => model.id === modelId)) {
-      alert("Model already exists for this provider.");
+      setImportDialog({ kind: "error", title: "Model exists", message: `Model "${modelId}" already exists for this provider.` });
       return;
     }
 
@@ -132,12 +135,12 @@ export default function CompatibleModelsSection({ providerStorageAlias, provider
       const res = await fetch(`/api/providers/${activeConnection.id}/models`);
       const data = await res.json();
       if (!res.ok) {
-        alert(data.error || "Failed to import models");
+        setImportDialog({ kind: "error", title: "Import failed", message: data.error || "Failed to import models from the /models endpoint." });
         return;
       }
       const models = data.models || [];
       if (models.length === 0) {
-        alert("No models returned from /models.");
+        setImportDialog({ kind: "info", title: "Nothing to import", message: "The /models endpoint returned no models for this connection." });
         return;
       }
       let importedCount = 0;
@@ -149,10 +152,13 @@ export default function CompatibleModelsSection({ providerStorageAlias, provider
         importedCount += 1;
       }
       if (importedCount === 0) {
-        alert("No new models were added.");
+        setImportDialog({ kind: "info", title: "Nothing to import", message: `All ${models.length} models returned by /models already exist for this provider.` });
+        return;
       }
+      setImportDialog({ kind: "success", title: "Import complete", message: `${importedCount} new model${importedCount === 1 ? "" : "s"} imported from /models (${models.length} fetched, ${models.length - importedCount} already existed).` });
     } catch (error) {
       console.log("Error importing models:", error);
+      setImportDialog({ kind: "error", title: "Import failed", message: "Could not reach the provider's /models endpoint. Check the connection and retry." });
     } finally {
       setImporting(false);
     }
@@ -162,7 +168,7 @@ export default function CompatibleModelsSection({ providerStorageAlias, provider
 
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-sm text-text-muted">
+      <p className="font-mono text-[10px] uppercase tracking-wider text-text-subtle">
         Add {isAnthropic ? "Anthropic" : "OpenAI"}-compatible models manually or import them from the /models endpoint.
       </p>
 
@@ -210,6 +216,29 @@ export default function CompatibleModelsSection({ providerStorageAlias, provider
           ))}
         </div>
       )}
+
+      <Modal
+        isOpen={!!importDialog}
+        onClose={() => setImportDialog(null)}
+        title={importDialog?.title}
+        size="sm"
+        footer={
+          <Button size="sm" onClick={() => setImportDialog(null)}>
+            Close
+          </Button>
+        }
+      >
+        <div className="flex items-start gap-3">
+          <span
+            className={`material-symbols-outlined text-[22px] ${
+              importDialog?.kind === "success" ? "text-green-500" : importDialog?.kind === "error" ? "text-red-500" : "text-primary"
+            }`}
+          >
+            {importDialog?.kind === "success" ? "check_circle" : importDialog?.kind === "error" ? "error" : "info"}
+          </span>
+          <p className="text-sm text-text-muted">{importDialog?.message}</p>
+        </div>
+      </Modal>
     </div>
   );
 }

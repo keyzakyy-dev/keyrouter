@@ -52,37 +52,6 @@ function getProviderName(providerId, cache) {
   return providerConfig?.name || providerId;
 }
 
-function CollapsibleSection({ title, children, defaultOpen = false, icon = null }) {
-  const [isOpen, setIsOpen] = useState(defaultOpen);
-  
-  return (
-    <div className="border border-border-subtle rounded-lg overflow-hidden">
-      <button 
-        type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between p-3 bg-bg-subtle/60 hover:bg-bg-subtle transition-colors"
-      >
-        <div className="flex items-center gap-2">
-          {icon && <span className="material-symbols-outlined text-[18px] text-primary dark:text-primary">{icon}</span>}
-          <span className="font-semibold text-sm text-text-main">{title}</span>
-        </div>
-        <span className={cn(
-          "material-symbols-outlined text-[20px] text-text-muted transition-transform duration-200",
-          isOpen ? "rotate-90" : ""
-        )}>
-          chevron_right
-        </span>
-      </button>
-      
-      {isOpen && (
-        <div className="p-4 border-t border-border-subtle">
-          {children}
-        </div>
-      )}
-    </div>
-  );
-}
-
 function getCachedTokens(tokens) {
   return tokens?.cached_tokens || tokens?.cache_read_input_tokens || 0;
 }
@@ -98,6 +67,242 @@ function getInputTokens(tokens) {
   // rows don't under-report input.
   const cache = getCachedTokens(tokens);
   return prompt < cache ? cache : prompt;
+}
+
+function MetricTile({ label, value, hint, accent }) {
+  return (
+    <div className="flex min-w-0 flex-col gap-0.5 rounded-lg border border-border-subtle bg-bg-subtle/50 px-3 py-2">
+      <span className="font-mono text-[9px] uppercase tracking-wider text-text-subtle">{label}</span>
+      <span
+        className={cn(
+          "truncate font-mono text-sm tabular-nums",
+          accent === "danger" ? "text-danger" : accent === "success" ? "text-success" : accent === "primary" ? "text-primary" : "text-text-main"
+        )}
+        title={String(value)}
+      >
+        {value}
+      </span>
+      {hint && <span className="truncate font-mono text-[9px] text-text-subtle">{hint}</span>}
+    </div>
+  );
+}
+
+function isRedacted(value) {
+  return value && typeof value === "object" && value.redacted === true;
+}
+
+function JsonBlock({ value, tone = "default", maxHeight = "max-h-[420px]" }) {
+  const [copied, setCopied] = useState(false);
+  const redacted = isRedacted(value);
+  const text = typeof value === "string" ? value : JSON.stringify(value, null, 2);
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      // clipboard unavailable (insecure context) — leave the button inert
+    }
+  };
+
+  const tones = {
+    default: "border-border-subtle bg-bg-subtle text-text-main",
+    warn: "border-warning/40 bg-warning/10 text-warning",
+    ok: "border-success/40 bg-success/10 text-text-main",
+  };
+
+  return (
+    <div className="relative">
+      {redacted ? (
+        <div className="flex items-start gap-2 rounded-lg border border-border-subtle bg-bg-subtle/50 p-3 text-xs text-text-muted sm:p-4">
+          <span className="material-symbols-outlined shrink-0 text-[16px]">lock</span>
+          <span>
+            Conversation payload is redacted by the usage API — only metadata (tokens, latency) is kept.
+          </span>
+        </div>
+      ) : (
+        <>
+          <button
+            type="button"
+            onClick={copy}
+            className="absolute right-2 top-2 z-10 flex items-center gap-1 rounded-md border border-border-subtle bg-surface/90 px-2 py-1 font-mono text-[10px] uppercase tracking-wider text-text-subtle transition-colors hover:text-text-main"
+          >
+            <span className="material-symbols-outlined text-[14px]">{copied ? "check" : "content_copy"}</span>
+            {copied ? "Copied" : "Copy"}
+          </button>
+          <pre
+            className={cn(
+              "max-w-full overflow-auto rounded-lg border p-3 font-mono text-xs sm:p-4",
+              maxHeight,
+              tones[tone] || tones.default
+            )}
+          >
+            {text}
+          </pre>
+        </>
+      )}
+    </div>
+  );
+}
+
+function SectionTitle({ icon, children }) {
+  return (
+    <h4 className="mb-2 flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider text-text-subtle">
+      {icon && <span className="material-symbols-outlined text-[14px]">{icon}</span>}
+      {children}
+    </h4>
+  );
+}
+
+function DetailDrawerBody({ detail, providerName }) {
+  const [activeTab, setActiveTab] = useState("request");
+  const input = getInputTokens(detail.tokens);
+  const cached = getCachedTokens(detail.tokens);
+  const cacheWrite = getCacheCreationTokens(detail.tokens);
+  const output = detail.tokens?.completion_tokens || 0;
+  const isError = detail.status && detail.status !== "success";
+
+  const tabs = [
+    { value: "request", label: "Request", icon: "input", available: detail.request !== undefined },
+    { value: "providerRequest", label: "Translated", icon: "translate", available: detail.providerRequest !== undefined },
+    { value: "providerResponse", label: "Raw", icon: "data_object", available: detail.providerResponse !== undefined },
+    { value: "response", label: "Response", icon: "output", available: detail.response !== undefined },
+  ].filter((tab) => tab.available);
+  const current = tabs.find((tab) => tab.value === activeTab) || tabs[0];
+
+  const cacheHitRate = input > 0 && cached > 0 ? Math.round((cached / input) * 100) : 0;
+
+  return (
+    <div className="space-y-4">
+      {/* Identity row */}
+      <div className="flex flex-wrap items-center gap-2">
+        <span
+          className={cn(
+            "inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider",
+            isError ? "bg-danger/15 text-danger" : "bg-success/15 text-success"
+          )}
+        >
+          <span className={cn("size-1.5 rounded-full", isError ? "bg-danger" : "bg-success")} />
+          {detail.status || "unknown"}
+        </span>
+        <span className="truncate font-mono text-sm text-text-main" title={detail.model}>
+          {detail.model}
+        </span>
+        <span className="text-text-subtle">·</span>
+        <span className="truncate text-xs text-text-muted" title={providerName}>{providerName}</span>
+        <span className="ml-auto whitespace-nowrap font-mono text-[10px] text-text-subtle tabular-nums">
+          {new Date(detail.timestamp).toLocaleString()}
+        </span>
+      </div>
+
+      {/* Metric strip */}
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+        <MetricTile label="TTFT" value={`${detail.latency?.ttft || 0}ms`} />
+        <MetricTile label="Total" value={`${detail.latency?.total || 0}ms`} accent={isError ? "danger" : undefined} />
+        <MetricTile label="Input" value={input.toLocaleString()} hint={cacheHitRate ? `${cacheHitRate}% cached` : undefined} />
+        <MetricTile label="Output" value={output.toLocaleString()} />
+        <MetricTile label="Cached" value={cached > 0 ? cached.toLocaleString() : "–"} accent={cached > 0 ? "primary" : undefined} />
+        <MetricTile label="Cache Write" value={cacheWrite > 0 ? cacheWrite.toLocaleString() : "–"} />
+        <MetricTile
+          label="Total Tokens"
+          value={(input + output).toLocaleString()}
+          hint={output > 0 ? `${(input / output).toFixed(1)}:1 in/out` : undefined}
+        />
+        <MetricTile label="Request ID" value={detail.id?.slice(0, 18) || "–"} hint="click row for full" />
+      </div>
+
+      {/* PXPIPE */}
+      {detail.pxpipe && (
+        <div className="rounded-lg border border-border-subtle p-3">
+          <div className="mb-2 flex items-center gap-2">
+            <span className="material-symbols-outlined text-[16px] text-primary">image</span>
+            <span className="font-mono text-[10px] uppercase tracking-wider text-text-subtle">pxpipe</span>
+            <span
+              className={cn(
+                "rounded px-1.5 py-0.5 font-mono text-[10px] uppercase",
+                detail.pxpipe.applied ? "bg-success/15 text-success" : "bg-warning/15 text-warning"
+              )}
+            >
+              {detail.pxpipe.applied ? "applied" : "skipped"}
+            </span>
+          </div>
+          {detail.pxpipe.applied ? (
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+              <MetricTile label="Before" value={`${(detail.pxpipe.tokensBeforeEst || 0).toLocaleString()}`} hint="est. tokens" />
+              <MetricTile label="After" value={`${(detail.pxpipe.tokensAfterEst || 0).toLocaleString()}`} hint="est. tokens" />
+              <MetricTile label="Saved" value={`${detail.pxpipe.savedPct || 0}%`} accent="success" />
+              <MetricTile label="Images" value={detail.pxpipe.imageCount || 0} hint={`${detail.pxpipe.durationMs || 0}ms`} />
+            </div>
+          ) : (
+            <p className="text-xs text-text-muted">
+              Reason: <span className="font-mono text-text-main">{detail.pxpipe.reason}</span>
+              {detail.pxpipe.detail ? ` — ${detail.pxpipe.detail}` : ""}
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* Payload tabs */}
+      <div className="flex flex-wrap gap-1 rounded-lg border border-border-subtle bg-bg-subtle/60 p-1">
+        {tabs.map((tab) => (
+          <button
+            key={tab.value}
+            type="button"
+            onClick={() => setActiveTab(tab.value)}
+            className={cn(
+              "flex items-center gap-1.5 rounded-md px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-wider transition-colors",
+              current?.value === tab.value
+                ? "bg-surface text-text-main shadow-[var(--shadow-soft)]"
+                : "text-text-muted hover:text-text-main"
+            )}
+          >
+            <span className="material-symbols-outlined text-[14px]">{tab.icon}</span>
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="min-h-[200px]">
+        {current?.value === "request" && (
+          <JsonBlock value={detail.request} maxHeight="max-h-[460px]" />
+        )}
+
+        {current?.value === "providerRequest" && (
+          <JsonBlock value={detail.providerRequest} maxHeight="max-h-[460px]" />
+        )}
+
+        {current?.value === "providerResponse" && (
+          <JsonBlock value={detail.providerResponse} maxHeight="max-h-[460px]" />
+        )}
+
+        {current?.value === "response" && (
+          <div className="space-y-3">
+            {isRedacted(detail.response) ? (
+              <JsonBlock value={detail.response} />
+            ) : (
+              <>
+                {detail.response?.thinking && (
+                  <div>
+                    <SectionTitle icon="psychology">Thinking process</SectionTitle>
+                    <JsonBlock value={detail.response.thinking} tone="warn" maxHeight="max-h-[240px]" />
+                  </div>
+                )}
+                <div>
+                  <SectionTitle icon="chat">Content</SectionTitle>
+                  <JsonBlock value={detail.response?.content || "[No content]"} maxHeight="max-h-[420px]" />
+                </div>
+              </>
+            )}
+          </div>
+        )}
+
+        {!current && (
+          <p className="text-sm text-text-muted">No payload captured for this request.</p>
+        )}
+      </div>
+    </div>
+  );
 }
 
 export default function RequestDetailsTab() {
@@ -181,11 +386,11 @@ export default function RequestDetailsTab() {
   };
 
   return (
-    <div className="flex min-w-0 flex-col gap-6">
-      <Card padding="md">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="flex min-w-0 flex-col gap-2">
-            <label className="text-sm font-medium text-text-main">Provider</label>
+    <div className="flex min-w-0 flex-col gap-5">
+      <Card padding="none">
+        <div className="flex flex-wrap items-end gap-3 p-4">
+          <div className="flex min-w-0 flex-col gap-1.5">
+            <label htmlFor="rd-provider-filter" className="font-mono text-[10px] uppercase tracking-wider text-text-subtle">Provider</label>
             <Dropdown
               value={filters.provider}
               onChange={(v) => setFilters({ ...filters, provider: v })}
@@ -197,72 +402,87 @@ export default function RequestDetailsTab() {
                 "h-9 px-3 rounded-lg",
                 "text-sm text-text-main w-full min-w-0"
               )}
-              className="w-full min-w-0"
+              className="w-full min-w-[180px]"
             />
           </div>
-          
-          <div className="flex min-w-0 flex-col gap-2">
-            <label htmlFor="start-date-filter" className="text-sm font-medium text-text-main">Start Date</label>
+
+          <div className="flex min-w-0 flex-col gap-1.5">
+            <label htmlFor="start-date-filter" className="font-mono text-[10px] uppercase tracking-wider text-text-subtle">Start</label>
             <input
               id="start-date-filter"
               type="datetime-local"
               value={filters.startDate}
               onChange={(e) => setFilters({ ...filters, startDate: e.target.value })}
               className={cn(
-                "h-9 px-3 rounded-lg border border-border bg-surface",
-                "w-full min-w-0 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-primary/20"
+                "h-9 px-3 rounded-lg border border-border bg-surface font-mono tabular-nums",
+                "w-full min-w-0 text-xs text-text-main focus:outline-none focus:ring-2 focus:ring-primary/20"
               )}
             />
           </div>
 
-          <div className="flex min-w-0 flex-col gap-2">
-            <label htmlFor="end-date-filter" className="text-sm font-medium text-text-main">End Date</label>
+          <div className="flex min-w-0 flex-col gap-1.5">
+            <label htmlFor="end-date-filter" className="font-mono text-[10px] uppercase tracking-wider text-text-subtle">End</label>
             <input
               id="end-date-filter"
               type="datetime-local"
               value={filters.endDate}
               onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
               className={cn(
-                "h-9 px-3 rounded-lg border border-border bg-surface",
-                "w-full min-w-0 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-primary/20"
+                "h-9 px-3 rounded-lg border border-border bg-surface font-mono tabular-nums",
+                "w-full min-w-0 text-xs text-text-main focus:outline-none focus:ring-2 focus:ring-primary/20"
               )}
             />
           </div>
-          
-          <div className="flex min-w-0 flex-col gap-2 sm:col-span-2 lg:col-span-1">
-            <span className="hidden text-sm font-medium text-text-main opacity-0 lg:block" aria-hidden="true">Clear</span>
-            <Button 
-              variant="ghost" 
-              onClick={handleClearFilters}
-              disabled={!filters.provider && !filters.startDate && !filters.endDate}
-              className="w-full"
-            >
-              Clear Filters
-            </Button>
-          </div>
+
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleClearFilters}
+            disabled={!filters.provider && !filters.startDate && !filters.endDate}
+            className="h-9"
+          >
+            <span className="material-symbols-outlined text-[16px]">filter_alt_off</span>
+            Reset
+          </Button>
+
+          <span className="ml-auto self-end pb-2 font-mono text-[10px] uppercase tracking-wider text-text-subtle tabular-nums">
+            {pagination.totalItems.toLocaleString()} request{pagination.totalItems === 1 ? "" : "s"}
+          </span>
         </div>
       </Card>
 
       <Card padding="none">
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[880px]">
-            <thead>
-              <tr className="border-b border-border-subtle">
-                <th className="text-left p-4 text-sm font-semibold text-text-main">Timestamp</th>
-                <th className="text-left p-4 text-sm font-semibold text-text-main">Model</th>
-                <th className="text-left p-4 text-sm font-semibold text-text-main">Provider</th>
-                <th className="text-right p-4 text-sm font-semibold text-text-main">Input Tokens</th>
-                <th className="text-right p-4 text-sm font-semibold text-text-main">Cached</th>
-                <th className="text-right p-4 text-sm font-semibold text-text-main">Cache Creation</th>
-                <th className="text-right p-4 text-sm font-semibold text-text-main">Output Tokens</th>
-                <th className="text-left p-4 text-sm font-semibold text-text-main">Latency</th>
-                <th className="text-center p-4 text-sm font-semibold text-text-main">Action</th>
+        <div className="max-h-[calc(100vh-340px)] overflow-auto">
+          <table className="w-full min-w-[920px] border-separate border-spacing-0">
+            <thead className="sticky top-0 z-10">
+              <tr>
+                {[
+                  { label: "Time", align: "left" },
+                  { label: "Model", align: "left" },
+                  { label: "Provider", align: "left" },
+                  { label: "Input", align: "right" },
+                  { label: "Cached", align: "right" },
+                  { label: "Cache W", align: "right" },
+                  { label: "Output", align: "right" },
+                  { label: "Latency", align: "right" },
+                  { label: "", align: "right" },
+                ].map((col) => (
+                  <th
+                    key={col.label}
+                    className={cn(
+                      "whitespace-nowrap border-b border-border-subtle bg-bg-subtle px-3 py-2.5 font-mono text-[10px] font-medium uppercase tracking-wider text-text-subtle",
+                      col.align === "right" ? "text-right" : "text-left"
+                    )}
+                  >
+                    {col.label}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="7" className="p-8 text-center text-text-muted">
+                  <td colSpan="9" className="p-10 text-center text-text-muted">
                     <div className="flex items-center justify-center gap-2">
                       <span className="material-symbols-outlined animate-spin text-[20px]">progress_activity</span>
                       Loading...
@@ -271,56 +491,78 @@ export default function RequestDetailsTab() {
                 </tr>
               ) : details.length === 0 ? (
                 <tr>
-                  <td colSpan="7" className="p-8 text-center text-text-muted">
-                    No request details found
+                  <td colSpan="9" className="p-12 text-center">
+                    <div className="flex flex-col items-center gap-2 text-text-muted">
+                      <span className="material-symbols-outlined text-[28px] text-text-subtle">receipt_long</span>
+                      <span className="text-sm">No request details for this range</span>
+                      <span className="font-mono text-[10px] uppercase tracking-wider text-text-subtle">
+                        Widen the date filter or send traffic through the proxy
+                      </span>
+                    </div>
                   </td>
                 </tr>
               ) : (
-                details.map((detail, index) => (
-                  <tr
-                    key={`${detail.id}-${index}`}
-                    className="border-b border-border-subtle last:border-b-0 hover:bg-surface-2/50 transition-colors"
-                  >
-                    <td className="whitespace-nowrap p-4 text-sm text-text-main">
-                      {new Date(detail.timestamp).toLocaleString()}
-                    </td>
-                    <td className="max-w-[260px] truncate p-4 font-mono text-sm text-text-main">
-                      {detail.model}
-                    </td>
-                    <td className="max-w-[180px] truncate p-4 text-sm text-text-main">
-                       <span className="font-medium">
-                         {getProviderName(detail.provider, providerNameCache)}
-                       </span>
-                     </td>
-                    <td className="p-4 text-sm text-text-main text-right font-mono">
-                      {getInputTokens(detail.tokens).toLocaleString()}
-                    </td>
-                    <td className="p-4 text-sm text-text-main text-right font-mono">
-                      {getCachedTokens(detail.tokens) > 0 ? getCachedTokens(detail.tokens).toLocaleString() : "-"}
-                    </td>
-                    <td className="p-4 text-sm text-text-main text-right font-mono">
-                      {getCacheCreationTokens(detail.tokens) > 0 ? getCacheCreationTokens(detail.tokens).toLocaleString() : "-"}
-                    </td>
-                    <td className="p-4 text-sm text-text-main text-right font-mono">
-                      {detail.tokens?.completion_tokens?.toLocaleString() || 0}
-                    </td>
-                    <td className="p-4 text-sm text-text-muted">
-                      <div className="flex flex-col gap-0.5">
-                        <div>TTFT: <span className="font-mono">{detail.latency?.ttft || 0}ms</span></div>
-                        <div>Total: <span className="font-mono">{detail.latency?.total || 0}ms</span></div>
-                      </div>
-                    </td>
-                    <td className="p-4 text-center">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleViewDetail(detail)}
-                      >
-                        Detail
-                      </Button>
-                    </td>
-                  </tr>
-                ))
+                details.map((detail, index) => {
+                  const isError = detail.status && detail.status !== "success";
+                  return (
+                    <tr
+                      key={`${detail.id}-${index}`}
+                      className="group cursor-pointer transition-colors hover:bg-surface-2/60"
+                      onClick={() => handleViewDetail(detail)}
+                    >
+                      <td className="whitespace-nowrap border-b border-border-subtle/60 px-3 py-2.5">
+                        <div className="flex items-center gap-2">
+                          <span
+                            className={cn(
+                              "size-1.5 shrink-0 rounded-full",
+                              isError ? "bg-danger" : "bg-success"
+                            )}
+                            title={detail.status}
+                          />
+                          <span className="font-mono text-xs text-text-main tabular-nums">
+                            {new Date(detail.timestamp).toLocaleString()}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="max-w-[240px] border-b border-border-subtle/60 px-3 py-2.5">
+                        <span className="block truncate font-mono text-xs text-text-main" title={detail.model}>
+                          {detail.model}
+                        </span>
+                      </td>
+                      <td className="max-w-[160px] border-b border-border-subtle/60 px-3 py-2.5">
+                        <span className="block truncate text-xs text-text-muted" title={getProviderName(detail.provider, providerNameCache)}>
+                          {getProviderName(detail.provider, providerNameCache)}
+                        </span>
+                      </td>
+                      <td className="border-b border-border-subtle/60 px-3 py-2.5 text-right font-mono text-xs text-text-main tabular-nums">
+                        {getInputTokens(detail.tokens).toLocaleString()}
+                      </td>
+                      <td className="border-b border-border-subtle/60 px-3 py-2.5 text-right font-mono text-xs tabular-nums">
+                        <span className={getCachedTokens(detail.tokens) > 0 ? "text-primary" : "text-text-subtle"}>
+                          {getCachedTokens(detail.tokens) > 0 ? getCachedTokens(detail.tokens).toLocaleString() : "–"}
+                        </span>
+                      </td>
+                      <td className="border-b border-border-subtle/60 px-3 py-2.5 text-right font-mono text-xs tabular-nums">
+                        <span className={getCacheCreationTokens(detail.tokens) > 0 ? "text-text-main" : "text-text-subtle"}>
+                          {getCacheCreationTokens(detail.tokens) > 0 ? getCacheCreationTokens(detail.tokens).toLocaleString() : "–"}
+                        </span>
+                      </td>
+                      <td className="border-b border-border-subtle/60 px-3 py-2.5 text-right font-mono text-xs text-text-main tabular-nums">
+                        {detail.tokens?.completion_tokens?.toLocaleString() || 0}
+                      </td>
+                      <td className="border-b border-border-subtle/60 px-3 py-2.5 text-right font-mono text-xs tabular-nums">
+                        <span className="text-text-subtle">{detail.latency?.ttft || 0}</span>
+                        <span className="text-text-subtle">/</span>
+                        <span className="text-text-main">{detail.latency?.total || 0}ms</span>
+                      </td>
+                      <td className="border-b border-border-subtle/60 px-3 py-2.5 text-right">
+                        <span className="material-symbols-outlined text-[18px] text-text-subtle transition-colors group-hover:text-primary group-hover:translate-x-0.5">
+                          chevron_right
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>
@@ -346,159 +588,11 @@ export default function RequestDetailsTab() {
         width="lg"
       >
         {selectedDetail && (
-          <div className="space-y-6">
-            <div className="grid min-w-0 grid-cols-1 gap-4 text-sm sm:grid-cols-2">
-              <div>
-                <span className="text-text-muted">ID:</span>{" "}
-                <span className="break-all font-mono text-text-main">{selectedDetail.id}</span>
-              </div>
-              <div>
-                <span className="text-text-muted">Timestamp:</span>{" "}
-                <span className="text-text-main">{new Date(selectedDetail.timestamp).toLocaleString()}</span>
-              </div>
-              <div>
-                 <span className="text-text-muted">Provider:</span>{" "}
-                 <span className="text-text-main font-medium">{getProviderName(selectedDetail.provider, providerNameCache)}</span>
-               </div>
-              <div>
-                <span className="text-text-muted">Model:</span>{" "}
-                <span className="text-text-main font-mono">{selectedDetail.model}</span>
-              </div>
-              <div>
-                <span className="text-text-muted">Status:</span>{" "}
-                <span className={cn(
-                  "font-medium",
-                  selectedDetail.status === "success" ? "text-success" : "text-danger"
-                )}>
-                  {selectedDetail.status}
-                </span>
-              </div>
-              <div>
-                <span className="text-text-muted">Latency:</span>{" "}
-                <span className="text-text-main font-mono">
-                  TTFT {selectedDetail.latency?.ttft || 0}ms / Total {selectedDetail.latency?.total || 0}ms
-                </span>
-              </div>
-              <div>
-                <span className="text-text-muted">Input Tokens:</span>{" "}
-                <span className="text-text-main font-mono">
-                  {getInputTokens(selectedDetail.tokens).toLocaleString()}
-                </span>
-              </div>
-              {getCachedTokens(selectedDetail.tokens) > 0 && (
-                <div>
-                  <span className="text-text-muted">Cached Tokens:</span>{" "}
-                  <span className="text-text-main font-mono">
-                    {getCachedTokens(selectedDetail.tokens).toLocaleString()}
-                  </span>
-                </div>
-              )}
-              {getCacheCreationTokens(selectedDetail.tokens) > 0 && (
-                <div>
-                  <span className="text-text-muted">Cache Creation:</span>{" "}
-                  <span className="text-text-main font-mono">
-                    {getCacheCreationTokens(selectedDetail.tokens).toLocaleString()}
-                  </span>
-                </div>
-              )}
-              <div>
-                <span className="text-text-muted">Output Tokens:</span>{" "}
-                <span className="text-text-main font-mono">
-                  {selectedDetail.tokens?.completion_tokens?.toLocaleString() || 0}
-                </span>
-              </div>
-            </div>
-
-            {selectedDetail.pxpipe && (
-              <div className="rounded-lg border border-border-subtle p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="material-symbols-outlined text-[18px] text-primary dark:text-primary">image</span>
-                  <span className="font-semibold text-sm text-text-main">PXPIPE</span>
-                  <span className={cn(
-                    "text-xs px-2 py-0.5 rounded",
-                    selectedDetail.pxpipe.applied
-                      ? "bg-success/15 text-success"
-                      : "bg-warning/15 text-warning"
-                  )}>
-                    {selectedDetail.pxpipe.applied ? "Activated" : "Skipped"}
-                  </span>
-                </div>
-                {selectedDetail.pxpipe.applied ? (
-                  <div className="grid grid-cols-2 gap-2 text-sm sm:grid-cols-4">
-                    <div>
-                      <span className="text-text-muted block text-xs">Original (est.)</span>
-                      <span className="font-mono">{(selectedDetail.pxpipe.tokensBeforeEst || 0).toLocaleString()} tokens</span>
-                    </div>
-                    <div>
-                      <span className="text-text-muted block text-xs">Compressed (est.)</span>
-                      <span className="font-mono">{(selectedDetail.pxpipe.tokensAfterEst || 0).toLocaleString()} tokens</span>
-                    </div>
-                    <div>
-                      <span className="text-text-muted block text-xs">Saved</span>
-                      <span className="font-mono text-success">{selectedDetail.pxpipe.savedPct || 0}%</span>
-                    </div>
-                    <div>
-                      <span className="text-text-muted block text-xs">Images</span>
-                      <span className="font-mono">{selectedDetail.pxpipe.imageCount || 0} ({selectedDetail.pxpipe.durationMs || 0}ms)</span>
-                    </div>
-                  </div>
-                ) : (
-                  <p className="text-sm text-text-muted">
-                    Reason: <span className="font-mono">{selectedDetail.pxpipe.reason}</span>
-                    {selectedDetail.pxpipe.detail ? ` - ${selectedDetail.pxpipe.detail}` : ""}
-                  </p>
-                )}
-              </div>
-            )}
-
-            <div className="space-y-4">
-              <CollapsibleSection title="1. Client Request (Input)" defaultOpen={true} icon="input">
-                <pre className="max-h-[300px] max-w-full overflow-auto rounded-lg border border-border-subtle bg-bg-subtle p-3 font-mono text-xs text-text-main sm:p-4">
-                  {JSON.stringify(selectedDetail.request, null, 2)}
-                </pre>
-              </CollapsibleSection>
-
-              {selectedDetail.providerRequest && (
-                <CollapsibleSection title="2. Provider Request (Translated)" icon="translate">
-                  <pre className="max-h-[300px] max-w-full overflow-auto rounded-lg border border-border-subtle bg-bg-subtle p-3 font-mono text-xs text-text-main sm:p-4">
-                    {JSON.stringify(selectedDetail.providerRequest, null, 2)}
-                  </pre>
-                </CollapsibleSection>
-              )}
-
-              {selectedDetail.providerResponse && (
-                <CollapsibleSection title="3. Provider Response (Raw)" icon="data_object">
-                  <pre className="max-h-[300px] max-w-full overflow-auto rounded-lg border border-border-subtle bg-bg-subtle p-3 font-mono text-xs text-text-main sm:p-4">
-                    {typeof selectedDetail.providerResponse === 'object'
-                      ? JSON.stringify(selectedDetail.providerResponse, null, 2)
-                      : selectedDetail.providerResponse
-                    }
-                  </pre>
-                </CollapsibleSection>
-              )}
-              
-              <CollapsibleSection title="4. Client Response (Final)" defaultOpen={true} icon="output">
-                {selectedDetail.response?.thinking && (
-                  <div className="mb-4">
-                    <h4 className="font-semibold text-text-main mb-2 flex items-center gap-2 text-xs uppercase tracking-wide opacity-70">
-                      <span className="material-symbols-outlined text-[16px] text-primary dark:text-primary">psychology</span>
-                      Thinking Process
-                    </h4>
-                    <pre className="max-h-[200px] max-w-full overflow-auto rounded-lg border border-warning/40 bg-warning/10 p-3 font-mono text-xs text-warning sm:p-4">
-                      {selectedDetail.response.thinking}
-                    </pre>
-                  </div>
-                )}
-                
-                <h4 className="font-semibold text-text-main mb-2 text-xs uppercase tracking-wide opacity-70">
-                  Content
-                </h4>
-                <pre className="max-h-[300px] max-w-full overflow-auto rounded-lg border border-border-subtle bg-bg-subtle p-3 font-mono text-xs text-text-main sm:p-4">
-                  {selectedDetail.response?.content || "[No content]"}
-                </pre>
-              </CollapsibleSection>
-            </div>
-          </div>
+          <DetailDrawerBody
+            key={selectedDetail.id}
+            detail={selectedDetail}
+            providerName={getProviderName(selectedDetail.provider, providerNameCache)}
+          />
         )}
       </Drawer>
     </div>

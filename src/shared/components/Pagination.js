@@ -44,10 +44,10 @@ export default function Pagination({
     >
       {/* Info text */}
       {totalItems > 0 && (
-        <div className="text-sm text-text-muted">
-          Showing <span className="font-medium text-text-main">{startItem}</span> to{" "}
-          <span className="font-medium text-text-main">{endItem}</span> of{" "}
-          <span className="font-medium text-text-main">{totalItems}</span> results
+        <div className="font-mono text-[10px] uppercase tracking-wider text-text-subtle tabular-nums">
+          Showing <span className="text-text-main">{startItem}</span> to{" "}
+          <span className="text-text-main">{endItem}</span> of{" "}
+          <span className="text-text-main">{totalItems}</span> results
         </div>
       )}
 
@@ -55,12 +55,13 @@ export default function Pagination({
         {/* Page size selector */}
         {onPageSizeChange && (
           <div className="flex items-center gap-2">
-            <span className="text-sm text-text-muted">Rows:</span>
+            <span className="font-mono text-[10px] uppercase tracking-wider text-text-subtle">Rows:</span>
             <Dropdown
               value={pageSize}
               onChange={(v) => onPageSizeChange(Number(v))}
               options={[10, 20, 50].map((size) => ({ value: size, label: String(size) }))}
-              buttonClassName="h-9 min-w-[70px] py-1"
+              buttonClassName="h-8 min-w-[64px] px-2 font-mono text-xs tabular-nums"
+              menuClassName="bottom-full mt-0 mb-2"
             />
           </div>
         )}
