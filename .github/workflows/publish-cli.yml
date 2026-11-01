@@ -52,8 +52,10 @@ jobs:
             console.log(`publishing ${tag}`);
           '
 
-      - run: npm ci --omit=optional
-      - run: npm ci --omit=optional
+      # The repo does not commit package-lock.json (see .gitignore), so this is
+      # npm install — release builds still resolve the same semver ranges.
+      - run: npm install --omit=optional --no-audit --no-fund
+      - run: npm install --omit=optional --no-audit --no-fund
         working-directory: cli
 
       # Same build as `npm publish` locally (prepublishOnly → build-cli.js).
