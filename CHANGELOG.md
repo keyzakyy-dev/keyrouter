@@ -1,6 +1,9 @@
-# v1.0.5 (2026-11-01)
+# v1.0.6 (2026-11-01)
 
 ## Features
+- **Usage**: redesigned Request Details tab — 8-tile metric strip (latency split per stage, tokens, cost), PXPIPE card, and payload tabs (Request / Translated / Raw / Response) with copy-to-JSON blocks replacing the old accordions; redacted payloads now render as an explanatory card instead of `{"redacted": true}`
+- **Usage**: filter toolbar moved into the table header — sticky mono-uppercase header, status dots, `tabular-nums` alignment, compact `TTFT/Total` latency, chevron row targets, and an explicit empty state
+- **Providers**: model import now reports its outcome (imported/skipped/failed) in a modal instead of a native browser `alert()`
 - **CLI**: the system tray now ships the same brand mark as the dashboard header (Windows `icon.ico` at 16/24/32/48/64, macOS/Linux `icon.png` at 64×64)
 
 ## Fixes
@@ -10,6 +13,12 @@
 - **Profile**: keep the Security icon visible in dark mode, unify backup/password actions as secondary buttons, and use font-display on both buttons
 - **Endpoint**: align empty-state title/caption and item title typography with the dashboard
 - **CLI Tools**: consistent light/dark theming and fonts, plus self-hosted CJK/Arabic/Devanagari font subsets
+- **Login**: route glyph in the brand tile, and an idle glow/sweep on the "KeyRouter Proxy" wordmark
+- **Navigation**: table pagination counter and rows-per-page menu (opens upward, sized to its content)
+
+# v1.0.5 (2026-10-31)
+
+The `1.0.5` tarball on npm was built before the branding and usage work above; this release supersedes it.
 
 # v1.0.4 (2026-10-31)
 
