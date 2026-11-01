@@ -1,3 +1,8 @@
+# v1.0.7 (2026-11-01)
+
+## Fixes
+- **ci**: bump checkout/setup-node actions to v6 (Node 20 deprecation)
+
 # v1.0.6 (2026-11-01)
 
 ## Features
