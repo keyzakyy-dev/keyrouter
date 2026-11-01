@@ -141,8 +141,6 @@ export default function LoginPage() {
   const ssoTitle =
     activeSsoType === "saml" ? "SAML 2.0 Single Sign-On" : "OIDC Single Sign-On";
 
-  const isSsoMode = samlAvailable || oidcAvailable;
-
   if (hasPassword === null) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-bg p-4">
@@ -270,25 +268,19 @@ export default function LoginPage() {
           {/* Brand — centered */}
           <div className="mb-8 flex flex-col items-center text-center">
             <div className="grid size-14 place-items-center rounded-2xl bg-primary text-white shadow-[var(--shadow-warm)] dark:text-black">
-              <span className="material-symbols-outlined text-[26px]">hub</span>
+              {/* ponytail: inline fontSize because the material-symbols vendor css
+                  (unlayered) overrides Tailwind's layered text-* utilities on
+                  .material-symbols-outlined app-wide; upgrade = layer the package
+                  import / drop its font-size so utilities win. */}
+              <span className="material-symbols-outlined leading-none" style={{ fontSize: 32 }}>route</span>
             </div>
-            <h1 className="mt-4 font-display text-2xl font-semibold tracking-tight text-text-main">
+            <h1 className="login-brand-sheen mt-4 font-display text-2xl font-semibold tracking-tight text-text-main">
               {APP_CONFIG.name}
+              <span aria-hidden="true" className="login-brand-sheen-layer">{APP_CONFIG.name}</span>
             </h1>
             <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.2em] text-text-subtle">
               v{APP_CONFIG.versionLabel}
             </p>
-          </div>
-
-          {/* Access header — left */}
-          <div className="mb-7 text-left">
-            <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-text-subtle">
-              {isSsoMode ? "Single sign-on" : "Access control"}
-            </p>
-            <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight text-text-main">
-              Sign in
-            </h2>
-
           </div>
 
           {/* SSO options */}

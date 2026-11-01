@@ -202,9 +202,9 @@ function initUnixTray(options) {
 
     const menu = {
       icon: getIconBase64(),
-      // The bundled icon.png is a full-color RGBA logo. Don't mark it as a
-      // template icon: macOS would then render it as a solid white square
-      // because template mode only uses the alpha channel.
+      // The bundled icon.png is a full-color RGBA logo (same mark as the web
+      // favicon). Don't mark it as a template icon: macOS would then render it
+      // as a solid white square because template mode only uses the alpha channel.
       isTemplateIcon: false,
       title: "",
       tooltip: `KeyRouter - Port ${port}`,
