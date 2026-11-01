@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./images/keyrouter.png" alt="KeyRouter dashboard" width="820"/>
+<img src="./public/icons/icon-512.svg" alt="KeyRouter logo" width="72"/>
 
 # KeyRouter
 
@@ -144,6 +144,17 @@ Cursor and other GUI tools: paste the endpoint + key manually per the table abov
 
 ---
 
+## 📸 Screenshots
+
+| | |
+| --- | --- |
+| **Endpoint** — base URL, remote access tunnel & API keys | **Providers** — 40+ providers, multi-account with live status |
+| ![Endpoint page](images/endpoint.png) | ![Providers page](images/providers.png) |
+| **CLI** — one-shot `keyrouter connect` wires 9 coding tools | **Prompt Injection** — global, per-key, and chat-script variants |
+| ![CLI tools page](images/cli.png) | ![Prompt injection page](images/prompt_injection.png) |
+
+---
+
 ## 🗺 How it works
 
 ```text
@@ -154,7 +165,7 @@ Cursor and other GUI tools: paste the endpoint + key manually per the table abov
          ▼
 ┌─────────────────────────────────────────────┐
 │              KeyRouter (router)             │
-│  1. Auth your API key (+ per-key limits)    │
+│  1. Auth your API key (+ per-key access)    │
 │  2. RTK Token Saver compresses tool output  │
 │  3. Translate format: OpenAI ↔ Claude ↔     │
 │     Gemini ↔ Kiro ↔ Vertex ↔ Cursor         │
@@ -177,7 +188,7 @@ Deep dive (executors, streaming, OAuth flows, DB schema): [`docs/ARCHITECTURE.md
 | **RTK Token Saver** | Compresses `git diff`, `grep`, `ls` and friends in-place | 20–40% cheaper requests, fail-open (never breaks your call) |
 | **Format translation** | OpenAI ↔ Claude ↔ Gemini ↔ Kiro ↔ Vertex ↔ Cursor | One endpoint into any CLI tool |
 | **Usage analytics** | Tokens, cost, latency per request — filterable, exportable | See exactly where money goes |
-| **Per-key limits** | Token budgets + request rate per API key (HTTP 429) | Share with a team or resell safely |
+| **Per-key model access** | Restrict each API key to specific combos and models | Share the endpoint without exposing every provider |
 | **Prompt injection** | System prompts / chat scripts per key, model or global | Router-level personas, no tool config needed |
 | **Proxy pools** | Health checks, rotation, dead-pool cleanup | Keeps big key fleets alive |
 | **Request log** | Live console with per-request detail and redaction | Debug any call in seconds |
@@ -267,7 +278,7 @@ Yes — `kr/` prefixes a **combo**: a KeyRouter-defined model mix with its own f
 <details>
 <summary><b>Can I run it on a shared server and keep it private?</b></summary>
 
-Yes — that's exactly what per-key limits + `INITIAL_PASSWORD` + `BASE_URL` + HTTPS (put it behind nginx/Caddy) are for. Authentication is session-based for the dashboard and API-key-based for `/v1`.
+Yes — that's exactly what per-key model access + `INITIAL_PASSWORD` + `BASE_URL` + HTTPS (put it behind nginx/Caddy) are for. Authentication is session-based for the dashboard and API-key-based for `/v1`.
 </details>
 
 <details>
@@ -281,7 +292,7 @@ Yes — **Kiro AI** (free Claude) and **OpenCode Free** work without any login, 
 ## 🗺 Roadmap
 
 - [x] `keyrouter connect` one-shot tool config
-- [x] Per-key token budgets & rate limits
+- [x] Per-key model access control
 - [x] Trusted publishing (releases are provenance-signed from CI)
 - [ ] Cloud sync dashboard for multi-instance deployments (`CLOUD_URL`)
 - [ ] Request replay / diff between two providers for the same payload
@@ -310,6 +321,19 @@ For bugs → [Issues](https://github.com/keyzakyy-dev/keyrouter/issues) · Quest
 
 ---
 
+## ⚖️ KeyRouter vs 9Router vs 9Router Pro
+
+| | [9Router](https://github.com/decolua/9router) | [9Router Pro](https://github.com/giienew/9router-pro) | **KeyRouter** |
+| --- | --- | --- | --- |
+| Positioning | Origin — free AI router & token saver | Pro fork — prompts & quotas | Development fork — 9Router base + Pro features + extras |
+| Token savers | RTK, Headroom, Caveman, Ponytail | Same | Same + PXPIPE image compression |
+| Prompt injection (global / per-key / per-model) | ❌ | ✅ | ✅ |
+| Per-key control | ❌ | ✅ quotas & rate limits | ✅ model access |
+| Modalities | Chat, image, speech, embeddings | Same | Same + video, search, web fetch |
+| Extra tooling | Proxy pools | Proxy pools + health checks | Proxy pools, MITM proxy, remote access, MCP plugins |
+
+---
+
 ## 📚 Documentation
 
 | Doc | What's in it |
@@ -324,7 +348,7 @@ For bugs → [Issues](https://github.com/keyzakyy-dev/keyrouter/issues) · Quest
 
 ## 🙏 Acknowledgments
 
-KeyRouter is a derivative and rebrand of [9Router](https://github.com/decolua/9router) by [decolua](https://github.com/decolua), released under the MIT license. The original copyright notice and license terms are preserved in [LICENSE](LICENSE).
+KeyRouter is a derivative and rebrand of [9Router](https://github.com/decolua/9router) by [decolua](https://github.com/decolua), with ideas from [9Router Pro](https://github.com/giienew/9router-pro) by [Gienetic](https://github.com/giienew). Both released under the MIT license. The original copyright notice and license terms are preserved in [LICENSE](LICENSE).
 
 The token-saving pipeline builds on ideas from [RTK](https://github.com/rtk-ai/rtk) (Rust token saver) and [CLIProxyAPI](https://github.com/router-for-me/CLIProxyAPI) (the Go implementation that inspired this JavaScript port). Many thanks to their authors.
 
