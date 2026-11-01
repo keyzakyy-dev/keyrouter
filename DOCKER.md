@@ -1,6 +1,6 @@
 # Docker
 
-Run KeyRouter in a container. Published image: [`keyzakyy-dev/keyrouter`](https://hub.docker.com/r/keyzakyy-dev/keyrouter) — multi-platform `linux/amd64` + `linux/arm64`.
+Run KeyRouter in a container. Published image: [`keyzakyy/keyrouter`](https://hub.docker.com/r/keyzakyy/keyrouter) — multi-platform `linux/amd64` + `linux/arm64`.
 
 ---
 
@@ -14,7 +14,7 @@ docker run -d \
   -v "$HOME/.keyrouter:/app/data" \
   -e DATA_DIR=/app/data \
   --name keyrouter \
-  keyzakyy-dev/keyrouter:latest
+  keyzakyy/keyrouter:latest
 ```
 
 App listens on port `20131`. Open: http://localhost:20131
@@ -61,7 +61,7 @@ docker run -d \
   -e HOSTNAME=0.0.0.0 \
   -e DEBUG=true \
   --name keyrouter \
-  keyzakyy-dev/keyrouter:latest
+  keyzakyy/keyrouter:latest
 ```
 
 ## Optional Headroom sidecar
@@ -71,7 +71,7 @@ The KeyRouter image does not bundle Python or Headroom. To use Headroom in Docke
 ```yaml
 services:
   keyrouter:
-    image: keyzakyy-dev/keyrouter:latest
+    image: keyzakyy/keyrouter:latest
     ports:
       - "20131:20131"
     volumes:
@@ -95,7 +95,7 @@ If Headroom runs on the Docker host instead of as a sidecar, use `http://host.do
 ## Update to latest
 
 ```bash
-docker pull keyzakyy-dev/keyrouter:latest
+docker pull keyzakyy/keyrouter:latest
 docker rm -f keyrouter
 # re-run the quick start command
 ```
@@ -103,7 +103,7 @@ docker rm -f keyrouter
 To pin a specific version instead of following `latest`, use a numbered image tag:
 
 ```bash
-docker pull keyzakyy-dev/keyrouter:0.5.81
+docker pull keyzakyy/keyrouter:0.5.81
 ```
 
 ---
@@ -135,7 +135,7 @@ docker build \
 Push a Docker-safe semver git tag `vX.Y.Z` (or a prerelease such as `vX.Y.Z-rc.1`) → GitHub Actions builds `linux/amd64` and `linux/arm64` on native runners, health-checks each platform image, verifies the resulting manifest and `/api/health`, then publishes:
 
 - `ghcr.io/keyzakyy-dev/keyrouter:X.Y.Z` + `:latest`
-- `keyzakyy-dev/keyrouter:X.Y.Z` + `:latest`
+- `keyzakyy/keyrouter:X.Y.Z` + `:latest`
 
 The `v` prefix is used only for the git tag; image tags omit it. A stable tag push promotes `latest`, but a prerelease tag such as `vX.Y.Z-rc.1` publishes only its numbered image by default. Prereleases require an explicit manual `promote_latest` opt-in. Promotion happens only after both native platform builds, both platform health checks, manifest inspection, and the resolved-manifest smoke test succeed. A failed or timed-out platform build therefore cannot move `latest`.
 
@@ -166,7 +166,7 @@ promote_latest:  true
 Numbered image tags are mutable because a republish can replace their manifest. For a deployment that must be immutable, pin the image digest instead:
 
 ```bash
-docker pull keyzakyy-dev/keyrouter@sha256:<verified-digest>
+docker pull keyzakyy/keyrouter@sha256:<verified-digest>
 ```
 
 The release workflow runs `/api/health` on each native `amd64` and `arm64` platform image before it uploads the digest artifact or assembles the multi-platform manifest. It then runs a second health check against the resolved version manifest before any requested `latest` promotion.
@@ -180,7 +180,7 @@ The upstream repository needs these repository secrets for Docker Hub publishing
 - `DOCKERHUB_USERNAME`
 - `DOCKERHUB_TOKEN`
 
-GHCR publishing uses the workflow's `GITHUB_TOKEN` with package write permission. Forks can publish to their own GHCR namespace, but Docker Hub publication is restricted to the upstream `keyzakyy-dev/keyrouter` repository.
+GHCR publishing uses the workflow's `GITHUB_TOKEN` with package write permission. Forks can publish to their own GHCR namespace, but Docker Hub publication is restricted to the upstream `keyzakyy/keyrouter` Docker Hub image.
 
 The optional repository variables `ALPINE_MIRROR` and `NPM_REGISTRY` can override the default package mirrors used by the CI Docker build.
 

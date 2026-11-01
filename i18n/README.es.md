@@ -9,7 +9,7 @@
   
   [![npm](https://img.shields.io/npm/v/keyrouter.svg)](https://www.npmjs.com/package/keyrouter)
   [![Downloads](https://img.shields.io/npm/dm/keyrouter.svg)](https://www.npmjs.com/package/keyrouter)
-  [![Docker Pulls](https://img.shields.io/docker/pulls/keyzakyy-dev/keyrouter.svg?logo=docker&label=Docker%20pulls)](https://hub.docker.com/r/keyzakyy-dev/keyrouter)
+  [![Docker Pulls](https://img.shields.io/docker/pulls/keyzakyy/keyrouter.svg?logo=docker&label=Docker%20pulls)](https://hub.docker.com/r/keyzakyy/keyrouter)
   [![GHCR](https://img.shields.io/badge/GHCR-keyzakyy-dev%2Fkeyrouter-blue?logo=github)](https://github.com/keyzakyy-dev/keyrouter/pkgs/container/keyrouter)
   [![License](https://img.shields.io/npm/l/keyrouter.svg)](https://github.com/keyzakyy-dev/keyrouter/blob/main/LICENSE)
 
@@ -1159,7 +1159,7 @@ pm2 startup
 
 Imágenes publicadas (multi-plataforma `linux/amd64` + `linux/arm64`):
 
-- Docker Hub: [`keyzakyy-dev/keyrouter`](https://hub.docker.com/r/keyzakyy-dev/keyrouter)
+- Docker Hub: [`keyzakyy/keyrouter`].docker.com/r/keyzakyy/keyrouter)
 - GHCR: [`ghcr.io/keyzakyy-dev/keyrouter`](https://github.com/keyzakyy-dev/keyrouter/pkgs/container/keyrouter)
 
 **Inicio rápido (usa la imagen publicada):**
@@ -1170,7 +1170,7 @@ docker run -d \
   -p 20131:20131 \
   -v "$HOME/.keyrouter:/app/data" \
   -e DATA_DIR=/app/data \
-  keyzakyy-dev/keyrouter:latest
+  keyzakyy/keyrouter:latest
 ```
 
 → Abre http://localhost:20131
@@ -1196,7 +1196,7 @@ docker run -d --name keyrouter -p 20131:20131 \
 docker logs -f keyrouter
 docker restart keyrouter
 docker stop keyrouter && docker rm keyrouter
-docker pull keyzakyy-dev/keyrouter:latest   # actualiza a la última versión
+docker pull keyzakyy/keyrouter:latest   # actualiza a la última versión
 ```
 
 **Persistencia de datos:** `$HOME/.keyrouter/db/data.sqlite` en el host ↔ `/app/data/db/data.sqlite` en el contenedor.

@@ -876,7 +876,7 @@ docker run -d \
   -v keyrouter-data:/app/data \
   -e PORT=20131 \
   -e BASE_URL=http://localhost:20131 \
-  ghcr.io/keyzakyy-dev/keyrouter:latest
+  ghcr.io/keyzakyy/keyrouter:latest
 ```
 
 Dashboard: `http://localhost:20131/dashboard`

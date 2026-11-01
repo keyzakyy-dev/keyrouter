@@ -63,10 +63,10 @@ docker run -d --name keyrouter \
   -p 20131:20131 \
   -v "$HOME/.keyrouter:/app/data" \
   -e DATA_DIR=/app/data \
-  keyzakyy-dev/keyrouter:latest
+  keyzakyy/keyrouter:latest
 ```
 
-Published images are available on [Docker Hub](https://hub.docker.com/r/keyzakyy-dev/keyrouter)
+Published images are available on [Docker Hub](https://hub.docker.com/r/keyzakyy/keyrouter)
 and [GHCR](https://github.com/keyzakyy-dev/keyrouter/pkgs/container/keyrouter) for
 amd64 and arm64.
 

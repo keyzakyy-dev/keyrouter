@@ -9,7 +9,7 @@
 
 [![npm](https://img.shields.io/npm/v/keyrouter.svg)](https://www.npmjs.com/package/keyrouter)
 [![Downloads](https://img.shields.io/npm/dm/keyrouter.svg)](https://www.npmjs.com/package/keyrouter)
-[![Docker Pulls](https://img.shields.io/docker/pulls/keyzakyy-dev/keyrouter.svg?logo=docker&label=Docker%20pulls)](https://hub.docker.com/r/keyzakyy-dev/keyrouter)
+[![Docker Pulls](https://img.shields.io/docker/pulls/keyzakyy/keyrouter.svg?logo=docker&label=Docker%20pulls)](https://hub.docker.com/r/keyzakyy/keyrouter)
 [![GHCR](https://img.shields.io/badge/GHCR-keyzakyy-dev%2Fkeyrouter-blue?logo=github)](https://github.com/keyzakyy-dev/keyrouter/pkgs/container/keyrouter)
 [![License](https://img.shields.io/npm/l/keyrouter.svg)](https://github.com/keyzakyy-dev/keyrouter/blob/main/LICENSE)
 
@@ -56,10 +56,10 @@ npx keyrouter
 ```bash
 docker run -d --name keyrouter -p 20131:20131 \
   -v "$HOME/.keyrouter:/app/data" -e DATA_DIR=/app/data \
-  keyzakyy-dev/keyrouter:latest
+  keyzakyy/keyrouter:latest
 ```
 
-Published images: [Docker Hub](https://hub.docker.com/r/keyzakyy-dev/keyrouter) • [GHCR](https://github.com/keyzakyy-dev/keyrouter/pkgs/container/keyrouter) (multi-platform amd64/arm64).
+Published images: [Docker Hub](https://hub.docker.com/r/keyzakyy/keyrouter) • [GHCR](https://github.com/keyzakyy-dev/keyrouter/pkgs/container/keyrouter) (multi-platform amd64/arm64).
 
 🎉 Dashboard opens at `http://localhost:20131`
 

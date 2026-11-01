@@ -24,7 +24,7 @@ concurrency:
   queue: max
 
 env:
-  DOCKERHUB_IMAGE: keyzakyy-dev/keyrouter
+  DOCKERHUB_IMAGE: keyzakyy/keyrouter
 
 jobs:
   prepare:
