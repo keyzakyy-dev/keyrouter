@@ -239,6 +239,29 @@ export default function ModelSelectModal({
     if (isOpen) fetchDisabledModels();
   }, [isOpen]);
 
+  // Prompt-injection variants (custom-named models) are fetched internally so the
+  // "Injected Model" section shows in every model picker, not just the prompt-injection
+  // page. The `variants` prop (when passed) acts as an immediate initial value.
+  const [fetchedVariants, setFetchedVariants] = useState(null);
+
+  const fetchVariants = async () => {
+    try {
+      const res = await fetch("/api/prompt-injection", { cache: "no-store" });
+      if (!res.ok) throw new Error(`Failed to fetch variants: ${res.status}`);
+      const data = await res.json();
+      setFetchedVariants(data.variants || {});
+    } catch (error) {
+      console.error("Error fetching variants:", error);
+      setFetchedVariants({});
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen) fetchVariants();
+  }, [isOpen]);
+
+  const effectiveVariants = fetchedVariants !== null ? fetchedVariants : variants;
+
   const allProviders = useMemo(() => ({ ...OAUTH_PROVIDERS, ...FREE_PROVIDERS, ...FREE_TIER_PROVIDERS, ...APIKEY_PROVIDERS }), []);
 
   // Group models by provider with priority order
@@ -536,15 +559,15 @@ export default function ModelSelectModal({
   const variantEntries = useMemo(() => {
     if (kindFilter || capFilter) return [];
     let list = [];
-    if (Array.isArray(variants)) {
-      list = variants.map((v) => (typeof v === "string" ? { name: v, value: v } : { name: v?.name, value: v?.name || v?.model, model: v?.model }));
-    } else if (variants && typeof variants === "object") {
-      list = Object.entries(variants).map(([name, v]) => ({ name, value: name, model: v?.model }));
+    if (Array.isArray(effectiveVariants)) {
+      list = effectiveVariants.map((v) => (typeof v === "string" ? { name: v, value: v } : { name: v?.name, value: v?.name || v?.model, model: v?.model }));
+    } else if (effectiveVariants && typeof effectiveVariants === "object") {
+      list = Object.entries(effectiveVariants).map(([name, v]) => ({ name, value: name, model: v?.model }));
     }
     list = list.filter((v) => v && typeof v.name === "string" && v.name.trim());
     if (parsedQuery.isEmpty) return list;
     return list.filter((v) => matchesSearch(v.name, parsedQuery));
-  }, [variants, parsedQuery, kindFilter, capFilter]);
+  }, [effectiveVariants, parsedQuery, kindFilter, capFilter]);
 
   // Sort models alphabetically, with added models floated to top
   const sortModels = (models) => {
