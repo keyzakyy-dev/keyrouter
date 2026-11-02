@@ -1,6 +1,6 @@
 {
   "name": "keyrouter",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "KeyRouter CLI - Start and manage KeyRouter server",
   "repository": {
     "type": "git",

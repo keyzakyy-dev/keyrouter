@@ -1,3 +1,10 @@
+# v1.0.8 (2026-11-02)
+
+## Fixes
+- **model-select**: fetch prompt-injection variants so Injected Model section shows in every picker
+- **docker**: publish images under the keyzakyy Docker Hub namespace
+- **ci**: install optional deps so the Next build resolves native/external modules
+
 # v1.0.7 (2026-11-01)
 
 ## Fixes
