@@ -2,6 +2,13 @@
 // requests with HTTP 405 code 3012 "unusual activity" unless the body carries
 // the exact stock ZCode system prefix.
 // Matches verified prefix (ZCode 3.16.3 capture, seg0 + seg1).
+//
+// Provenance: these two strings are the system prefix sent by the ZCode CLI
+// (version 3.16.3) on its own requests, captured from that client's traffic on
+// 2026-11-06. They are reproduced verbatim on purpose — the gateway compares
+// them, so trimming, rewording, or translating any part of them makes every
+// request fail with 405/3012. This file exists solely for interoperability with
+// a client the user is entitled to run; it is not derived from KeyRouter code.
 
 export const ZCODE_SYSTEM_PROMPTS = [
   "You are ZCode, an interactive coding agent",
