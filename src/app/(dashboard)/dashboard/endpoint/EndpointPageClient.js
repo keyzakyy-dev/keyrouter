@@ -789,7 +789,7 @@ export default function APIPageClient({ machineId }) {
         </div>
       </Card>
 
-      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[1fr_520px] lg:items-stretch">
+      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_520px] lg:items-stretch">
         {/* Left column: remote access */}
         <div className="flex flex-col">
           <Card className="h-full">
@@ -805,7 +805,7 @@ export default function APIPageClient({ machineId }) {
                   toneLabel={tunnelLabel}
                 >
                   {tunnelEnabled && !tunnelLoading && tunnelReachable ? (
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
                       <UrlField
                         value={`${tunnelPublicUrl || tunnelUrl}/v1`}
                         copyId="tunnel_url"
@@ -818,6 +818,7 @@ export default function APIPageClient({ machineId }) {
                         variant="outline"
                         icon="power_settings_new"
                         onClick={() => setShowDisableTunnelModal(true)}
+                        className="self-start sm:self-auto"
                       >
                         Stop
                       </Button>
@@ -910,7 +911,7 @@ export default function APIPageClient({ machineId }) {
                   toneLabel={tsLabel}
                 >
                   {tsEnabled && !tsLoading && tsReachable ? (
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
                       <UrlField
                         value={`${tsUrl}/v1`}
                         copyId="ts_url"
@@ -923,6 +924,7 @@ export default function APIPageClient({ machineId }) {
                         variant="outline"
                         icon="power_settings_new"
                         onClick={() => setShowDisableTsModal(true)}
+                        className="self-start sm:self-auto"
                       >
                         Stop
                       </Button>

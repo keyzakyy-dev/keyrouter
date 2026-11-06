@@ -14,7 +14,7 @@ export default function UrlField({ value, copyId, copied, onCopy, size = "sm", o
   return (
     <div
       className={cn(
-        "flex items-center gap-2 rounded-md border bg-surface pl-3 pr-1",
+        "flex min-w-0 items-center gap-2 rounded-md border bg-surface pl-3 pr-1",
         "border-border focus-within:border-text-subtle focus-within:ring-1 focus-within:ring-text-subtle/50 transition",
         large ? "h-11" : "h-9",
         className

@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { getProviderIconSrc, markProviderIconMissing } from "@/shared/utils/providerIcon";
+import { getProviderIconSrc, markProviderIconMissing, needsDarkInvert } from "@/shared/utils/providerIcon";
 import { Card, Button, Badge, Input, Modal, CardSkeleton, OAuthModal, KiroOAuthWrapper, CursorAuthModal, ZedAuthModal, XiaomiMimoAuthModal, IFlowCookieModal, GitLabAuthModal, Toggle, Checkbox, Select, EditConnectionModal, NoAuthProxyCard, ConfirmModal } from "@/shared/components";
 import Dropdown from "@/shared/components/Dropdown";
 import { OAUTH_PROVIDERS, APIKEY_PROVIDERS, FREE_PROVIDERS, FREE_TIER_PROVIDERS, WEB_COOKIE_PROVIDERS, getProviderAlias, isOpenAICompatibleProvider, isAnthropicCompatibleProvider, AI_PROVIDERS } from "@/shared/constants/providers";
@@ -1430,7 +1430,7 @@ export default function ProviderDetailPage() {
                   alt={providerInfo.name}
                   width={44}
                   height={44}
-                  className="max-h-11 max-w-11 rounded-lg object-contain sm:max-h-12 sm:max-w-12"
+                  className={`max-h-11 max-w-11 rounded-lg object-contain sm:max-h-12 sm:max-w-12${needsDarkInvert(getHeaderIconPath()) ? " dark:invert" : ""}`}
                   sizes="44px"
                   onError={() => {
                     markProviderIconMissing(providerInfo.id);

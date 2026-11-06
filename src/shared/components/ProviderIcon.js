@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import PropTypes from "prop-types";
-import { getProviderIconSrc, markProviderIconMissing } from "@/shared/utils/providerIcon";
+import { getProviderIconSrc, markProviderIconMissing, needsDarkInvert } from "@/shared/utils/providerIcon";
 
 function resolveSrc(src, providerId) {
   if (providerId) return getProviderIconSrc(providerId);
@@ -23,6 +23,8 @@ export default function ProviderIcon({
 }) {
   const effectiveSrc = resolveSrc(src, providerId);
   const [errored, setErrored] = useState(false);
+  // Black-on-transparent brand marks vanish on dark surfaces; invert just those.
+  const invertClass = needsDarkInvert(effectiveSrc) ? " dark:invert" : "";
 
   if (!effectiveSrc || errored) {
     return (
@@ -46,7 +48,7 @@ export default function ProviderIcon({
       alt={alt}
       width={size}
       height={size}
-      className={className}
+      className={`${className}${invertClass}`}
       loading="lazy"
       decoding="async"
       onError={() => {

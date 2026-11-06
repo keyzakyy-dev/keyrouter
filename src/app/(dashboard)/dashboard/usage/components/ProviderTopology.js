@@ -14,7 +14,7 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { AI_PROVIDERS } from "@/shared/constants/providers";
-import { getProviderIconSrc, markProviderIconMissing } from "@/shared/utils/providerIcon";
+import { getProviderIconSrc, markProviderIconMissing, needsDarkInvert } from "@/shared/utils/providerIcon";
 
 // Force-stop FE animation if a provider stays active longer than this
 const FE_ACTIVE_TIMEOUT_MS = 60000;
@@ -56,7 +56,7 @@ function ProviderNode({ data }) {
           <img
             src={imageUrl}
             alt={label}
-            className="size-5 rounded-sm object-contain"
+            className={`size-5 rounded-sm object-contain${needsDarkInvert(imageUrl) ? " dark:invert" : ""}`}
             loading="lazy"
             decoding="async"
             onError={() => {

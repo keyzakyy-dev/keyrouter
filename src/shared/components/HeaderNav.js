@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/shared/utils/cn";
@@ -46,7 +46,7 @@ function NavLinkItem({ item, active }) {
 
 export default function HeaderNav() {
   const pathname = usePathname();
-  const isPathActive = (href) => pathname.startsWith(href);
+  const navRef = useRef(null);
 
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -56,6 +56,25 @@ export default function HeaderNav() {
   const { copied, copy } = useCopyToClipboard(2000);
 
   const INSTALL_CMD = UPDATER_CONFIG.installCmdLatest;
+
+  // Vertical wheel → horizontal scroll on the nav strip. Non-passive listener so
+  // preventDefault can stop the page from scrolling; at either end the event is
+  // left alone so the wheel keeps doing its normal job.
+  useEffect(() => {
+    const el = navRef.current;
+    if (!el) return;
+    const onWheel = (e) => {
+      if (e.deltaX !== 0) return; // horizontal input already works natively
+      if (el.scrollWidth <= el.clientWidth) return;
+      const atStart = el.scrollLeft <= 0;
+      const atEnd = el.scrollLeft >= el.scrollWidth - el.clientWidth - 1;
+      if ((e.deltaY < 0 && atStart) || (e.deltaY > 0 && atEnd)) return;
+      e.preventDefault();
+      el.scrollLeft += e.deltaY;
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -120,7 +139,7 @@ export default function HeaderNav() {
 
   return (
     <>
-      <nav className="scrollbar-hide flex w-full items-center overflow-x-auto">
+      <nav ref={navRef} className="scrollbar-hide flex w-full items-center overflow-x-auto">
         <div className="flex items-center gap-0.5">
           {items.map((item) => (
             <NavLinkItem key={item.href} item={item} active={isActive(item.href)} />

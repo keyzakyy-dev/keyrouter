@@ -18,6 +18,32 @@ const ICON_ALIASES = {
   "chatgpt-web": "openai",
 };
 
+// Logos shipped black-on-transparent — invisible on dark surfaces, so invert them there.
+const DARK_ONLY_IDS = new Set([
+  "oai-cc",
+  "oai-r",
+  "anthropic-m",
+  "vercel",
+  "vercel-ai-gateway",
+  "venice",
+  "ollama",
+  "ollama-local",
+  "elevenlabs",
+  "chutes",
+  "novita",
+  "featherless",
+  "windsurf",
+  "kilo-gateway",
+  "tavily",
+]);
+
+/** True when the icon file is a black monochrome mark that needs `dark:invert`. Accepts id or src. */
+export function needsDarkInvert(providerIdOrSrc) {
+  const raw = String(providerIdOrSrc || "");
+  const base = raw.split("/").pop().replace(/\.(png|svg|webp)$/i, "");
+  return DARK_ONLY_IDS.has(normalizeId(ICON_ALIASES[base] || base));
+}
+
 // Runtime only — first 404 remembers id for the whole session
 const failedIds = new Set();
 
