@@ -1,3 +1,12 @@
+# v1.1.0 (2026-11-06)
+
+## Features
+- **providers**: serve GLM-5.3 free tokens through the ZCode Start Plan lane
+
+## Fixes
+- **tests**: repair the regression gate's path matching and the key-access mocks
+- **dashboard**: tighten endpoint layout, nav scroll, and dark-mode provider icons
+
 # v1.0.8 (2026-11-02)
 
 ## Fixes
