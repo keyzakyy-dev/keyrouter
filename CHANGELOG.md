@@ -1,3 +1,8 @@
+# v1.1.1 (2026-11-06)
+
+## Fixes
+- **providers**: rescue a paid GLM 429/1113 onto the ZCode start-plan lane
+
 # v1.1.0 (2026-11-06)
 
 ## Features
