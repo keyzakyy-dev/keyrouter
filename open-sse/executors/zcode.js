@@ -134,6 +134,17 @@ async function laneRejected(response) {
   return /"code"\s*:\s*"?\d+"?/.test(text) || /unusual activity|model not allowed/i.test(text);
 }
 
+// api.z.ai answers 429/1113 "Insufficient balance or no resource package" when
+// the coding-plan key exists but carries no entitlement. Having a key is proof
+// the account can mint one, not that it has quota — so this is the one paid
+// error the free lane is allowed to rescue, and only a start-plan model has a
+// bucket to rescue it into.
+async function paidLaneExhausted(response, model) {
+  if (!response || response.status !== 429 || !isStartModel(model)) return false;
+  const text = await response.clone().text().catch(() => "");
+  return /"?1113"?/.test(text) || /insufficient balance|no resource package/i.test(text);
+}
+
 export class ZcodeExecutor extends DefaultExecutor {
   constructor() {
     super("glm");
@@ -202,7 +213,27 @@ export class ZcodeExecutor extends DefaultExecutor {
 
   async execute(args) {
     const result = await super.execute(args);
-    if (!this.laneOn(args?.credentials, args?.model)) return result;
+    const { credentials, model } = args || {};
+    if (!this.laneOn(credentials, model)) {
+      // Not on the lane. A paid 429/1113 means the plan key has no entitlement
+      // left — the exact account the free Start Plan exists for. Retry once on
+      // the lane, on a throwaway opt-in copy so the choice is never persisted.
+      // An explicit `false` is the user saying "never route me here", so it wins.
+      if (credentials?.providerSpecificData?.__zcodeLane === false) return result;
+      if (!zcodeJwt(credentials) || !(await paidLaneExhausted(result?.response, model))) return result;
+      try {
+        await result.response.body?.cancel?.();
+      } catch {
+        // Already consumed.
+      }
+      return super.execute({
+        ...args,
+        credentials: {
+          ...credentials,
+          providerSpecificData: { ...(credentials?.providerSpecificData || {}), __zcodeLane: true },
+        },
+      });
+    }
     if (!(await laneRejected(result.response))) return result;
 
     // The lane credential itself is the JWT (pasted into the API-key field):

@@ -108,6 +108,87 @@ describe("lane gating", () => {
   });
 });
 
+describe("paid 429/1113 rescue", () => {
+  // A coding-plan key can be minted with no entitlement behind it: OAuth mints
+  // "id.secret" whatever the account owns. api.z.ai then answers 429/1113, which
+  // is exactly the account the free Start Plan bucket serves.
+  const paidCreds = () => ({ ...credentials(API_KEY), providerSpecificData: { zcodeJwtToken: JWT } });
+  const noopLog = { debug() {}, warn() {}, info() {}, error() {}, line() {}, errorLine() {} };
+  const rescue = (args) => executor.execute({ model: "glm-5.3", body: claudeBody(), stream: false, log: noopLog, ...args });
+
+  it("retries on the free lane when the paid key has no entitlement", async () => {
+    const calls = [];
+    const spy = vi.spyOn(DefaultExecutor.prototype, "execute").mockImplementation(async (args) => {
+      calls.push(args.credentials.providerSpecificData.__zcodeLane);
+      return calls.length === 1
+        ? { response: new Response('{"error":{"code":"1113","message":"[1113][Insufficient balance or no resource package. Please recharge.]"}}', { status: 429 }), url: "paid" }
+        : { response: new Response("{}", { status: 200 }), url: "lane" };
+    });
+    try {
+      const result = await rescue({ credentials: paidCreds() });
+      expect(result.response.status).toBe(200);
+      expect(result.url).toBe("lane");
+    } finally {
+      spy.mockRestore();
+    }
+    expect(calls).toEqual([undefined, true]);
+  });
+
+  it("leaves the caller's credentials untouched", async () => {
+    const original = paidCreds();
+    const spy = vi.spyOn(DefaultExecutor.prototype, "execute").mockResolvedValue({
+      response: new Response('{"error":{"code":"1113"}}', { status: 429 }), url: "paid",
+    });
+    try { await rescue({ credentials: original }); } finally { spy.mockRestore(); }
+    expect(original.providerSpecificData.__zcodeLane).toBeUndefined();
+  });
+
+  it("does not rescue a quota error the lane cannot pay for", async () => {
+    const spy = vi.spyOn(DefaultExecutor.prototype, "execute").mockResolvedValue({
+      response: new Response('{"error":{"code":"1302","message":"Rate limit reached"}}', { status: 429 }), url: "paid",
+    });
+    try {
+      const result = await rescue({ credentials: paidCreds() });
+      expect(result.url).toBe("paid");
+      expect(spy).toHaveBeenCalledTimes(1);
+    } finally { spy.mockRestore(); }
+  });
+
+  it("does not rescue a model the start-plan buckets do not cover", async () => {
+    const spy = vi.spyOn(DefaultExecutor.prototype, "execute").mockResolvedValue({
+      response: new Response('{"error":{"code":"1113"}}', { status: 429 }), url: "paid",
+    });
+    try {
+      const result = await rescue({ model: "glm-5.2", credentials: paidCreds() });
+      expect(result.url).toBe("paid");
+      expect(spy).toHaveBeenCalledTimes(1);
+    } finally { spy.mockRestore(); }
+  });
+
+  it("does not rescue a pasted JWT (nothing to fall back to)", async () => {
+    const spy = vi.spyOn(DefaultExecutor.prototype, "execute").mockResolvedValue({
+      response: new Response('{"error":{"code":"1113"}}', { status: 429 }), url: "paid",
+    });
+    try {
+      const result = await rescue({ credentials: credentials(JWT) });
+      expect(result.url).toBe("paid");
+      expect(spy).toHaveBeenCalledTimes(1);
+    } finally { spy.mockRestore(); }
+  });
+
+  it("honours an explicit lane opt-out", async () => {
+    const spy = vi.spyOn(DefaultExecutor.prototype, "execute").mockResolvedValue({
+      response: new Response('{"error":{"code":"1113"}}', { status: 429 }), url: "paid",
+    });
+    const creds = { ...paidCreds(), providerSpecificData: { zcodeJwtToken: JWT, __zcodeLane: false } };
+    try {
+      const result = await rescue({ credentials: creds });
+      expect(result.url).toBe("paid");
+      expect(spy).toHaveBeenCalledTimes(1);
+    } finally { spy.mockRestore(); }
+  });
+});
+
 describe("JWT shape", () => {
   it("accepts a three-segment JWS", () => {
     expect(looksLikeZcodeJwt(JWT)).toBe(true);
