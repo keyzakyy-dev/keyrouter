@@ -5,7 +5,7 @@ import { pipeWithDisconnect } from "../../utils/streamHandler.js";
 import { PROVIDERS } from "../../config/providers.js";
 import { HTTP_STATUS, STREAM_STALL_TIMEOUT_MS } from "../../config/runtimeConfig.js";
 import { buildAbortedResponsesTerminalBytes } from "../../utils/responsesStreamHelpers.js";
-import { buildStreamErrorBytes } from "../../utils/streamHelpers.js";
+import { buildStreamErrorBytes, buildJsonBodyToSSE } from "../../utils/streamHelpers.js";
 import { buildRequestDetail, extractRequestConfig, saveUsageStats, formatDoneLine } from "./requestDetail.js";
 import { saveRequestDetail } from "@/lib/usageDb.js";
 import { SSE_HEADERS_CORS as SSE_HEADERS } from "../../utils/sseConstants.js";
@@ -65,6 +65,30 @@ export async function handleStreamingResponse({ providerResponse, provider, mode
   // and clamped so untrusted upstream text never reaches the client verbatim
   // (the UI may render error.message as HTML).
   const upstreamContentType = (providerResponse.headers.get('content-type') || '').toLowerCase();
+
+  // A JSON body on the streaming path is not SSE and must never be piped
+  // through the SSE transform: the transform looks for "data:" lines, finds
+  // none, and emits only "[DONE]". Claude Code then sees no message_start and
+  // reports "usage.input_tokens" undefined — while the real cause (quota,
+  // concurrency, WAF block) is lost. Turn it into real SSE frames instead.
+  if (upstreamContentType.includes('application/json')) {
+    const bodyText = await providerResponse.text().catch(() => '');
+    let parsed = null;
+    try {
+      parsed = JSON.parse(bodyText);
+    } catch {
+      // Not JSON despite the header — fall through to the non-SSE guard below.
+    }
+    if (parsed) {
+      const frame = buildJsonBodyToSSE(parsed, providerResponse.status, sourceFormat);
+      streamController?.handleComplete?.();
+      return {
+        success: true,
+        response: new Response(frame, { headers: { ...SSE_HEADERS, ...upstreamResponseHeaders(providerResponse.headers) } }),
+      };
+    }
+  }
+
   if (upstreamContentType && !upstreamContentType.includes('text/event-stream') && !upstreamContentType.includes('application/json')) {
     const bodyText = await providerResponse.text().catch(() => '');
     const titleMatch = bodyText.match(/<title>([^<]+)<\/title>/i);

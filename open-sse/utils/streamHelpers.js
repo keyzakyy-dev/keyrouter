@@ -1,6 +1,7 @@
 import { FORMATS } from "../translator/formats.js";
 import { fallbackToolCallId } from "../translator/concerns/toolCall.js";
 import { buildErrorBody } from "./error.js";
+import { openAICompletionToClaudeMessage } from "../translator/concerns/claudeMessage.js";
 import { SSE_DONE } from "./sseConstants.js";
 
 const sharedEncoder = new TextEncoder();
@@ -189,4 +190,61 @@ export function buildStreamErrorBytes(statusCode, message, clientFormat) {
     : formatSSE({ error }, clientFormat) + SSE_DONE;
 
   return sharedEncoder.encode(sse);
+}
+
+// Does this JSON body report an upstream failure? Providers answer business
+// errors with HTTP 200 (Z.ai code 1005/3009, e.g. {"code":1005,"msg":"exceed
+// quota limit"}), so the status line alone cannot be trusted.
+function jsonErrorEnvelope(body) {
+  if (!body || typeof body !== "object") return null;
+  if (Array.isArray(body)) return null;
+  // OpenAI / Anthropic envelope
+  const nested = body.error;
+  if (nested && typeof nested === "object") {
+    const msg = typeof nested.message === "string" ? nested.message
+      : typeof body.msg === "string" ? body.msg : null;
+    if (msg) return { status: Number(nested.code) || null, message: msg };
+    if (typeof nested === "string" && nested) return { status: null, message: nested };
+  }
+  // Anthropic's own top-level error type
+  if (body.type === "error" && body.error) return jsonErrorEnvelope({ error: body.error });
+  // Z.ai business envelope: {code:<number>, msg:<string>} with no payload
+  if (typeof body.code === "number" && body.code !== 0 && typeof body.msg === "string") {
+    return { status: null, message: `[${body.code}]: ${body.msg}` };
+  }
+  return null;
+}
+
+// Convert a non-SSE JSON body into the SSE frames the client format expects.
+// A success body becomes one delta + a terminal frame carrying usage, so a
+// client that already committed to streaming still completes cleanly. An error
+// envelope becomes a real error frame — never an empty stream.
+export function buildJsonBodyToSSE(body, upstreamStatus, clientFormat) {
+  const err = jsonErrorEnvelope(body);
+  if (err) {
+    const status = err.status && err.status >= 400 && err.status <= 599
+      ? err.status
+      : (upstreamStatus >= 400 ? upstreamStatus : 502);
+    return new TextDecoder().decode(buildStreamErrorBytes(status, err.message, clientFormat));
+  }
+
+  if (clientFormat === FORMATS.CLAUDE) {
+    // Anthropic clients need message_start (which carries usage) before any
+    // content block, or they fail reading usage.input_tokens.
+    const message = openAICompletionToClaudeMessage(body);
+    return [
+      formatSSE({ type: "message_start", message: { ...message, content: [], stop_reason: null } }, FORMATS.CLAUDE),
+      ...(message.content || []).map((block, index) =>
+        block.type === "text"
+          ? formatSSE({ type: "content_block_start", index, content_block: { type: "text", text: "" } }, FORMATS.CLAUDE)
+            + formatSSE({ type: "content_block_delta", index, delta: { type: "text_delta", text: block.text || "" } }, FORMATS.CLAUDE)
+            + formatSSE({ type: "content_block_stop", index }, FORMATS.CLAUDE)
+          : formatSSE({ type: "content_block_start", index, content_block: block }, FORMATS.CLAUDE)
+            + formatSSE({ type: "content_block_stop", index }, FORMATS.CLAUDE)),
+      formatSSE({ type: "message_delta", delta: { stop_reason: message.stop_reason || "end_turn" }, usage: message.usage }, FORMATS.CLAUDE),
+      formatSSE({ type: "message_stop" }, FORMATS.CLAUDE),
+    ].join("");
+  }
+
+  return formatSSE(body, clientFormat) + SSE_DONE;
 }
