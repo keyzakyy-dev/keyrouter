@@ -127,8 +127,18 @@ const glm = {
       };
     }
 
-    // ready.accessToken is the Z.AI OAuth token — derive the coding-plan API key
-    const { planApiKey, businessToken } = await resolveCodingPlanApiKey(config, zaiAccessToken);
+    // ready.accessToken is the Z.AI OAuth token. Derive the coding-plan API key
+    // when the account has one; a free Start Plan account has no api_keys to
+    // copy, and the ZCode JWT below is a complete credential on its own — so an
+    // empty key must not fail the login (it would otherwise lock the free lane
+    // out of OAuth entirely).
+    let planApiKey = "";
+    let businessToken = "";
+    try {
+      ({ planApiKey, businessToken } = await resolveCodingPlanApiKey(config, zaiAccessToken));
+    } catch (error) {
+      console.warn(`[glm oauth] coding-plan key unavailable, keeping ZCode JWT only: ${error.message}`);
+    }
 
     return {
       ok: true,

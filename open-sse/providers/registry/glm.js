@@ -63,8 +63,13 @@ export default {
     },
   ],
   models: [
-    { id: "glm-5.3", name: "GLM 5.3" },
-    { id: "glm-5.3-flash", name: "GLM 5.3 Flash (Vision)" },
+    // The free start-plan lane lives on the Anthropic wire only (zcode.z.ai has
+    // no OpenAI-compatible path — every /openai/* probe 404s), so these two ids
+    // must be translated to the claude format even for OpenAI clients. Without
+    // the model-level targetFormat, chatCore picks the OpenAI transport for
+    // glm-5.3* and the executor would POST an OpenAI body to /v1/messages.
+    { id: "glm-5.3", name: "GLM 5.3", targetFormat: "claude", supportedFormats: ["claude"] },
+    { id: "glm-5.3-flash", name: "GLM 5.3 Flash (Vision)", targetFormat: "claude", supportedFormats: ["claude"] },
     { id: "glm-5.2", name: "GLM 5.2" },
     { id: "glm-5.1", name: "GLM 5.1" },
     { id: "glm-5-turbo", name: "GLM 5 Turbo" },

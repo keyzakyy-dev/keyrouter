@@ -457,6 +457,10 @@ Specialized executors:
 - `kiro`
 - `codex`
 - `cursor`
+- `glm` (`open-sse/executors/zcode.js` — the free Start Plan lane on
+  `zcode.z.ai`; only `glm-5.3`/`glm-5.3-flash` take it, and only when the ZCode
+  JWT is the sole credential or the connection opts in with `__zcodeLane: true`.
+  Everything else falls through to `default.js` and `api.z.ai`)
 
 Default executor path:
 

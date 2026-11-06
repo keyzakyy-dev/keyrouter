@@ -7,6 +7,7 @@ import { openaiToCommandCodeRequest } from "open-sse/translator/request/openai-t
 import { buildCommandCodeHeaders } from "open-sse/shared/commandCodeHeaders.js";
 import { resolveQoderCredentials, resolveQoderModels } from "open-sse/services/qoderModels.js";
 import { probeBedrockCredentials } from "open-sse/executors/bedrock.js";
+import { looksLikeZcodeJwt, probeZcodeJwt } from "open-sse/services/zcodeProbe.js";
 import {
   createNousApiKeyProbe,
   getNousApiKeyValidationError,
@@ -335,6 +336,13 @@ export async function POST(request) {
         case "alims-intl":
         case "alicode":
         case "agentrouter": {
+          // A ZCode JWT is the free Start Plan credential; api.z.ai 401s it.
+          if (provider === "glm" && looksLikeZcodeJwt(apiKey)) {
+            const probe = await probeZcodeJwt(apiKey);
+            isValid = probe.valid;
+            if (!isValid) error = probe.error;
+            break;
+          }
           // Use baseUrl from PROVIDERS (DRY); separate openai-format vs claude-format flow
           const cfg = PROVIDERS[provider];
           const isOpenAiFormat = provider === "glm-cn" || provider === "alicode" || provider === "alicode-intl" || provider === "alims-intl";

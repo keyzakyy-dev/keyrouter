@@ -29,6 +29,7 @@ import {
 } from "@/lib/oauth/constants/oauth";
 import { buildClineHeaders } from "@/shared/utils/clineAuth";
 import { hasWebIdentityProbe, fetchWebIdentity } from "open-sse/services/webIdentity.js";
+import { looksLikeZcodeJwt, probeZcodeJwt } from "open-sse/services/zcodeProbe.js";
 
 // OAuth provider test endpoints
 const OAUTH_TEST_CONFIG = {
@@ -364,6 +365,22 @@ function isTokenExpired(connection) {
 }
 
 async function testOAuthConnection(connection, effectiveProxy = null) {
+  // GLM free Start Plan: the ZCode JWT is the credential. Such an account can
+  // have no coding-plan API key at all (the OAuth flow tolerates that), so the
+  // generic token probes below have nothing to test — probe its own gateway.
+  if (connection.provider === "glm") {
+    const jwt = connection.providerSpecificData?.zcodeJwtToken;
+    // Only when there is no coding-plan key to probe: accounts that have both
+    // must not be marked broken because the (older) JWT went stale.
+    if (!connection.accessToken && !connection.apiKey && looksLikeZcodeJwt(jwt)) {
+      const probe = await probeZcodeJwt(
+        jwt,
+        (url, options) => fetchWithConnectionProxy(url, options, effectiveProxy),
+      );
+      return { valid: probe.valid, error: probe.error, refreshed: false };
+    }
+  }
+
   const config = OAUTH_TEST_CONFIG[connection.provider];
   if (!config) return { valid: false, error: "Provider test not supported", refreshed: false };
   if (!connection.accessToken) return { valid: false, error: "No access token", refreshed: false };
@@ -677,6 +694,14 @@ async function testApiKeyConnection(connection, effectiveProxy = null) {
         };
       }
       case "glm": {
+        // A ZCode JWT (three JWS segments) is the free Start Plan credential and
+        // api.z.ai answers 401 for it; probe its own gateway instead.
+        if (looksLikeZcodeJwt(connection.apiKey || connection.accessToken)) {
+          return await probeZcodeJwt(
+            connection.apiKey || connection.accessToken,
+            (url, options) => fetchWithConnectionProxy(url, options, effectiveProxy),
+          );
+        }
         const res = await fetchWithConnectionProxy("https://api.z.ai/api/anthropic/v1/messages", {
           method: "POST",
           headers: { "x-api-key": connection.apiKey, "anthropic-version": "2023-06-01", "content-type": "application/json" },
