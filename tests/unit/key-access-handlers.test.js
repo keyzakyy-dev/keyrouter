@@ -23,6 +23,8 @@ vi.mock("@/lib/localDb", () => ({
   getProviderConnections: async () => [],
   getProviderConnectionById: async () => null,
   getCustomModels: async () => [],
+  getApiKeyByKey: async (k) => fx.keys[k] || null,
+  resolvePromptInjections: async () => ({}),
 }));
 vi.mock("@/lib/disabledModelsDb", () => ({ getDisabledModels: async () => ({}) }));
 vi.mock("@/lib/db/repos/combosRepo.js", () => ({ getCombos: async () => fx.combos }));
