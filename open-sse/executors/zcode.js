@@ -124,6 +124,34 @@ function alignSystem(body) {
   return next;
 }
 
+// The plan gateway reports business failures inside an HTTP 200 JSON envelope
+// (e.g. {"code":1005,"msg":"exceed quota limit"}); rewrite the status so the
+// router's account-fallback logic sees a real error and rotates.
+async function normalizeStartPlanResponse(response) {
+  if (!response?.ok) return response;
+  const ct = (response.headers.get("content-type") || "").toLowerCase();
+  if (ct.includes("event-stream") || !ct.includes("json")) return response;
+  const text = await response.clone().text().catch(() => "");
+  let json = null;
+  try { json = text ? JSON.parse(text) : null; } catch { return response; }
+  const code = typeof json?.code === "number" ? json.code : null;
+  const failed = (code !== null && code !== 0 && code !== 200)
+    || json?.success === false
+    || json?.type === "error";
+  if (!failed) return response;
+  const message = json?.msg || json?.message || json?.error?.message || text;
+  // 1005 (quota) and 3009 (concurrency) → 429 so fallback triggers.
+  // 3006/3001 (model not allowed / bad request) → 400.
+  const status = (code === 1005 || code === 3009) ? 429
+    : (code === 3006 || code === 3001) ? 400
+    : 502;
+  return new Response(text, {
+    status,
+    statusText: String(message).slice(0, 120),
+    headers: response.headers,
+  });
+}
+
 // Business failures arrive as HTTP 200 envelopes on some paths; surface the
 // ones that mean "this lane is not yours" so the caller falls back.
 async function laneRejected(response) {
@@ -214,6 +242,9 @@ export class ZcodeExecutor extends DefaultExecutor {
   async execute(args) {
     const result = await super.execute(args);
     const { credentials, model } = args || {};
+    // Normalize HTTP 200 business errors (1005/3009/3006/…) into real status
+    // codes before any downstream logic checks providerResponse.ok.
+    result.response = await normalizeStartPlanResponse(result.response);
     if (!this.laneOn(credentials, model)) {
       // Not on the lane. A paid 429/1113 means the plan key has no entitlement
       // left — the exact account the free Start Plan exists for. Retry once on
