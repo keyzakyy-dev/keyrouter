@@ -1,3 +1,8 @@
+# v1.2.0 (2026-11-07)
+
+## Features
+- **usage**: fall back to ZCode Start Plan balance when coding-plan quota unavailable
+
 # v1.1.2 (2026-11-07)
 
 ## Fixes
