@@ -1,3 +1,8 @@
+# v1.2.1 (2026-11-07)
+
+## Fixes
+- **usage**: allow Start Plan fallback when apiKey is omitted
+
 # v1.2.0 (2026-11-07)
 
 ## Features
