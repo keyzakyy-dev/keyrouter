@@ -1,3 +1,9 @@
+# v1.1.2 (2026-11-07)
+
+## Fixes
+- **zcode**: rewrite HTTP 200 business errors to real status codes for account fallback
+- **stream**: frame a JSON body as SSE instead of emitting a bare [DONE]
+
 # v1.1.1 (2026-11-06)
 
 ## Fixes
