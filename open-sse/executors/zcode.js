@@ -59,9 +59,12 @@ function zcodeJwt(credentials) {
 // plan key keep their existing api.z.ai behaviour unless they explicitly opt in
 // (`__zcodeLane: true`): the lane prepends 2.2 KB of ZCode system prompt, which
 // must not silently change what paying accounts already receive.
+// A real plan key is "id.secret" (not a JWT). When accessToken carries the JWT
+// itself, the account has no separate plan key.
 function hasSeparatePlanKey(credentials) {
+  const key = String(credentials?.apiKey || credentials?.accessToken || "").trim();
   return !!(credentials?.providerSpecificData?.zcodeJwtToken
-    && (credentials?.apiKey || credentials?.accessToken));
+    && key && !looksLikeZcodeJwt(key));
 }
 
 function isStartModel(model) {
@@ -179,13 +182,15 @@ export class ZcodeExecutor extends DefaultExecutor {
   }
 
   laneOn(credentials, model) {
-    if (!zcodeJwt(credentials) || !isStartModel(model)) return false;
+    if (!zcodeJwt(credentials)) return false;
     const flag = credentials?.providerSpecificData?.__zcodeLane;
     if (flag === false) return false;
-    // Explicit opt-in, or a JWT that is the only credential (free Start Plan).
-    // Paying accounts keep their api.z.ai behaviour: the lane's 2.2 KB stock
-    // system prefix would otherwise silently rewrite what they already get.
-    return flag === true || !hasSeparatePlanKey(credentials);
+    // Accounts with only a JWT (free Start Plan, no paid coding-plan key) have
+    // no credentials for api.z.ai (it answers 401). Always use the zcode lane;
+    // transformRequest normalizes any model name to the free Start Plan bucket.
+    if (!hasSeparatePlanKey(credentials)) return true;
+    if (!isStartModel(model)) return false;
+    return flag === true;
   }
 
   buildUrl(model, stream, urlIndex = 0, credentials = null) {
@@ -199,6 +204,12 @@ export class ZcodeExecutor extends DefaultExecutor {
 
     const next = alignSystem(transformed);
     if (Array.isArray(next.messages)) next.messages = mergeAdjacentRoles(next.messages);
+
+    // Normalize model to one of the two start-plan buckets if needed
+    const rawModel = String(next.model || model || "").toLowerCase();
+    if (!isStartModel(rawModel)) {
+      next.model = rawModel.includes("5.3") && !rawModel.includes("flash") ? "GLM-5.3" : "GLM-5.3-Flash";
+    }
 
     // Anthropic requires max_tokens; the gateway rejects OpenAI-only fields.
     next.max_tokens = next.max_tokens || next.max_completion_tokens || 4096;
