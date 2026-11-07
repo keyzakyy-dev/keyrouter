@@ -64,7 +64,8 @@ export function parseGlmQuotaResponse(json) {
  */
 export async function getGlmUsage(apiKey, provider, proxyOptions = null, providerSpecificData = null) {
   if (!apiKey) {
-    return { message: "GLM API key not available." };
+    return await startPlanFallback(providerSpecificData, proxyOptions)
+      || { message: "GLM API key not available." };
   }
 
   const region = provider === "glm-cn" ? "china" : "international";
