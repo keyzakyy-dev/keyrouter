@@ -1,3 +1,8 @@
+# v1.2.2 (2026-11-07)
+
+## Fixes
+- **zcode**: ensure free JWT-only accounts stay on Start Plan lane
+
 # v1.2.1 (2026-11-07)
 
 ## Fixes
