@@ -7,8 +7,6 @@ import {
   Handle,
   Position,
   Controls,
-  Background,
-  BackgroundVariant,
   BaseEdge,
   getBezierPath,
 } from "@xyflow/react";
@@ -117,7 +115,7 @@ function RouterNode({ data }) {
         KeyRouter
       </span>
       {data.activeCount > 0 && (
-        <span className="ml-2 rounded-full bg-primary px-2 py-0.5 font-mono text-[10px] font-bold text-white dark:text-amber-950">
+        <span className="ml-2 rounded-full bg-primary px-2 py-0.5 font-mono text-[10px] font-bold text-white dark:text-neutral-950">
           {data.activeCount}
         </span>
       )}
@@ -201,9 +199,9 @@ function TopologyEdge({
         <circle
           key={`${id}-p-${i}`}
           r={i % 2 === 0 ? 4 : 2.5}
-          fill={i % 3 === 0 ? "#fde047" : i % 3 === 1 ? "#67e8f9" : "#fff"}
+          fill={i % 3 === 0 ? "#d97757" : i % 3 === 1 ? "#e28e63" : "#fff"}
           opacity={0.95}
-          style={{ filter: "drop-shadow(0 0 4px #22d3ee)" }}
+          style={{ filter: "drop-shadow(0 0 4px rgba(217,119,87,0.8))" }}
         >
           <animateMotion
             dur={`${0.4 + i * 0.08}s`}
@@ -290,7 +288,7 @@ function buildLayout(providers, activeSet, lastSet, errorSet) {
   const edgeStyle = (active, last, error) => {
     if (error) return { stroke: "#ef4444", strokeWidth: 2.5, opacity: 0.9 };
     if (active) return { stroke: "#22d3ee", strokeWidth: 3.5, opacity: 1 };
-    if (last) return { stroke: "#f59e0b", strokeWidth: 2, opacity: 0.7 };
+    if (last) return { stroke: "var(--color-topo-router-active)", strokeWidth: 2, opacity: 0.7 };
     return { stroke: "var(--color-border)", strokeWidth: 1, opacity: 0.3 };
   };
 
@@ -460,7 +458,6 @@ export default function ProviderTopology({ providers = [], activeRequests = [], 
           nodesConnectable={false}
           elementsSelectable={false}
         >
-          <Background variant={BackgroundVariant.Dots} gap={20} size={1.5} color="#c4c4ce" />
           <Controls showInteractive={false} className="react-flow-controls-custom" />
         </ReactFlow>
       )}

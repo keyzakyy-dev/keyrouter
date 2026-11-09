@@ -55,9 +55,9 @@ function parseLine(text) {
 const LEVEL_STYLE = {
   log: { label: null, labelCls: "", textCls: "text-text-muted" },
   debug: { label: null, labelCls: "", textCls: "text-text-subtle" },
-  info: { label: "info", labelCls: "bg-sky-500/10 text-sky-600 dark:text-sky-400", textCls: "text-text-main" },
-  warn: { label: "warn", labelCls: "bg-amber-500/10 text-amber-600 dark:text-amber-400", textCls: "text-text-main" },
-  error: { label: "error", labelCls: "bg-red-500/10 text-red-600 dark:text-red-400", textCls: "text-text-main" },
+  info: { label: "info", labelCls: "bg-info/10 text-info", textCls: "text-text-main" },
+  warn: { label: "warn", labelCls: "bg-warning/10 text-warning", textCls: "text-text-main" },
+  error: { label: "error", labelCls: "bg-danger/10 text-danger", textCls: "text-text-main" },
 };
 
 const FILTER_PRESETS = [
@@ -82,7 +82,7 @@ function renderLine(entry) {
       {style.label ? (
         <span
           className={cn(
-            "shrink-0 rounded px-1.5 py-px font-mono text-[9px] uppercase tracking-wider leading-4",
+            "shrink-0 rounded px-1.5 py-px text-[10px] font-medium leading-4",
             style.labelCls
           )}
         >
@@ -192,7 +192,7 @@ export default function ConsoleLogClient() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="font-display text-2xl font-semibold tracking-tight text-text-main">Console Log</h1>
-          <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-text-subtle">
+          <p className="mt-1 text-xs text-text-subtle">
             {connected ? "Live server output" : "Disconnected — reconnecting…"}
           </p>
         </div>
@@ -217,7 +217,7 @@ export default function ConsoleLogClient() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={translate("Filter lines…")}
-            className="h-8 w-40 rounded-lg border border-border bg-surface px-2.5 text-xs text-text-main outline-none placeholder:text-text-subtle focus:border-text-subtle"
+            className="h-8 w-40 rounded-lg border border-border bg-surface px-2.5 text-xs text-text-main placeholder:text-text-subtle focus:border-text-subtle"
           />
           <button
             type="button"
@@ -261,7 +261,7 @@ export default function ConsoleLogClient() {
           {visibleLogs.length === 0 ? (
             <div className="flex h-full flex-col items-center justify-center gap-3 text-center">
               <span className="material-symbols-outlined text-2xl text-text-subtle">terminal</span>
-              <span className="font-mono text-[11px] uppercase tracking-wider text-text-subtle">
+              <span className="text-xs text-text-subtle">
                 {logs.length === 0 ? "No console logs yet." : "No matching lines."}
               </span>
             </div>

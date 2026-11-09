@@ -6,9 +6,10 @@ import {
 } from "@/app/(dashboard)/dashboard/providers/utils.js";
 
 describe("providers status filter", () => {
-  it("exposes all/active/inactive/none options", () => {
+  it("exposes all/error/active/inactive/none options", () => {
     expect(STATUS_FILTER_OPTIONS.map((o) => o.value)).toEqual([
       "all",
+      "error",
       "active",
       "inactive",
       "none",
@@ -48,5 +49,10 @@ describe("providers status filter", () => {
     expect(matchesStatusFilter("inactive", disabledStats)).toBe(true);
     expect(matchesStatusFilter("active", disabledStats)).toBe(false);
     expect(matchesStatusFilter("none", disabledStats)).toBe(false);
+  });
+
+  it("matchesStatusFilter 'error' requires at least one failing connection", () => {
+    expect(matchesStatusFilter("error", { total: 2, error: 1 })).toBe(true);
+    expect(matchesStatusFilter("error", { total: 2, error: 0 })).toBe(false);
   });
 });

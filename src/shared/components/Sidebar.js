@@ -50,8 +50,8 @@ const NAV_ITEM_BASE =
   "group relative flex items-center rounded-lg font-display font-medium transition-colors duration-150";
 const NAV_ITEM_ACTIVE = "text-primary dark:text-primary";
 const NAV_ITEM_IDLE = "text-text-muted hover:text-text-main";
-const NAV_ICON_ACTIVE = "text-amber-700 dark:text-amber-300";
-const NAV_ICON_IDLE = "text-amber-600/60 dark:text-amber-400/60 transition-colors group-hover:text-amber-700 dark:group-hover:text-amber-300";
+const NAV_ICON_ACTIVE = "text-clay-700 dark:text-clay-300";
+const NAV_ICON_IDLE = "text-clay-600/60 dark:text-clay-400/60 transition-colors group-hover:text-clay-700 dark:group-hover:text-clay-300";
 const NAV_ACTIVE_BAR =
   "absolute left-0 top-1/2 h-4 w-[3px] -translate-y-1/2 rounded-full bg-primary";
 
@@ -368,7 +368,7 @@ export default function Sidebar({ onClose, collapsible = true }) {
           </Link>
           {!isCollapsed && updateInfo && (
             <div className="mt-3 space-y-2 rounded-lg border border-border-subtle bg-bg p-2.5">
-              <span className="flex items-center gap-1.5 text-[11px] font-medium text-green-700 dark:text-amber-400">
+              <span className="flex items-center gap-1.5 text-[11px] font-medium text-green-700 dark:text-clay-400">
                 <span className="material-symbols-outlined text-[14px]">arrow_upward</span>
                 New version available: v{updateInfo.latestVersion}
               </span>
@@ -384,7 +384,7 @@ export default function Sidebar({ onClose, collapsible = true }) {
                   title="Copy install command"
                   className="min-w-0 flex-1 cursor-pointer text-left transition-opacity hover:opacity-80"
                 >
-                  <code className="block truncate font-mono text-[10px] text-green-700/80 dark:text-amber-400/70">
+                  <code className="block truncate font-mono text-[10px] text-green-700/80 dark:text-clay-400/70">
                     {copied ? "✓ copied!" : INSTALL_CMD}
                   </code>
                 </button>
@@ -549,7 +549,7 @@ function ManualUpdatePanel({ latestVersion, installCmd, copied, onCopyAndShutdow
   return (
     <div className="w-full max-w-lg rounded-xl border border-white/10 bg-neutral-900/95 p-6 text-white">
       <div className="mb-4 flex items-center gap-3">
-        <div className="flex size-11 items-center justify-center rounded-full bg-amber-500/20 text-amber-400">
+        <div className="flex size-11 items-center justify-center rounded-full bg-clay-500/20 text-clay-400">
           <span className="material-symbols-outlined text-[24px]">content_copy</span>
         </div>
         <div>
@@ -566,7 +566,7 @@ function ManualUpdatePanel({ latestVersion, installCmd, copied, onCopyAndShutdow
 
       <p className="mb-2 text-sm text-white/80">Install command:</p>
       <div className="mb-4 w-full rounded bg-white/5 px-3 py-2">
-        <code className="break-all font-mono text-xs text-amber-400">{installCmd}</code>
+        <code className="break-all font-mono text-xs text-clay-400">{installCmd}</code>
       </div>
 
       <ol className="mb-4 list-inside list-decimal space-y-1 text-xs text-white/70">

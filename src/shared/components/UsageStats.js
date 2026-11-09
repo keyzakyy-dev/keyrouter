@@ -49,7 +49,7 @@ function RecentRequests({ requests = [], providerLabels = {} }) {
       <div className="flex items-center justify-between gap-2 px-2 py-3">
         <span className="font-display text-sm font-semibold text-text-main">Recent Requests</span>
         {requests.length > 0 && (
-          <span className="rounded-full bg-surface-2 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-text-muted">
+          <span className="rounded-full bg-surface-2 px-2 py-0.5 text-xs text-text-muted">
             {requests.length}
           </span>
         )}
@@ -57,8 +57,8 @@ function RecentRequests({ requests = [], providerLabels = {} }) {
 
       {!requests.length ? (
         <div className="flex-1 flex flex-col items-center justify-center gap-2 text-text-muted">
-          <span className="material-symbols-outlined text-[32px] text-primary dark:text-primary">inbox</span>
-          <span className="font-mono text-xs uppercase tracking-wider">No requests yet.</span>
+          <span className="material-symbols-outlined text-[32px] text-text-subtle">inbox</span>
+          <span className="text-xs text-text-muted">No requests yet.</span>
         </div>
       ) : (
         <div className="flex-1 overflow-y-auto">
@@ -79,7 +79,7 @@ function RecentRequests({ requests = [], providerLabels = {} }) {
                     <div className="truncate font-mono text-[13px] text-text-main" title={r.model}>
                       {r.model}
                     </div>
-                    <div className="truncate font-display text-[11px] text-text-subtle">
+                    <div className="truncate text-[11px] text-text-subtle">
                       {providerLabels[r.provider] || r.provider || "local"}
                       <span className="mx-1 text-border">·</span>
                       <TimeAgo timestamp={r.timestamp} />
@@ -485,13 +485,13 @@ export default function UsageStats({ period: periodProp, setPeriod: setPeriodPro
       {/* Period selector (hidden when controlled by parent) */}
       {!hidePeriodSelector && (
         <div className="flex w-full items-center gap-2 sm:w-auto sm:self-end">
-          <div className="grid flex-1 grid-cols-6 items-center gap-1 rounded-lg border border-border bg-bg-subtle p-1 sm:flex sm:flex-none">
+          <div className="grid flex-1 grid-cols-6 items-center gap-1 rounded-lg border border-border bg-surface-2 p-1 sm:flex sm:flex-none">
             {PERIODS.map((p) => (
               <button
                 key={p.value}
                 onClick={() => setPeriod(p.value)}
                 disabled={fetching}
-                className={`rounded-md px-3 py-1 text-sm font-medium transition-colors ${period === p.value ? "bg-primary text-white dark:text-amber-950" : "text-text-muted hover:bg-bg-hover hover:text-text"}`}
+                className={`rounded-md px-3 py-1 text-sm font-medium transition-colors ${period === p.value ? "bg-primary text-white dark:text-neutral-950" : "text-text-muted hover:bg-surface hover:text-text-main"}`}
               >
                 {p.label}
               </button>
@@ -529,13 +529,13 @@ export default function UsageStats({ period: periodProp, setPeriod: setPeriodPro
               role="tab"
               aria-selected={active}
               onClick={() => setSectionTab(t.id)}
-              className={`flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.5 font-display text-[13px] font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-text-subtle/60 focus-visible:ring-offset-1 focus-visible:ring-offset-surface-2 ${
+              className={`flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.5 font-display text-[13px] font-medium transition-all duration-150 ${
                 active
-                  ? "bg-surface text-primary shadow-[var(--shadow-soft)] dark:text-primary"
+                  ? "bg-surface text-text-main shadow-[var(--shadow-soft)]"
                   : "text-text-muted hover:text-text-main"
               }`}
             >
-              <span className={`material-symbols-outlined text-[15px] ${active ? "text-primary dark:text-primary" : "text-text-subtle"}`}>
+              <span className={`material-symbols-outlined text-[15px] ${active ? "text-text-main" : "text-text-subtle"}`}>
                 {t.icon}
               </span>
               {t.label}
@@ -569,16 +569,16 @@ export default function UsageStats({ period: periodProp, setPeriod: setPeriodPro
                         className="w-full sm:w-auto"
                       />
                     </div>
-                    <div className="grid grid-cols-2 items-center gap-1 rounded-lg border border-border bg-bg-subtle p-1 sm:flex">
+                    <div className="grid grid-cols-2 items-center gap-1 rounded-lg border border-border bg-surface-2 p-1 sm:flex">
                       <button
                         onClick={() => setViewMode("costs")}
-                        className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${viewMode === "costs" ? "bg-primary text-white dark:text-amber-950" : "text-text-muted hover:text-text hover:bg-bg-hover"}`}
+                        className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${viewMode === "costs" ? "bg-primary text-white dark:text-neutral-950" : "text-text-muted hover:text-text-main hover:bg-surface"}`}
                       >
                         Costs
                       </button>
                       <button
                         onClick={() => setViewMode("tokens")}
-                        className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${viewMode === "tokens" ? "bg-primary text-white dark:text-amber-950" : "text-text-muted hover:text-text hover:bg-bg-hover"}`}
+                        className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${viewMode === "tokens" ? "bg-primary text-white dark:text-neutral-950" : "text-text-muted hover:text-text-main hover:bg-surface"}`}
                       >
                         Tokens
                       </button>

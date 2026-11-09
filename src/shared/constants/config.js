@@ -35,10 +35,10 @@ export const UPDATER_CONFIG = {
   appPort: 20131,
 };
 
-// Theme configuration
+// Theme configuration (dark-only)
 export const THEME_CONFIG = {
   storageKey: "theme",
-  defaultTheme: "system", // "light" | "dark" | "system"
+  defaultTheme: "dark",
 };
 
 // Subscription

@@ -32,9 +32,9 @@ export default function StrategyDropdown({ options, value, onChange, className }
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="listbox"
         aria-expanded={open}
-        className="flex h-9 w-full items-center gap-2 rounded-lg border border-border bg-surface-2 px-3 font-display text-sm text-text-main outline-none transition-colors hover:border-text-subtle focus-visible:ring-2 focus-visible:ring-text-subtle/60"
+        className="flex h-9 w-full items-center gap-2 rounded-lg border border-border bg-surface-2 px-3 font-display text-sm text-text-main outline-none transition-colors hover:border-text-subtle"
       >
-        <span className="material-symbols-outlined text-[16px] text-primary dark:text-primary">
+        <span className="material-symbols-outlined text-[16px] text-text-subtle">
           {OPTION_META[value]?.icon || "label"}
         </span>
         <span className="flex-1 truncate text-left">{selected?.label}</span>
@@ -62,15 +62,15 @@ export default function StrategyDropdown({ options, value, onChange, className }
                   setOpen(false);
                 }}
                 className={`group flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm transition-colors ${
-                  active ? "bg-surface-2 text-text-main" : "text-text-muted hover:text-primary dark:hover:text-primary"
+                  active ? "bg-surface-2 text-text-main" : "text-text-muted hover:text-text-main"
                 }`}
               >
-                <span className={`material-symbols-outlined text-[18px] ${active ? "text-text-main" : "text-text-subtle group-hover:text-primary dark:group-hover:text-primary"}`}>
+                <span className={`material-symbols-outlined text-[18px] ${active ? "text-text-main" : "text-text-subtle group-hover:text-text-main"}`}>
                   {meta.icon}
                 </span>
                 <span className="flex-1 font-display">{option.label}</span>
                 {active && (
-                  <span className="material-symbols-outlined text-[18px] text-primary dark:text-primary">check</span>
+                  <span className="material-symbols-outlined text-[18px] text-text-main">check</span>
                 )}
               </button>
             );

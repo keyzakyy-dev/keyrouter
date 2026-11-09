@@ -62,7 +62,7 @@ export default function DefaultToolCard({ toolId, tool, isExpanded, onToggle, ba
           value={modelValue}
           onChange={(e) => setModelValue(e.target.value)}
           placeholder="provider/model-id"
-          className="w-full sm:w-auto flex-1 px-3 py-2 bg-bg-secondary rounded-lg text-sm border border-border focus:outline-none focus:ring-1 focus:ring-primary/50"
+          className="w-full sm:w-auto flex-1 px-3 py-2 bg-bg-secondary rounded-lg text-sm border border-border"
         />
         <button
           onClick={() => setShowModelModal(true)}
@@ -87,7 +87,7 @@ export default function DefaultToolCard({ toolId, tool, isExpanded, onToggle, ba
             </button>
             <button
               onClick={() => setModelValue("")}
-              className="p-2 text-text-muted hover:text-red-500 rounded transition-colors"
+              className="p-2 text-text-muted hover:text-danger rounded transition-colors"
               title="Clear"
             >
               <span className="material-symbols-outlined text-lg">close</span>
@@ -110,9 +110,9 @@ export default function DefaultToolCard({ toolId, tool, isExpanded, onToggle, ba
           const isWarning = note.type === "warning";
           const isError = note.type === "cloudCheck" && !cloudEnabled && !tunnelEnabled;
           
-          let bgClass = "bg-blue-500/10 border-blue-500/30";
-          let textClass = "text-blue-600 dark:text-blue-400";
-          let iconClass = "text-blue-500";
+          let bgClass = "bg-info/10 border-info/30";
+          let textClass = "text-info text-info";
+          let iconClass = "text-info";
           let icon = "info";
           
           if (isWarning) {

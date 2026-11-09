@@ -16,7 +16,7 @@ import Card from "@/shared/components/Card";
 import { cn } from "@/shared/utils/cn";
 import { AI_PROVIDERS } from "@/shared/constants/providers";
 
-const FALLBACK_COLORS = ["#a3a3a3", "#b4b4bb", "#c4c4cb", "#d4d4d8", "#71717a", "#52525b", "#3f3f46", "#dcdce0"];
+const FALLBACK_COLORS = ["#d97757", "#898781", "#c6613f", "#6d6b67", "#a5a49a", "#52514e", "#c3c2b7", "#383835"];
 
 const fmtTokens = (n) => {
   if (n >= 1000000) return `${(n / 1000000).toFixed(1)}M`;
@@ -88,17 +88,17 @@ export default function ProviderBarChart({ byProvider, bare = false, providerLab
       {chartData.length > 0 && (
         <div className="grid grid-cols-3 gap-2 rounded-lg bg-surface-2/50 p-2.5">
           <div className="min-w-0">
-            <div className="font-mono text-[10px] uppercase tracking-wider text-text-subtle">Total {label}</div>
+            <div className="text-xs text-text-subtle">Total {label}</div>
             <div className="truncate font-display text-sm font-bold text-text-main">{fmtFull(total)}</div>
           </div>
           <div className="min-w-0">
-            <div className="font-mono text-[10px] uppercase tracking-wider text-text-subtle">Top provider</div>
+            <div className="text-xs text-text-subtle">Top provider</div>
             <div className="truncate font-display text-sm font-bold text-text-main" title={top?.name}>
               {top?.name || "-"}
             </div>
           </div>
           <div className="min-w-0">
-            <div className="font-mono text-[10px] uppercase tracking-wider text-text-subtle">Providers</div>
+            <div className="text-xs text-text-subtle">Providers</div>
             <div className="truncate font-display text-sm font-bold text-text-main">{chartData.length}</div>
           </div>
         </div>
@@ -107,7 +107,7 @@ export default function ProviderBarChart({ byProvider, bare = false, providerLab
       {/* Chart / empty */}
       {!chartData.length ? (
         <div className="h-44 flex flex-col items-center justify-center gap-1 text-text-muted">
-          <span className="material-symbols-outlined text-[26px] text-primary dark:text-primary">candlestick_chart</span>
+          <span className="material-symbols-outlined text-[26px] text-text-subtle">candlestick_chart</span>
           <span className="text-sm">No provider usage yet</span>
         </div>
       ) : (
@@ -130,7 +130,7 @@ export default function ProviderBarChart({ byProvider, bare = false, providerLab
               width={44}
             />
             <Tooltip
-              cursor={{ fill: "var(--color-bg-subtle)", opacity: 0.6 }}
+              cursor={{ fill: "var(--color-surface-2)", opacity: 0.6 }}
               contentStyle={{
                 backgroundColor: "var(--color-surface)",
                 border: "1px solid var(--color-border)",

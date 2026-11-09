@@ -274,7 +274,7 @@ export default function LoginPage() {
                   import / drop its font-size so utilities win. */}
               <span className="material-symbols-outlined leading-none" style={{ fontSize: 32 }}>route</span>
             </div>
-            <h1 className="login-brand-sheen mt-4 font-display text-2xl font-semibold tracking-tight text-text-main">
+            <h1 className="login-brand-sheen mt-4 font-serif text-2xl font-semibold tracking-tight text-text-main">
               {APP_CONFIG.name}
               <span aria-hidden="true" className="login-brand-sheen-layer">{APP_CONFIG.name}</span>
             </h1>

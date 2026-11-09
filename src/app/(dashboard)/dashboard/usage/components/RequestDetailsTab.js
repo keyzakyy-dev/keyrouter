@@ -71,8 +71,8 @@ function getInputTokens(tokens) {
 
 function MetricTile({ label, value, hint, accent }) {
   return (
-    <div className="flex min-w-0 flex-col gap-0.5 rounded-lg border border-border-subtle bg-bg-subtle/50 px-3 py-2">
-      <span className="font-mono text-[9px] uppercase tracking-wider text-text-subtle">{label}</span>
+    <div className="flex min-w-0 flex-col gap-0.5 rounded-lg border border-border-subtle bg-surface-2/60 px-3 py-2">
+      <span className="text-[11px] text-text-subtle">{label}</span>
       <span
         className={cn(
           "truncate font-mono text-sm tabular-nums",
@@ -82,7 +82,7 @@ function MetricTile({ label, value, hint, accent }) {
       >
         {value}
       </span>
-      {hint && <span className="truncate font-mono text-[9px] text-text-subtle">{hint}</span>}
+      {hint && <span className="truncate font-mono text-[10px] text-text-subtle">{hint}</span>}
     </div>
   );
 }
@@ -107,7 +107,7 @@ function JsonBlock({ value, tone = "default", maxHeight = "max-h-[420px]" }) {
   };
 
   const tones = {
-    default: "border-border-subtle bg-bg-subtle text-text-main",
+    default: "border-border-subtle bg-surface-2 text-text-main",
     warn: "border-warning/40 bg-warning/10 text-warning",
     ok: "border-success/40 bg-success/10 text-text-main",
   };
@@ -115,7 +115,7 @@ function JsonBlock({ value, tone = "default", maxHeight = "max-h-[420px]" }) {
   return (
     <div className="relative">
       {redacted ? (
-        <div className="flex items-start gap-2 rounded-lg border border-border-subtle bg-bg-subtle/50 p-3 text-xs text-text-muted sm:p-4">
+        <div className="flex items-start gap-2 rounded-lg border border-border-subtle bg-surface-2/50 p-3 text-xs text-text-muted sm:p-4">
           <span className="material-symbols-outlined shrink-0 text-[16px]">lock</span>
           <span>
             Conversation payload is redacted by the usage API — only metadata (tokens, latency) is kept.
@@ -126,7 +126,7 @@ function JsonBlock({ value, tone = "default", maxHeight = "max-h-[420px]" }) {
           <button
             type="button"
             onClick={copy}
-            className="absolute right-2 top-2 z-10 flex items-center gap-1 rounded-md border border-border-subtle bg-surface/90 px-2 py-1 font-mono text-[10px] uppercase tracking-wider text-text-subtle transition-colors hover:text-text-main"
+            className="absolute right-2 top-2 z-10 flex items-center gap-1 rounded-md border border-border-subtle bg-surface/90 px-2 py-1 text-xs text-text-subtle transition-colors hover:text-text-main"
           >
             <span className="material-symbols-outlined text-[14px]">{copied ? "check" : "content_copy"}</span>
             {copied ? "Copied" : "Copy"}
@@ -148,7 +148,7 @@ function JsonBlock({ value, tone = "default", maxHeight = "max-h-[420px]" }) {
 
 function SectionTitle({ icon, children }) {
   return (
-    <h4 className="mb-2 flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider text-text-subtle">
+    <h4 className="mb-2 flex items-center gap-1.5 text-xs font-semibold text-text-subtle">
       {icon && <span className="material-symbols-outlined text-[14px]">{icon}</span>}
       {children}
     </h4>
@@ -179,7 +179,7 @@ function DetailDrawerBody({ detail, providerName }) {
       <div className="flex flex-wrap items-center gap-2">
         <span
           className={cn(
-            "inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider",
+            "inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium",
             isError ? "bg-danger/15 text-danger" : "bg-success/15 text-success"
           )}
         >
@@ -217,10 +217,10 @@ function DetailDrawerBody({ detail, providerName }) {
         <div className="rounded-lg border border-border-subtle p-3">
           <div className="mb-2 flex items-center gap-2">
             <span className="material-symbols-outlined text-[16px] text-primary">image</span>
-            <span className="font-mono text-[10px] uppercase tracking-wider text-text-subtle">pxpipe</span>
+            <span className="text-xs font-medium text-text-subtle">pxpipe</span>
             <span
               className={cn(
-                "rounded px-1.5 py-0.5 font-mono text-[10px] uppercase",
+                "rounded px-1.5 py-0.5 text-[11px] font-medium",
                 detail.pxpipe.applied ? "bg-success/15 text-success" : "bg-warning/15 text-warning"
               )}
             >
@@ -244,14 +244,14 @@ function DetailDrawerBody({ detail, providerName }) {
       )}
 
       {/* Payload tabs */}
-      <div className="flex flex-wrap gap-1 rounded-lg border border-border-subtle bg-bg-subtle/60 p-1">
+      <div className="flex flex-wrap gap-1 rounded-lg border border-border-subtle bg-surface-2/60 p-1">
         {tabs.map((tab) => (
           <button
             key={tab.value}
             type="button"
             onClick={() => setActiveTab(tab.value)}
             className={cn(
-              "flex items-center gap-1.5 rounded-md px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-wider transition-colors",
+              "flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors",
               current?.value === tab.value
                 ? "bg-surface text-text-main shadow-[var(--shadow-soft)]"
                 : "text-text-muted hover:text-text-main"
@@ -390,7 +390,7 @@ export default function RequestDetailsTab() {
       <Card padding="none">
         <div className="flex flex-wrap items-end gap-3 p-4">
           <div className="flex min-w-0 flex-col gap-1.5">
-            <label htmlFor="rd-provider-filter" className="font-mono text-[10px] uppercase tracking-wider text-text-subtle">Provider</label>
+            <label htmlFor="rd-provider-filter" className="text-xs text-text-subtle">Provider</label>
             <Dropdown
               value={filters.provider}
               onChange={(v) => setFilters({ ...filters, provider: v })}
@@ -407,7 +407,7 @@ export default function RequestDetailsTab() {
           </div>
 
           <div className="flex min-w-0 flex-col gap-1.5">
-            <label htmlFor="start-date-filter" className="font-mono text-[10px] uppercase tracking-wider text-text-subtle">Start</label>
+            <label htmlFor="start-date-filter" className="text-xs text-text-subtle">Start</label>
             <input
               id="start-date-filter"
               type="datetime-local"
@@ -415,13 +415,13 @@ export default function RequestDetailsTab() {
               onChange={(e) => setFilters({ ...filters, startDate: e.target.value })}
               className={cn(
                 "h-9 px-3 rounded-lg border border-border bg-surface font-mono tabular-nums",
-                "w-full min-w-0 text-xs text-text-main focus:outline-none focus:ring-2 focus:ring-primary/20"
+                "w-full min-w-0 text-xs text-text-main"
               )}
             />
           </div>
 
           <div className="flex min-w-0 flex-col gap-1.5">
-            <label htmlFor="end-date-filter" className="font-mono text-[10px] uppercase tracking-wider text-text-subtle">End</label>
+            <label htmlFor="end-date-filter" className="text-xs text-text-subtle">End</label>
             <input
               id="end-date-filter"
               type="datetime-local"
@@ -429,7 +429,7 @@ export default function RequestDetailsTab() {
               onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
               className={cn(
                 "h-9 px-3 rounded-lg border border-border bg-surface font-mono tabular-nums",
-                "w-full min-w-0 text-xs text-text-main focus:outline-none focus:ring-2 focus:ring-primary/20"
+                "w-full min-w-0 text-xs text-text-main"
               )}
             />
           </div>
@@ -445,7 +445,7 @@ export default function RequestDetailsTab() {
             Reset
           </Button>
 
-          <span className="ml-auto self-end pb-2 font-mono text-[10px] uppercase tracking-wider text-text-subtle tabular-nums">
+          <span className="ml-auto self-end pb-2 text-xs text-text-subtle tabular-nums">
             {pagination.totalItems.toLocaleString()} request{pagination.totalItems === 1 ? "" : "s"}
           </span>
         </div>
@@ -470,7 +470,7 @@ export default function RequestDetailsTab() {
                   <th
                     key={col.label}
                     className={cn(
-                      "whitespace-nowrap border-b border-border-subtle bg-bg-subtle px-3 py-2.5 font-mono text-[10px] font-medium uppercase tracking-wider text-text-subtle",
+                      "whitespace-nowrap border-b border-border-subtle bg-surface-2 px-3 py-2.5 text-xs font-medium text-text-subtle",
                       col.align === "right" ? "text-right" : "text-left"
                     )}
                   >
@@ -495,7 +495,7 @@ export default function RequestDetailsTab() {
                     <div className="flex flex-col items-center gap-2 text-text-muted">
                       <span className="material-symbols-outlined text-[28px] text-text-subtle">receipt_long</span>
                       <span className="text-sm">No request details for this range</span>
-                      <span className="font-mono text-[10px] uppercase tracking-wider text-text-subtle">
+                      <span className="text-xs text-text-subtle">
                         Widen the date filter or send traffic through the proxy
                       </span>
                     </div>

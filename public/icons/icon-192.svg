@@ -1,11 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 24 24">
   <style>
     /* Header brand mark (Header.js) as a static app icon.
-       Light: #525252 bg / #ffffff glyph. Dark: #fbbf24 bg / #000000 glyph. */
-    .mark { fill: #525252; }
+       Light context: #0b0b0b chip / #ffffff glyph.
+       Dark context:  #ffffff chip / #000000 glyph (the dark-only app mark). */
+    .mark { fill: #0b0b0b; }
     .icon { fill: #ffffff; }
     @media (prefers-color-scheme: dark) {
-      .mark { fill: #fbbf24; }
+      .mark { fill: #ffffff; }
       .icon { fill: #000000; }
     }
   </style>

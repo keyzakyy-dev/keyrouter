@@ -30,8 +30,8 @@ export default function UrlField({ value, copyId, copied, onCopy, size = "sm", o
       </span>
       <span
         className={cn(
-          "min-w-0 flex-1 truncate font-mono text-text-main",
-          large ? "text-[13px] sm:text-sm" : "text-[12px]"
+          "min-w-0 flex-1 truncate font-geist text-text-main",
+          large ? "text-[13px] sm:text-sm tracking-tight" : "text-[12px]"
         )}
         title={value}
       >

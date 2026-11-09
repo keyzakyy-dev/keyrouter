@@ -12,6 +12,7 @@ import { OAUTH_PROVIDERS, APIKEY_PROVIDERS, FREE_PROVIDERS, FREE_TIER_PROVIDERS,
 import { getModelsByProviderId, getModelKind } from "@/shared/constants/models";
 import { getThinkingLevels } from "open-sse/providers/thinkingLevels.js";
 import { useCopyToClipboard } from "@/shared/hooks/useCopyToClipboard";
+import { useNotificationStore } from "@/store/notificationStore";
 import { useModelCaps } from "@/shared/hooks/useModelCaps";
 import { translate } from "@/i18n/runtime";
 import { fetchSuggestedModels } from "@/shared/utils/providerModelsFetcher";
@@ -82,6 +83,8 @@ export default function ProviderDetailPage() {
   const [testingModelIds, setTestingModelIds] = useState(() => new Set());
   const [showAddCustomModel, setShowAddCustomModel] = useState(false);
   const [selectedConnectionIds, setSelectedConnectionIds] = useState([]);
+  const [selectedModelIds, setSelectedModelIds] = useState([]);
+  const [selectedDisabledIds, setSelectedDisabledIds] = useState([]);
   const [bulkProxyPoolId, setBulkProxyPoolId] = useState("__none__");
   const [bulkUpdatingProxy, setBulkUpdatingProxy] = useState(false);
   const [providerStrategy, setProviderStrategy] = useState(null);
@@ -106,6 +109,7 @@ export default function ProviderDetailPage() {
   const [importingQoderModels, setImportingQoderModels] = useState(false);
   const [importingClineModels, setImportingClineModels] = useState(false);
   const { copied, copy } = useCopyToClipboard();
+  const notify = useNotificationStore();
 
   const AG_RISK_STORAGE_KEY = "ag_risk_confirmed";
 
@@ -556,7 +560,7 @@ export default function ProviderDetailPage() {
         await fetchAliases();
       } else {
         const data = await res.json();
-        alert(data.error || "Failed to set alias");
+        notify.error(data.error || "Failed to set alias");
       }
     } catch (error) {
       console.log("Error setting alias:", error);
@@ -590,7 +594,7 @@ export default function ProviderDetailPage() {
         if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent("customModelChanged"));
       } else {
         const data = await res.json();
-        alert(data.error || "Failed to add custom model");
+        notify.error(data.error || "Failed to add custom model");
       }
     } catch (error) {
       console.log("Error adding custom model:", error);
@@ -615,7 +619,7 @@ export default function ProviderDetailPage() {
     if (importingQoderModels) return;
     const activeConnection = connections.find((conn) => conn.isActive !== false);
     if (!activeConnection) {
-      alert(translate("Please add an active Qoder connection first"));
+      notify.error(translate("Please add an active Qoder connection first"));
       return;
     }
 
@@ -624,12 +628,12 @@ export default function ProviderDetailPage() {
       const res = await fetch(`/api/providers/${activeConnection.id}/models`);
       const data = await res.json();
       if (!res.ok) {
-        alert(data.error || translate("Failed to fetch models"));
+        notify.error(data.error || translate("Failed to fetch models"));
         return;
       }
       const models = data.models || [];
       if (models.length === 0) {
-        alert(translate("No models returned"));
+        notify.warning(translate("No models returned"));
         return;
       }
 
@@ -653,13 +657,13 @@ export default function ProviderDetailPage() {
       }
       
       if (importedCount === 0) {
-        alert(translate("All models already exist, no new models added"));
+        notify.warning(translate("All models already exist, no new models added"));
       } else {
-        alert(translate("Successfully added") + ` ${importedCount} ` + translate("models"));
+        notify.info(translate("Successfully added") + ` ${importedCount} ` + translate("models"));
       }
     } catch (error) {
       console.log("Error importing Qoder models:", error);
-      alert(translate("Error fetching models") + ": " + error.message);
+      notify.error(translate("Error fetching models") + ": " + error.message);
     } finally {
       setImportingQoderModels(false);
     }
@@ -670,7 +674,7 @@ export default function ProviderDetailPage() {
     if (importingClineModels) return;
     const activeConnection = connections.find((conn) => conn.isActive !== false);
     if (!activeConnection) {
-      alert(translate("Please add an active Cline connection first"));
+      notify.error(translate("Please add an active Cline connection first"));
       return;
     }
     setImportingClineModels(true);
@@ -678,12 +682,12 @@ export default function ProviderDetailPage() {
       const res = await fetch(`/api/providers/${activeConnection.id}/models`);
       const data = await res.json();
       if (!res.ok) {
-        alert(data.error || translate("Failed to fetch models"));
+        notify.error(data.error || translate("Failed to fetch models"));
         return;
       }
       const models = data.models || [];
       if (models.length === 0) {
-        alert(translate("No models returned"));
+        notify.warning(translate("No models returned"));
         return;
       }
       let importedCount = 0;
@@ -700,13 +704,13 @@ export default function ProviderDetailPage() {
         importedCount += 1;
       }
       if (importedCount === 0) {
-        alert(translate("All models already exist, no new models added"));
+        notify.warning(translate("All models already exist, no new models added"));
       } else {
-        alert(translate("Successfully added") + ` ${importedCount} ` + translate("models"));
+        notify.info(translate("Successfully added") + ` ${importedCount} ` + translate("models"));
       }
     } catch (error) {
       console.log("Error importing Cline models:", error);
-      alert(translate("Error fetching models") + ": " + error.message);
+      notify.error(translate("Error fetching models") + ": " + error.message);
     } finally {
       setImportingClineModels(false);
     }
@@ -843,7 +847,8 @@ export default function ProviderDetailPage() {
         }
         setConnections(prev => prev.filter(c => !idsToDelete.includes(c.id)));
         setSelectedConnectionIds([]);
-        if (failed > 0) alert(`Deleted ${idsToDelete.length - failed} connection(s), ${failed} failed.`);
+        if (failed > 0) notify.error(`Deleted ${idsToDelete.length - failed} connection(s), ${failed} failed.`);
+        else notify.success(`Deleted ${idsToDelete.length} connection(s).`);
       }
     });
   };
@@ -1012,7 +1017,8 @@ export default function ProviderDetailPage() {
           failed += 1;
         }
       }
-      if (failed > 0) alert(`Updated with ${failed} failed request(s).`);
+      if (failed > 0) notify.error(`Updated with ${failed} failed request(s).`);
+      else notify.success("Proxy assignments updated");
       await fetchConnections();
       setShowBulkProxyModal(false);
     } finally {
@@ -1028,7 +1034,7 @@ export default function ProviderDetailPage() {
   const handleApplyOneToOne = () => {
     const activePools = proxyPools.filter((p) => p.isActive === true);
     if (activePools.length === 0) {
-      alert("No active proxy pools available.");
+      notify.warning("No active proxy pools available.");
       return;
     }
     const targets = connections.map((c, i) => ({
@@ -1041,8 +1047,86 @@ export default function ProviderDetailPage() {
 
   const isSelected = (connectionId) => selectedConnectionIds.includes(connectionId);
 
+  // One shared row of "add connection" actions; inList toggles the responsive
+  // wrapper classes and titles used by the after-list placement.
+  const renderConnectionActions = (inList) => (
+    <>
+      {hasDualAuthModes ? (
+        <>
+          <button
+            onClick={triggerOAuthConnection}
+            className={`inline-flex h-8 items-center justify-center gap-2 rounded-lg border border-border bg-surface px-3.5 text-sm font-display font-medium text-text-main transition-colors hover:border-text-subtle hover:bg-surface-2${inList ? " w-full sm:w-auto" : ""}`}
+          >
+            <span className="material-symbols-outlined text-[17px]">lock</span>
+            {oauthConnectionLabel}
+          </button>
+          <button
+            onClick={triggerApiKeyConnection}
+            className={`inline-flex h-8 items-center justify-center gap-2 rounded-lg bg-primary px-3.5 text-sm font-display font-medium text-white dark:text-neutral-950 transition-colors hover:bg-primary-hover${inList ? " w-full sm:w-auto" : ""}`}
+          >
+            <span className="material-symbols-outlined text-[17px]">key</span>
+            {apiKeyConnectionLabel}
+          </button>
+        </>
+      ) : (
+        <>
+          {!isCompatible && WEB_LOGIN_PROVIDERS.has(providerId) && (
+            <WebLoginButton providerId={providerId} onConnected={fetchConnections} />
+          )}
+          {!isCompatible && MCODE_LEASE_PROVIDERS.has(providerId) && (
+            <MinimaxLeaseButton providerId={providerId} onConnected={fetchConnections} />
+          )}
+          {!isCompatible && providerId === "iflow" && (
+            <Button
+              size="sm"
+              icon="cookie"
+              variant="secondary"
+              onClick={() => setShowIFlowCookieModal(true)}
+              title="Add connection using browser cookie"
+              className={inList ? "w-full sm:w-auto" : undefined}
+            >
+              Cookie
+            </Button>
+          )}
+          {providerId === "codex" && (
+            <Button
+              size="sm"
+              icon="playlist_add"
+              variant="secondary"
+              onClick={() => setShowBulkImportCodex(true)}
+              title={inList ? translate("Bulk import codex accounts from JSON") : undefined}
+              className={inList ? "w-full sm:w-auto" : undefined}
+            >
+              {translate("Bulk Add")}
+            </Button>
+          )}
+          {providerId === "grok-cli" && (
+            <Button
+              size="sm"
+              icon="playlist_add"
+              variant="secondary"
+              onClick={() => setShowBulkImportGrokCli(true)}
+              title={inList ? translate("Bulk import Grok CLI accounts from JSON") : undefined}
+              className={inList ? "w-full sm:w-auto" : undefined}
+            >
+              {translate("Bulk Add")}
+            </Button>
+          )}
+          <Button
+            size="sm"
+            icon="add"
+            onClick={triggerAddConnection}
+            className={inList ? "w-full sm:w-auto" : undefined}
+          >
+            {inList ? "Add" : (isCompatible ? "Add API Key" : (providerId === "iflow" ? "OAuth" : "Add Connection"))}
+          </Button>
+        </>
+      )}
+    </>
+  );
+
   const connectionsList = (
-    <div className="flex min-w-0 flex-col divide-y divide-black/[0.03] dark:divide-white/[0.03] max-h-[500px] overflow-y-auto pr-1">
+    <div className="flex min-w-0 flex-col divide-y divide-border-subtle max-h-[500px] overflow-y-auto pr-1">
       {connections
         .map((conn, index) => (
           <div key={conn.id} className="flex min-w-0 items-stretch">
@@ -1111,7 +1195,7 @@ export default function ProviderDetailPage() {
           <button
             onClick={handleApplyOneToOne}
             disabled={bulkUpdatingProxy || activePools.length === 0}
-            className="flex items-center gap-2 rounded-lg px-3 py-2 text-left transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.04] disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex items-center gap-2 rounded-lg px-3 py-2 text-left transition-colors hover:bg-surface-2 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <span className="material-symbols-outlined text-text-muted text-[18px]">sync_alt</span>
             <span className="text-sm text-text-main">One-to-one (rotate)</span>
@@ -1119,7 +1203,7 @@ export default function ProviderDetailPage() {
           <button
             onClick={() => handleApplySinglePool(null)}
             disabled={bulkUpdatingProxy}
-            className="flex items-center gap-2 rounded-lg px-3 py-2 text-left transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.04] disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex items-center gap-2 rounded-lg px-3 py-2 text-left transition-colors hover:bg-surface-2 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <span className="material-symbols-outlined text-text-muted text-[18px]">link_off</span>
             <span className="text-sm text-text-main">None (unbind all)</span>
@@ -1129,7 +1213,7 @@ export default function ProviderDetailPage() {
               key={pool.id}
               onClick={() => handleApplySinglePool(pool.id)}
               disabled={bulkUpdatingProxy || pool.isActive !== true}
-              className="flex items-center gap-2 rounded-lg px-3 py-2 text-left transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.04] disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex items-center gap-2 rounded-lg px-3 py-2 text-left transition-colors hover:bg-surface-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <span className="material-symbols-outlined text-text-muted text-[18px]">lan</span>
               <span className="truncate text-sm text-text-main">{pool.name}</span>
@@ -1205,8 +1289,67 @@ export default function ProviderDetailPage() {
       type: "llm",
     });
 
+    // Bulk selection: custom → delete record, legacyAlias → drop alias, built-in → disable (restorable)
+    const selectableRows = [
+      ...customModelRows.map((m) => ({ id: m.id, kind: m.source === "custom" ? "custom" : "alias", alias: m.alias })),
+      ...displayModels.map((m) => ({ id: m.id, kind: "builtin" })),
+    ];
+    const selectedModelSet = new Set(selectedModelIds);
+    const selectableIds = selectableRows.map((r) => r.id);
+    const selectedModelCount = selectableIds.filter((id) => selectedModelSet.has(id)).length;
+    const allModelsSelected = selectableIds.length > 0 && selectedModelCount === selectableIds.length;
+    const toggleSelectAllModels = () => setSelectedModelIds(allModelsSelected ? [] : selectableIds);
+    const toggleSelectModel = (id) => setSelectedModelIds((prev) => (
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+    ));
+    const handleDeleteSelectedModels = () => {
+      const rows = selectableRows.filter((r) => selectedModelSet.has(r.id));
+      if (rows.length === 0) return;
+      const customCount = rows.filter((r) => r.kind === "custom").length;
+      const aliasCount = rows.filter((r) => r.kind === "alias").length;
+      const builtinCount = rows.filter((r) => r.kind === "builtin").length;
+      const parts = [
+        customCount > 0 && `${customCount} custom model${customCount > 1 ? "s" : ""} will be deleted permanently.`,
+        aliasCount > 0 && `${aliasCount} alias${aliasCount > 1 ? "es" : ""} will be removed.`,
+        builtinCount > 0 && `${builtinCount} built-in model${builtinCount > 1 ? "s" : ""} will be disabled (restorable below).`,
+      ].filter(Boolean);
+      setConfirmState({
+        title: `Delete ${rows.length} Model${rows.length > 1 ? "s" : ""}`,
+        message: parts.join(" "),
+        onConfirm: async () => {
+          setConfirmState(null);
+          for (const row of rows) {
+            if (row.kind === "custom") await handleDeleteCustomModel(row.id, "llm", providerStorageAlias);
+            else if (row.kind === "alias") await handleDeleteAlias(row.alias);
+            else await handleDisableModel(row.id);
+          }
+          setSelectedModelIds([]);
+        },
+      });
+    };
+
     return (
       <div className="flex flex-wrap gap-3">
+        {(customModelRows.length > 0 || displayModels.length > 0) && (
+          <div className="mb-1 flex w-full items-center gap-1.5 border-b border-border-subtle pb-2 dark:border-border-subtle">
+            <Checkbox size="sm" checked={allModelsSelected} onChange={toggleSelectAllModels} />
+            <span
+              className="cursor-pointer select-none text-xs text-text-muted hover:text-text-main"
+              onClick={toggleSelectAllModels}
+            >
+              Select All
+            </span>
+            {selectedModelCount > 0 && (
+              <button
+                onClick={handleDeleteSelectedModels}
+                className="ml-auto inline-flex h-7 items-center gap-1.5 rounded-lg border border-danger/40 bg-surface px-2.5 text-[11px] text-danger transition-colors hover:bg-danger/5 hover:border-danger dark:border-danger/40 dark:hover:bg-danger/10"
+              >
+                <span className="material-symbols-outlined text-sm">delete</span>
+                Delete Selected ({selectedModelCount})
+              </button>
+            )}
+          </div>
+        )}
         {/* Custom models first */}
         {customModelRows.map((model) => (
           <ModelRow
@@ -1231,6 +1374,9 @@ export default function ProviderDetailPage() {
             isFree={false}
             caps={getCaps(`${providerId}/${model.id}`)}
             thinkingSuffix={resolveThinkingSuffix(model.id)}
+            selectable
+            selected={selectedModelSet.has(model.id)}
+            onToggleSelect={() => toggleSelectModel(model.id)}
           />
         ))}
 
@@ -1257,6 +1403,9 @@ export default function ProviderDetailPage() {
               onDisable={() => handleDisableModel(model.id)}
               caps={getCaps(`${providerId}/${model.id}`)}
               thinkingSuffix={resolveThinkingSuffix(model.id)}
+              selectable
+              selected={selectedModelSet.has(model.id)}
+              onToggleSelect={() => toggleSelectModel(model.id)}
             />
           );
         })}
@@ -1319,7 +1468,7 @@ export default function ProviderDetailPage() {
                     onClick={async () => {
                       await handleAddCustomModel(m.id, "llm", providerStorageAlias);
                     }}
-                    className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-black/10 dark:border-white/10 text-xs text-text-muted hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-colors"
+                    className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-border text-xs text-text-muted hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-colors"
                     title={`${m.name} · ${(m.contextLength / 1000).toFixed(0)}k ctx`}
                   >
                     <span className="material-symbols-outlined text-[13px]">add</span>
@@ -1332,24 +1481,64 @@ export default function ProviderDetailPage() {
         })()}
 
         {/* Disabled models — restorable */}
-        {disabledDisplayModels.length > 0 && (
-          <div className="w-full mt-2">
-            <p className="text-xs text-text-muted mb-2">Disabled models ({disabledDisplayModels.length}):</p>
-            <div className="flex flex-wrap gap-2">
-              {disabledDisplayModels.map((m) => (
-                <button
-                  key={m.id}
-                  onClick={() => handleEnableModel(m.id)}
-                  className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-dashed border-black/10 dark:border-white/10 text-xs text-text-muted hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-colors"
-                  title="Restore model"
+        {disabledDisplayModels.length > 0 && (() => {
+          const selectedDisabledSet = new Set(selectedDisabledIds);
+          const selectedDisabledCount = disabledDisplayModels.filter((m) => selectedDisabledSet.has(m.id)).length;
+          const allDisabledSelected = selectedDisabledCount === disabledDisplayModels.length;
+          const toggleSelectAllDisabled = () => setSelectedDisabledIds(allDisabledSelected ? [] : disabledDisplayModels.map((m) => m.id));
+          const toggleSelectDisabled = (id) => setSelectedDisabledIds((prev) => (
+            prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+          ));
+          const handleRestoreSelectedDisabled = async () => {
+            const ids = disabledDisplayModels.filter((m) => selectedDisabledSet.has(m.id)).map((m) => m.id);
+            for (const id of ids) {
+              await handleEnableModel(id);
+            }
+            setSelectedDisabledIds([]);
+          };
+          return (
+            <div className="w-full mt-2">
+              <div className="mb-2 flex flex-wrap items-center gap-1.5">
+                <p className="text-xs text-text-muted">Disabled models ({disabledDisplayModels.length}):</p>
+                {selectedDisabledCount > 0 && (
+                  <button
+                    onClick={handleRestoreSelectedDisabled}
+                    className="ml-auto inline-flex h-7 items-center gap-1.5 rounded-lg border border-primary/40 bg-surface px-2.5 text-[11px] text-primary transition-colors hover:bg-primary/5 hover:border-primary dark:border-primary/40 dark:hover:bg-primary/10"
+                  >
+                    <span className="material-symbols-outlined text-sm">restart_alt</span>
+                    Restore Selected ({selectedDisabledCount})
+                  </button>
+                )}
+                <Checkbox size="sm" checked={allDisabledSelected} onChange={toggleSelectAllDisabled} />
+                <span
+                  className="cursor-pointer select-none text-xs text-text-muted hover:text-text-main"
+                  onClick={toggleSelectAllDisabled}
                 >
-                  <span className="material-symbols-outlined text-[13px]">add</span>
-                  {m.id}
-                </button>
-              ))}
+                  Select All
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {disabledDisplayModels.map((m) => (
+                  <div key={m.id} className="flex items-center gap-1.5">
+                    <Checkbox
+                      size="sm"
+                      checked={selectedDisabledSet.has(m.id)}
+                      onChange={() => toggleSelectDisabled(m.id)}
+                    />
+                    <button
+                      onClick={() => handleEnableModel(m.id)}
+                      className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-dashed border-border text-xs text-text-muted hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-colors"
+                      title="Restore model"
+                    >
+                      <span className="material-symbols-outlined text-[13px]">add</span>
+                      {m.id}
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
       </div>
     );
   };
@@ -1450,7 +1639,7 @@ export default function ProviderDetailPage() {
                   {isCompatible ? "Compatible" : isFreeNoAuth ? "Free" : supportsApiKeyAuth && isOAuth ? "Dual Auth" : isOAuth ? "OAuth" : "API Key"}
                 </Badge>
               </div>
-              <p className="mt-0.5 font-mono text-[11px] uppercase tracking-wide text-text-muted">
+              <p className="mt-0.5 text-xs text-text-muted">
                 {summary.total} connection{summary.total === 1 ? "" : "s"}
                 {summary.total > 0 && ` · ${summary.connected} connected`}
               </p>
@@ -1471,7 +1660,7 @@ export default function ProviderDetailPage() {
         <SummaryStat
           className="lg:col-span-1"
           icon="hub"
-          label="Total koneksi"
+          label={translate("Connections")}
           value={summary.total}
         />
         <SummaryStat
@@ -1491,7 +1680,7 @@ export default function ProviderDetailPage() {
         <SummaryStat
           className="lg:col-span-1"
           icon="toggle_on"
-          label="Aktif"
+          label={translate("Active")}
           value={summary.active}
         />
       </div>
@@ -1501,7 +1690,7 @@ export default function ProviderDetailPage() {
           <div className="flex items-start gap-2.5">
             <span className="material-symbols-outlined text-[16px] text-warning shrink-0 mt-px">warning</span>
             <div className="min-w-0 flex-1">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-warning">
+              <p className="text-xs font-bold text-warning">
                 Risk Notice
               </p>
               <p className="mt-1 text-xs leading-relaxed text-warning">
@@ -1521,9 +1710,9 @@ export default function ProviderDetailPage() {
               href={providerInfo.notice.apiKeyUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex h-7 items-center justify-center rounded-lg bg-primary px-3 text-xs font-display font-medium text-white dark:text-amber-950 transition-colors hover:bg-primary-hover sm:py-0"
+              className="inline-flex h-7 items-center justify-center rounded-lg bg-primary px-3 text-xs font-display font-medium text-white dark:text-neutral-950 transition-colors hover:bg-primary-hover sm:py-0"
             >
-              Get API Key →
+              Get API Key
             </a>
           )}
         </div>
@@ -1620,7 +1809,7 @@ export default function ProviderDetailPage() {
                       size="sm"
                       variant="outline"
                       icon="delete"
-                      className="!h-[42px] border-danger/40 text-danger! hover:bg-danger/5 hover:border-danger dark:border-danger/40 dark:text-danger! dark:hover:bg-danger/10 font-mono text-[10px] uppercase tracking-wider"
+                      className="border-danger/40 text-danger! hover:bg-danger/5 hover:border-danger dark:border-danger/40 dark:text-danger! dark:hover:bg-danger/10"
                       onClick={handleBulkDelete}
                     >
                       Delete Selected ({selectedConnectionIds.length})
@@ -1630,7 +1819,7 @@ export default function ProviderDetailPage() {
                     size="sm"
                     variant="outline"
                     icon="sync"
-                    className="!h-[42px] border-primary/40 text-primary! hover:bg-primary/5 hover:border-primary dark:border-primary/40 dark:text-primary! dark:hover:bg-primary/10 font-mono text-[10px] uppercase tracking-wider"
+                    className="border-primary/40 text-primary! hover:bg-primary/5 hover:border-primary dark:border-primary/40 dark:text-primary! dark:hover:bg-primary/10"
                     onClick={handleRunOneByOneTest}
                     disabled={oneByOneRunning}
                   >
@@ -1651,21 +1840,21 @@ export default function ProviderDetailPage() {
               )}
               {/* Round Robin toggle */}
               <div className="flex flex-wrap items-center gap-2.5 rounded-lg border border-border bg-surface-2/40 px-3 py-2">
-                <span className="font-mono text-[10px] uppercase tracking-wider text-text-muted">Round Robin</span>
+                <span className="text-[11px] text-text-muted">Round Robin</span>
                 <Toggle
                   checked={providerStrategy === "round-robin"}
                   onChange={handleRoundRobinToggle}
                 />
                 {providerStrategy === "round-robin" && (
                   <div className="flex items-center gap-1.5">
-                    <span className="font-mono text-[10px] uppercase tracking-wider text-text-subtle">Sticky:</span>
+                    <span className="text-[11px] text-text-subtle">Sticky:</span>
                     <input
                       type="number"
                       min={1}
                       value={providerStickyLimit}
                       onChange={(e) => handleStickyLimitChange(e.target.value)}
                       placeholder="1"
-                      className="w-14 rounded-md border border-border bg-surface px-2 py-1 font-mono text-xs text-text-main focus:border-text-subtle focus:outline-none"
+                      className="w-14 rounded-md border border-border bg-surface px-2 py-1 font-mono text-xs text-text-main"
                     />
                   </div>
                 )}
@@ -1687,68 +1876,20 @@ export default function ProviderDetailPage() {
                 </div>
               </div>
               <div className="flex gap-2">
-                {hasDualAuthModes ? (
-                  <>
-                    <button
-                      onClick={triggerOAuthConnection}
-                      className="inline-flex h-8 items-center justify-center gap-2 rounded-lg border border-border bg-surface px-3.5 text-sm font-display font-medium text-text-main transition-colors hover:border-text-subtle hover:bg-surface-2"
-                    >
-                      <span className="material-symbols-outlined text-[17px]">lock</span>
-                      {oauthConnectionLabel}
-                    </button>
-                    <button
-                      onClick={triggerApiKeyConnection}
-                      className="inline-flex h-8 items-center justify-center gap-2 rounded-lg bg-primary px-3.5 text-sm font-display font-medium text-white dark:text-amber-950 transition-colors hover:bg-primary-hover"
-                    >
-                      <span className="material-symbols-outlined text-[17px]">key</span>
-                      {apiKeyConnectionLabel}
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    {!isCompatible && WEB_LOGIN_PROVIDERS.has(providerId) && (
-                      <WebLoginButton providerId={providerId} onConnected={fetchConnections} />
-                    )}
-                    {!isCompatible && MCODE_LEASE_PROVIDERS.has(providerId) && (
-                      <MinimaxLeaseButton providerId={providerId} onConnected={fetchConnections} />
-                    )}
-                    {!isCompatible && providerId === "iflow" && (
-                      <Button size="sm" icon="cookie" variant="secondary" onClick={() => setShowIFlowCookieModal(true)}>
-                        Cookie
-                      </Button>
-                    )}
-                    {providerId === "codex" && (
-                      <Button size="sm" icon="playlist_add" variant="secondary" onClick={() => setShowBulkImportCodex(true)}>
-                        {translate("Bulk Add")}
-                      </Button>
-                    )}
-                    {providerId === "grok-cli" && (
-                      <Button size="sm" icon="playlist_add" variant="secondary" onClick={() => setShowBulkImportGrokCli(true)}>
-                        {translate("Bulk Add")}
-                      </Button>
-                    )}
-                    <Button
-                      size="sm"
-                      icon="add"
-                      onClick={triggerAddConnection}
-                    >
-                      {isCompatible ? "Add API Key" : (providerId === "iflow" ? "OAuth" : "Add Connection")}
-                    </Button>
-                  </>
-                )}
+                {renderConnectionActions(false)}
               </div>
             </div>
           ) : (
             <>
               {oneByOneSummary && (
-                <div className="mb-4 rounded-lg border border-black/10 bg-black/[0.02] px-3 py-2 text-xs text-text-muted dark:border-white/10 dark:bg-white/[0.03]">
+                <div className="mb-4 rounded-lg border border-border bg-surface-2 px-3 py-2 text-xs text-text-muted">
                   <div className="flex flex-wrap items-center gap-3">
                     <span>Total: {oneByOneSummary.total}</span>
                     <span>Completed: {oneByOneSummary.completed}</span>
                     <span>Passed: {oneByOneSummary.passed}</span>
                     <span>Failed: {oneByOneSummary.failed}</span>
                     {oneByOneSummary.stopped && (
-                      <span className="text-amber-600 dark:text-amber-400">Stopped</span>
+                      <span className="text-clay-600 dark:text-clay-400">Stopped</span>
                     )}
                     {oneByOneRunning && oneByOneCurrentConnectionId && (
                       <span>Running: {connections.find((conn) => conn.id === oneByOneCurrentConnectionId)?.name || oneByOneCurrentConnectionId}</span>
@@ -1757,10 +1898,10 @@ export default function ProviderDetailPage() {
                 </div>
               )}
               {connections.length > 0 && (
-                <div className="mb-3 flex items-center gap-1.5 border-b border-black/[0.03] pb-2 dark:border-white/[0.03]">
+                <div className="mb-3 flex items-center gap-1.5 border-b border-border-subtle pb-2 dark:border-border-subtle">
                   <Checkbox size="sm" checked={allSelected} onChange={() => toggleSelectAllConnections()} />
                   <span
-                    className="cursor-pointer select-none text-xs text-text-muted hover:text-primary"
+                    className="cursor-pointer select-none text-xs text-text-muted hover:text-text-main"
                     onClick={() => toggleSelectAllConnections()}
                   >
                     Select All
@@ -1770,75 +1911,7 @@ export default function ProviderDetailPage() {
               {connectionsList}
               {!isCompatible && (
                 <div className="mt-4 grid grid-cols-1 gap-2 sm:flex">
-                  {WEB_LOGIN_PROVIDERS.has(providerId) && (
-                    <WebLoginButton providerId={providerId} onConnected={fetchConnections} />
-                  )}
-                  {MCODE_LEASE_PROVIDERS.has(providerId) && (
-                    <MinimaxLeaseButton providerId={providerId} onConnected={fetchConnections} />
-                  )}
-                  {providerId === "iflow" && (
-                    <Button
-                      size="sm"
-                      icon="cookie"
-                      variant="secondary"
-                      onClick={() => setShowIFlowCookieModal(true)}
-                      title="Add connection using browser cookie"
-                      className="w-full sm:w-auto"
-                    >
-                      Cookie
-                    </Button>
-                  )}
-                  {providerId === "codex" && (
-                    <Button
-                      size="sm"
-                      icon="playlist_add"
-                      variant="secondary"
-                      onClick={() => setShowBulkImportCodex(true)}
-                      title={translate("Bulk import codex accounts from JSON")}
-                      className="w-full sm:w-auto"
-                    >
-                      {translate("Bulk Add")}
-                    </Button>
-                  )}
-                  {providerId === "grok-cli" && (
-                    <Button
-                      size="sm"
-                      icon="playlist_add"
-                      variant="secondary"
-                      onClick={() => setShowBulkImportGrokCli(true)}
-                      title={translate("Bulk import Grok CLI accounts from JSON")}
-                      className="w-full sm:w-auto"
-                    >
-                      {translate("Bulk Add")}
-                    </Button>
-                  )}
-                  {hasDualAuthModes ? (
-                    <>
-                      <button
-                        onClick={triggerOAuthConnection}
-                        className="inline-flex h-8 items-center justify-center gap-2 rounded-lg border border-border bg-surface px-3.5 text-sm font-display font-medium text-text-main transition-colors hover:border-text-subtle hover:bg-surface-2 w-full sm:w-auto"
-                      >
-                        <span className="material-symbols-outlined text-[17px]">lock</span>
-                        {oauthConnectionLabel}
-                      </button>
-                      <button
-                        onClick={triggerApiKeyConnection}
-                        className="inline-flex h-8 items-center justify-center gap-2 rounded-lg bg-primary px-3.5 text-sm font-display font-medium text-white dark:text-amber-950 transition-colors hover:bg-primary-hover w-full sm:w-auto"
-                      >
-                        <span className="material-symbols-outlined text-[17px]">key</span>
-                        {apiKeyConnectionLabel}
-                      </button>
-                    </>
-                  ) : (
-                    <Button
-                      size="sm"
-                      icon="add"
-                      onClick={triggerAddConnection}
-                      className="w-full sm:w-auto"
-                    >
-                      Add
-                    </Button>
-                  )}
+                  {renderConnectionActions(true)}
                 </div>
               )}
             </>
@@ -2099,7 +2172,7 @@ export default function ProviderDetailPage() {
   );
 }
 
-function SummaryStat({ icon, label, value, sub, tone, hero, className }) {
+function SummaryStat({ icon, label, value, sub, tone, className }) {
   const toneClass = {
     default: "text-text-main",
     success: "text-success",
@@ -2116,18 +2189,18 @@ function SummaryStat({ icon, label, value, sub, tone, hero, className }) {
   return (
     <Card
       padding="none"
-      className={`flex items-center gap-3 ${hero ? "p-3.5" : "p-2.5"} ${className ?? ""}`}
+      className={`flex items-center gap-3 p-2.5 ${className ?? ""}`}
     >
       <span
-        className={`material-symbols-outlined shrink-0 ${hero ? "text-[26px]" : "text-[21px]"} ${iconClass}`}
+        className={`material-symbols-outlined shrink-0 text-[21px] ${iconClass}`}
       >
         {icon}
       </span>
       <div className="min-w-0 flex-1">
-        <p className={`font-display font-bold leading-tight ${toneClass} ${hero ? "text-2xl" : "text-base"}`}>
+        <p className={`font-display font-bold leading-tight ${toneClass} text-base`}>
           {value}
         </p>
-        <p className={`truncate font-mono uppercase tracking-[0.12em] text-text-muted ${hero ? "text-[10px]" : "text-[10px]"}`}>
+        <p className={`truncate text-xs text-text-muted`}>
           {label}
         </p>
         {sub && <p className="truncate text-[11px] text-text-muted">{sub}</p>}

@@ -161,7 +161,7 @@ export default function HeaderNav() {
 
       {/* Disconnected / Updating Overlay */}
       {(isDisconnected || isUpdating) && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-6 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-6">
           {isUpdating ? (
             <ManualUpdatePanel
               latestVersion={updateInfo?.latestVersion}
@@ -195,7 +195,7 @@ function ManualUpdatePanel({ latestVersion, installCmd, copied, onCopyAndShutdow
   return (
     <div className="w-full max-w-lg rounded-xl border border-white/10 bg-neutral-900/95 p-6 text-white">
       <div className="mb-4 flex items-center gap-3">
-        <div className="flex size-11 items-center justify-center rounded-full bg-amber-500/20 text-amber-400">
+        <div className="flex size-11 items-center justify-center rounded-full bg-clay-500/20 text-clay-400">
           <span className="material-symbols-outlined text-[24px]">content_copy</span>
         </div>
         <div>
@@ -212,7 +212,7 @@ function ManualUpdatePanel({ latestVersion, installCmd, copied, onCopyAndShutdow
 
       <p className="mb-2 text-sm text-white/80">Install command:</p>
       <div className="mb-4 w-full rounded bg-white/5 px-3 py-2">
-        <code className="break-all font-mono text-xs text-amber-400">{installCmd}</code>
+        <code className="break-all font-mono text-xs text-clay-400">{installCmd}</code>
       </div>
 
       <ol className="mb-4 list-inside list-decimal space-y-1 text-xs text-white/70">

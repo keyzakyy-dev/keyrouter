@@ -1,10 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Card, Button, Toggle, Input, SegmentedControl } from "@/shared/components";
+import { Card, Button, Toggle, Input } from "@/shared/components";
 import Modal, { ConfirmModal } from "@/shared/components/Modal";
 import LanguageSwitcher from "@/shared/components/LanguageSwitcher";
-import { useTheme } from "@/shared/hooks/useTheme";
 import { cn } from "@/shared/utils/cn";
 import { APP_CONFIG } from "@/shared/constants/config";
 import { LOCALE_COOKIE, normalizeLocale } from "@/i18n/config";
@@ -20,7 +19,6 @@ function getLocaleFromCookie() {
 }
 
 export default function ProfilePage() {
-  const { theme, setTheme, isDark } = useTheme();
   const [locale, setLocale] = useState(() => getLocaleFromCookie());
   const [langOpen, setLangOpen] = useState(false);
   const [shutdownOpen, setShutdownOpen] = useState(false);
@@ -770,23 +768,12 @@ export default function ProfilePage() {
         <Card>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
             <div className="flex items-center gap-3 sm:gap-4">
-              <span className="material-symbols-outlined text-2xl shrink-0 text-primary dark:text-primary">computer</span>
+              <span className="material-symbols-outlined text-2xl shrink-0 text-text-subtle">computer</span>
               <div>
                 <h2 className="font-display text-lg sm:text-xl font-semibold text-text-main">Local Mode</h2>
-                <p className="mt-0.5 font-mono text-[10px] uppercase tracking-wider text-text-subtle">Running on your machine</p>
+                <p className="mt-0.5 text-xs text-text-subtle">Running on your machine</p>
               </div>
             </div>
-            <SegmentedControl
-              value={theme}
-              onChange={(v) => setTheme(v)}
-              size="sm"
-              className="w-full sm:w-auto"
-              options={[
-                { value: "light", label: "Light", icon: "light_mode" },
-                { value: "dark", label: "Dark", icon: "dark_mode" },
-                { value: "system", label: "System", icon: "contrast" },
-              ]}
-            />
           </div>
           <div className="flex flex-col gap-3 pt-4 border-t border-border">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 rounded-lg bg-bg border border-border gap-2">
@@ -823,7 +810,7 @@ export default function ProfilePage() {
               />
             </div>
             {dbStatus.message && (
-              <p className={`text-sm ${dbStatus.type === "error" ? "text-red-500" : "text-green-600 dark:text-green-400"}`}>
+              <p className={`text-sm ${dbStatus.type === "error" ? "text-danger" : "text-success"}`}>
                 {dbStatus.message}
               </p>
             )}
@@ -833,14 +820,14 @@ export default function ProfilePage() {
         {/* Security */}
         <Card>
           <div className="flex items-center gap-3 mb-4">
-            <span className="material-symbols-outlined text-[24px] shrink-0 text-primary dark:text-primary">shield</span>
+            <span className="material-symbols-outlined text-[24px] shrink-0 text-text-subtle">shield</span>
             <h3 className="font-display text-base sm:text-lg font-semibold text-text-main">Security</h3>
           </div>
           <div className="flex flex-col gap-4">
             <div className="flex items-start sm:items-center justify-between gap-4">
               <div className="flex-1 min-w-0">
                 <p className="font-display text-sm sm:text-base font-semibold text-text-main">Require login</p>
-                <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted">
+                <p className="text-xs text-text-muted">
                   When ON, dashboard requires password. When OFF, access without login.
                 </p>
               </div>
@@ -854,7 +841,7 @@ export default function ProfilePage() {
               <form onSubmit={handlePasswordChange} className="flex flex-col gap-4 pt-4 border-t border-border/50">
                 {settings.hasPassword && (
                   <div className="flex flex-col gap-2">
-                    <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">Current Password</label>
+                    <label className="text-xs text-text-muted mb-1.5 block">Current Password</label>
                     <Input
                       type="password"
                       placeholder="Enter current password"
@@ -864,16 +851,9 @@ export default function ProfilePage() {
                     />
                   </div>
                 )}
-                {/* {!settings.hasPassword && (
-                  <div className="p-3 rounded-lg bg-blue-500/10 border border-blue-500/20">
-                    <p className="text-sm text-blue-600 dark:text-blue-400">
-                      Setting password for the first time. Leave current password empty or use default: <code className="bg-blue-500/20 px-1 rounded">123456</code>
-                    </p>
-                  </div>
-                )} */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="flex flex-col gap-2">
-                    <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">New Password</label>
+                    <label className="text-xs text-text-muted mb-1.5 block">New Password</label>
                     <Input
                       type="password"
                       placeholder="Enter new password"
@@ -883,7 +863,7 @@ export default function ProfilePage() {
                     />
                   </div>
                   <div className="flex flex-col gap-2">
-                    <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">Confirm New Password</label>
+                    <label className="text-xs text-text-muted mb-1.5 block">Confirm New Password</label>
                     <Input
                       type="password"
                       placeholder="Confirm new password"
@@ -895,7 +875,7 @@ export default function ProfilePage() {
                 </div>
 
                 {passStatus.message && (
-                  <p className={`text-xs sm:text-sm ${passStatus.type === "error" ? "text-red-500" : "text-green-500"}`}>
+                  <p className={`text-xs sm:text-sm ${passStatus.type === "error" ? "text-danger" : "text-success"}`}>
                     {passStatus.message}
                   </p>
                 )}
@@ -917,10 +897,10 @@ export default function ProfilePage() {
             onClick={() => setOidcExpanded((v) => !v)}
             className="w-full flex items-center gap-3 text-left"
           >
-            <span className="material-symbols-outlined text-[24px] shrink-0 text-primary dark:text-primary">lock_open</span>
+            <span className="material-symbols-outlined text-[24px] shrink-0 text-text-subtle">lock_open</span>
             <div className="flex-1 min-w-0">
               <h3 className="font-display text-base sm:text-lg font-semibold text-text-main">Single Sign-On (SSO)</h3>
-              <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted">
+              <p className="text-xs text-text-muted">
                 {settings.authMode === "sso" || settings.authMode === "oidc" || settings.authMode === "saml"
                   ? `${settings.ssoType === "saml" ? "SAML 2.0" : "OIDC"} SSO active`
                   : settings.authMode === "both"
@@ -934,13 +914,13 @@ export default function ProfilePage() {
           </button>
           {oidcExpanded && (
             <div className="flex flex-col gap-4 mt-4">
-              <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted">
+              <p className="text-xs text-text-muted">
                 Configure enterprise Single Sign-On (SSO) for dashboard access using SAML 2.0 or OIDC.
               </p>
 
               {/* SSO Protocol Switcher Tabs */}
               <div className="flex flex-col gap-2">
-                <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">SSO Protocol</label>
+                <label className="text-xs text-text-muted mb-1.5 block">SSO Protocol</label>
                 <div className="inline-flex p-1 rounded-full bg-surface-2 w-full overflow-hidden">
                   <button
                     type="button"
@@ -971,7 +951,7 @@ export default function ProfilePage() {
 
               {/* Auth Mode selection */}
               <div className="flex flex-col gap-2">
-                <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">Auth Mode</label>
+                <label className="text-xs text-text-muted mb-1.5 block">Auth Mode</label>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                   {[
                     {
@@ -1005,13 +985,13 @@ export default function ProfilePage() {
                         className={cn(
                           "text-left rounded-lg border p-3 transition-colors",
                           active
-                            ? "border-primary bg-primary/5"
-                            : "border-border bg-bg hover:bg-black/5 dark:hover:bg-white/5"
+                            ? "border-accent/50 bg-accent/5"
+                            : "border-border bg-bg hover:bg-surface-2"
                         )}
                         disabled={loading || oidcLoading || samlLoading}
                       >
                         <p className="font-display text-sm sm:text-base font-semibold text-text-main">{option.title}</p>
-                        <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted mt-1">{option.desc}</p>
+                        <p className="text-xs text-text-muted mt-1">{option.desc}</p>
                       </button>
                     );
                   })}
@@ -1029,12 +1009,12 @@ export default function ProfilePage() {
                       className="w-full p-3 flex items-center justify-between gap-2 text-left hover:bg-surface/50 transition-colors"
                     >
                       <div className="flex items-center gap-2">
-                        <span className="material-symbols-outlined text-primary dark:text-primary text-lg">menu_book</span>
+                        <span className="material-symbols-outlined text-text-subtle text-lg">menu_book</span>
                         <div>
                           <p className="font-display text-xs sm:text-sm font-semibold text-text-main">
                             IdP Setup Guidelines & Provider Configuration Instructions
                           </p>
-                          <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted">
+                          <p className="text-xs text-text-muted">
                             Click to view setup steps for AWS IAM Identity Center, Okta, Entra ID, Keycloak, & Authentik
                           </p>
                         </div>
@@ -1049,8 +1029,8 @@ export default function ProfilePage() {
 
                     {showSamlGuide && (
                       <div className="p-4 border-t border-border bg-surface/30 text-xs text-text-main flex flex-col gap-3">
-                        <div className="p-2.5 rounded border border-primary/20 bg-primary/5 text-primary text-xs">
-                          <p className="font-display text-sm font-semibold mb-1">🔑 Required Service Provider (SP) Values for your IdP Setup:</p>
+                        <div className="p-2.5 rounded border border-accent/20 bg-accent/5 text-accent text-xs">
+                          <p className="font-display text-sm font-semibold mb-1">(Required) Service Provider (SP) Values for your IdP Setup:</p>
                           <ul className="list-disc pl-4 space-y-1 font-mono text-[11px]">
                             <li>
                               <b>Assertion Consumer Service (ACS) URL:</b>{" "}
@@ -1070,7 +1050,7 @@ export default function ProfilePage() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
                           <div className="p-3 rounded border border-border bg-bg/50 flex flex-col gap-1.5">
                             <p className="font-display text-sm font-semibold text-text-main flex items-center gap-1.5">
-                              <span>☁️</span> AWS IAM Identity Center
+                              <span className="material-symbols-outlined text-[16px]">cloud</span> AWS IAM Identity Center
                             </p>
                             <ol className="list-decimal pl-4 text-text-muted space-y-1">
                               <li>Applications → <b>Add application</b> → Select <b>Add custom SAML 2.0 application</b>.</li>
@@ -1083,7 +1063,7 @@ export default function ProfilePage() {
 
                           <div className="p-3 rounded border border-border bg-bg/50 flex flex-col gap-1.5">
                             <p className="font-display text-sm font-semibold text-text-main flex items-center gap-1.5">
-                              <span>🔷</span> Microsoft Entra ID (Azure AD)
+                              <span className="material-symbols-outlined text-[16px]">domain</span> Microsoft Entra ID (Azure AD)
                             </p>
                             <ol className="list-decimal pl-4 text-text-muted space-y-1">
                               <li>Enterprise Applications → <b>New application</b> → <b>Create your own application</b>.</li>
@@ -1096,7 +1076,7 @@ export default function ProfilePage() {
 
                           <div className="p-3 rounded border border-border bg-bg/50 flex flex-col gap-1.5">
                             <p className="font-display text-sm font-semibold text-text-main flex items-center gap-1.5">
-                              <span>🟢</span> Okta / Auth0
+                              <span className="material-symbols-outlined text-[16px]">apps</span> Okta / Auth0
                             </p>
                             <ol className="list-decimal pl-4 text-text-muted space-y-1">
                               <li>Applications → <b>Create App Integration</b> → Select <b>SAML 2.0</b>.</li>
@@ -1109,7 +1089,7 @@ export default function ProfilePage() {
 
                           <div className="p-3 rounded border border-border bg-bg/50 flex flex-col gap-1.5">
                             <p className="font-display text-sm font-semibold text-text-main flex items-center gap-1.5">
-                              <span>🛡️</span> Keycloak / Authentik
+                              <span className="material-symbols-outlined text-[16px]">security</span> Keycloak / Authentik
                             </p>
                             <ol className="list-decimal pl-4 text-text-muted space-y-1">
                               <li>Clients → <b>Create client</b> → Select <b>SAML</b>.</li>
@@ -1124,10 +1104,10 @@ export default function ProfilePage() {
                   </div>
 
                   {/* Quick Import Card */}
-                  <div className="p-3 rounded-lg border border-dashed border-primary/40 bg-primary/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="p-3 rounded-lg border border-dashed border-accent/40 bg-accent/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
                       <p className="font-display text-sm font-semibold text-text-main">1-Click IdP Metadata XML Import</p>
-                      <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted">Auto-fill SSO URL, Issuer & Cert from XML metadata</p>
+                      <p className="text-xs text-text-muted">Auto-fill SSO URL, Issuer & Cert from XML metadata</p>
                     </div>
                     <Button
                       type="button"
@@ -1149,7 +1129,7 @@ export default function ProfilePage() {
 
                   <div className="grid grid-cols-1 gap-4">
                     <div className="flex flex-col gap-2">
-                      <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">Single Sign-On Service URL (samlEntryPoint)</label>
+                      <label className="text-xs text-text-muted mb-1.5 block">Single Sign-On Service URL (samlEntryPoint)</label>
                       <Input
                         placeholder="https://idp.example.com/app/saml/sso/..."
                         value={samlForm.samlEntryPoint}
@@ -1159,7 +1139,7 @@ export default function ProfilePage() {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">SP Entity ID / Audience (samlIssuer)</label>
+                      <label className="text-xs text-text-muted mb-1.5 block">SP Entity ID / Audience (samlIssuer)</label>
                       <Input
                         placeholder="urn:keyrouter:sp"
                         value={samlForm.samlIssuer}
@@ -1170,7 +1150,7 @@ export default function ProfilePage() {
 
                     <div className="flex flex-col gap-2">
                       <div className="flex items-center justify-between">
-                        <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">IdP X.509 Certificate (samlCert)</label>
+                        <label className="text-xs text-text-muted mb-1.5 block">IdP X.509 Certificate (samlCert)</label>
                         <Button
                           type="button"
                           variant="outline"
@@ -1196,12 +1176,12 @@ export default function ProfilePage() {
                         className="w-full p-2.5 rounded-lg border border-border bg-bg text-xs font-mono text-text-main focus:outline-none focus:border-primary"
                         disabled={loading || samlLoading}
                       />
-                      <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted">Paste raw Base64 certificate or PEM block.</p>
+                      <p className="text-xs text-text-muted">Paste raw Base64 certificate or PEM block.</p>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       <div className="flex flex-col gap-2">
-                        <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">Login Button Label</label>
+                        <label className="text-xs text-text-muted mb-1.5 block">Login Button Label</label>
                         <Input
                           placeholder="Sign in with SAML SSO"
                           value={samlForm.samlLoginLabel}
@@ -1211,7 +1191,7 @@ export default function ProfilePage() {
                       </div>
 
                       <div className="flex flex-col gap-2">
-                        <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">Email Claim Attribute</label>
+                        <label className="text-xs text-text-muted mb-1.5 block">Email Claim Attribute</label>
                         <Input
                           placeholder="email"
                           value={samlForm.samlAttributeEmail}
@@ -1221,7 +1201,7 @@ export default function ProfilePage() {
                       </div>
 
                       <div className="flex flex-col gap-2">
-                        <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">Display Name Claim</label>
+                        <label className="text-xs text-text-muted mb-1.5 block">Display Name Claim</label>
                         <Input
                           placeholder="name"
                           value={samlForm.samlAttributeName}
@@ -1261,7 +1241,7 @@ export default function ProfilePage() {
                         target="_blank"
                         rel="noopener noreferrer"
                         download="keyrouter-sp-metadata.xml"
-                        className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+                        className="inline-flex items-center gap-1 text-xs font-medium text-accent hover:underline"
                       >
                         <span className="material-symbols-outlined text-[16px]">download</span>
                         Download XML
@@ -1291,13 +1271,13 @@ export default function ProfilePage() {
                   </div>
 
                   {samlTestStatus.message && (
-                    <p className={`text-xs sm:text-sm ${samlTestStatus.type === "error" ? "text-red-500" : "text-green-500"}`}>
+                    <p className={`text-xs sm:text-sm ${samlTestStatus.type === "error" ? "text-danger" : "text-success"}`}>
                       {samlTestStatus.message}
                     </p>
                   )}
 
                   {samlStatus.message && (
-                    <p className={`text-xs sm:text-sm ${samlStatus.type === "error" ? "text-red-500" : "text-green-500"}`}>
+                    <p className={`text-xs sm:text-sm ${samlStatus.type === "error" ? "text-danger" : "text-success"}`}>
                       {samlStatus.message}
                     </p>
                   )}
@@ -1307,7 +1287,7 @@ export default function ProfilePage() {
                 <div className="flex flex-col gap-4 pt-2 border-t border-border/50">
                   <div className="grid grid-cols-1 gap-4">
                     <div className="flex flex-col gap-2">
-                      <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">Issuer URL</label>
+                      <label className="text-xs text-text-muted mb-1.5 block">Issuer URL</label>
                       <Input
                         placeholder="https://auth.example.com/application/o/keyrouter/"
                         value={oidcForm.oidcIssuerUrl}
@@ -1317,7 +1297,7 @@ export default function ProfilePage() {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">Client ID</label>
+                      <label className="text-xs text-text-muted mb-1.5 block">Client ID</label>
                       <Input
                         placeholder="keyrouter-dashboard"
                         value={oidcForm.oidcClientId}
@@ -1327,7 +1307,7 @@ export default function ProfilePage() {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">Client Secret</label>
+                      <label className="text-xs text-text-muted mb-1.5 block">Client Secret</label>
                       <Input
                         type="password"
                         placeholder="Leave blank to keep existing secret"
@@ -1335,11 +1315,11 @@ export default function ProfilePage() {
                         onChange={(e) => setOidcClientSecret(e.target.value)}
                         disabled={loading || oidcLoading}
                       />
-                      <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted">This value is write-only after saving.</p>
+                      <p className="text-xs text-text-muted">This value is write-only after saving.</p>
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">Scopes</label>
+                      <label className="text-xs text-text-muted mb-1.5 block">Scopes</label>
                       <Input
                         placeholder="openid profile email"
                         value={oidcForm.oidcScopes}
@@ -1349,7 +1329,7 @@ export default function ProfilePage() {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">Login Button Label</label>
+                      <label className="text-xs text-text-muted mb-1.5 block">Login Button Label</label>
                       <Input
                         placeholder="Sign in with OIDC"
                         value={oidcForm.oidcLoginLabel}
@@ -1374,13 +1354,13 @@ export default function ProfilePage() {
                   </div>
 
                   {oidcTestStatus.message && (
-                    <p className={`text-xs sm:text-sm ${oidcTestStatus.type === "error" ? "text-red-500" : "text-green-500"}`}>
+                    <p className={`text-xs sm:text-sm ${oidcTestStatus.type === "error" ? "text-danger" : "text-success"}`}>
                       {oidcTestStatus.message}
                     </p>
                   )}
 
                   {oidcStatus.message && (
-                    <p className={`text-xs sm:text-sm ${oidcStatus.type === "error" ? "text-red-500" : "text-green-500"}`}>
+                    <p className={`text-xs sm:text-sm ${oidcStatus.type === "error" ? "text-danger" : "text-success"}`}>
                       {oidcStatus.message}
                     </p>
                   )}
@@ -1388,13 +1368,13 @@ export default function ProfilePage() {
               )}
 
               {settings.authMode === "oidc" || settings.authMode === "saml" || settings.authMode === "sso" ? (
-                <p className="text-xs sm:text-sm text-amber-600 dark:text-amber-400">
+                <p className="text-xs sm:text-sm text-accent">
                   SSO login ({settings.ssoType === "saml" ? "SAML 2.0" : "OIDC"}) is currently active. Password login is disabled until you switch back.
                 </p>
               ) : null}
 
               {settings.authMode === "both" && (
-                <p className="text-xs sm:text-sm text-amber-600 dark:text-amber-400">
+                <p className="text-xs sm:text-sm text-accent">
                   Password and SSO login ({settings.ssoType === "saml" ? "SAML 2.0" : "OIDC"}) are both active.
                 </p>
               )}
@@ -1407,15 +1387,15 @@ export default function ProfilePage() {
         {/* Language */}
         <Card className="xl:col-span-2">
           <div className="flex items-center gap-3 mb-4">
-            <span className="material-symbols-outlined text-[24px] shrink-0 text-primary dark:text-primary">language</span>
+            <span className="material-symbols-outlined text-[24px] shrink-0 text-text-subtle">language</span>
             <h3 className="font-display text-base sm:text-lg font-semibold text-text-main">Language</h3>
           </div>
           <button
             onClick={() => setLangOpen(true)}
-            className="flex items-center justify-between w-full p-3 rounded-lg bg-bg border border-border hover:border-primary/50 transition-colors"
+            className="flex items-center justify-between w-full p-3 rounded-lg bg-bg border border-border hover:border-text-subtle transition-colors"
             data-i18n-skip="true"
           >
-            <span className="font-mono text-[10px] uppercase tracking-wider text-text-muted">Display language</span>
+            <span className="text-xs text-text-muted">Display language</span>
             <span className="text-2xl">{LOCALE_FLAGS[locale] || "🌐"}</span>
           </button>
         </Card>
@@ -1423,14 +1403,14 @@ export default function ProfilePage() {
         {/* Routing Preferences */}
         <Card className="xl:col-span-4">
           <div className="flex items-center gap-3 mb-4">
-            <span className="material-symbols-outlined text-[24px] shrink-0 text-primary dark:text-primary">route</span>
+            <span className="material-symbols-outlined text-[24px] shrink-0 text-text-subtle">route</span>
             <h3 className="font-display text-base sm:text-lg font-semibold text-text-main">Routing Strategy</h3>
           </div>
           <div className="flex flex-col gap-4">
             <div className="flex items-start sm:items-center justify-between gap-4">
               <div className="flex-1 min-w-0">
                 <p className="font-display text-sm sm:text-base font-semibold text-text-main">Round Robin</p>
-                <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted">
+                <p className="text-xs text-text-muted">
                   Cycle through accounts to distribute load
                 </p>
               </div>
@@ -1446,7 +1426,7 @@ export default function ProfilePage() {
               <div className="flex items-start sm:items-center justify-between gap-4 pt-2 border-t border-border/50">
                 <div className="flex-1 min-w-0">
                   <p className="font-display text-sm sm:text-base font-semibold text-text-main">Sticky Limit</p>
-                  <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted">
+                  <p className="text-xs text-text-muted">
                     Calls per account before switching
                   </p>
                 </div>
@@ -1466,7 +1446,7 @@ export default function ProfilePage() {
             <div className="flex items-start sm:items-center justify-between gap-4 pt-4 border-t border-border/50">
               <div className="flex-1 min-w-0">
                 <p className="font-display text-sm sm:text-base font-semibold text-text-main">Combo Round Robin</p>
-                <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted">
+                <p className="text-xs text-text-muted">
                   Cycle through providers in combos instead of always starting with first
                 </p>
               </div>
@@ -1482,7 +1462,7 @@ export default function ProfilePage() {
               <div className="flex items-center justify-between pt-2 border-t border-border/50">
                 <div>
                   <p className="font-display text-sm font-semibold text-text-main">Combo Sticky Limit</p>
-                  <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted">
+                  <p className="text-xs text-text-muted">
                     Calls per combo model before switching
                   </p>
                 </div>
@@ -1498,7 +1478,7 @@ export default function ProfilePage() {
               </div>
             )}
 
-            <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted italic pt-2 border-t border-border/50">
+            <p className="text-xs text-text-muted italic pt-2 border-t border-border/50">
               {settings.fallbackStrategy === "round-robin"
                 ? `Currently distributing requests across all available accounts with ${settings.stickyRoundRobinLimit || 3} calls per account.`
                 : "Currently using accounts in priority order (Fill First)."}
@@ -1512,7 +1492,7 @@ export default function ProfilePage() {
         {/* Network */}
         <Card className="xl:col-span-2">
           <div className="flex items-center gap-3 mb-4">
-            <span className="material-symbols-outlined text-[24px] shrink-0 text-primary dark:text-primary">wifi</span>
+            <span className="material-symbols-outlined text-[24px] shrink-0 text-text-subtle">wifi</span>
             <h3 className="font-display text-base sm:text-lg font-semibold text-text-main">Network</h3>
           </div>
 
@@ -1520,7 +1500,7 @@ export default function ProfilePage() {
             <div className="flex items-start sm:items-center justify-between gap-4">
               <div className="flex-1 min-w-0">
                 <p className="font-display text-sm sm:text-base font-semibold text-text-main">Outbound Proxy</p>
-                <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted">Enable proxy for OAuth + provider outbound requests.</p>
+                <p className="text-xs text-text-muted">Enable proxy for OAuth + provider outbound requests.</p>
               </div>
               <Toggle
                 checked={settings.outboundProxyEnabled === true}
@@ -1532,25 +1512,25 @@ export default function ProfilePage() {
             {settings.outboundProxyEnabled === true && (
               <form onSubmit={updateOutboundProxy} className="flex flex-col gap-4 pt-2 border-t border-border/50">
                 <div className="flex flex-col gap-2">
-                  <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">Proxy URL</label>
+                  <label className="text-xs text-text-muted mb-1.5 block">Proxy URL</label>
                   <Input
                     placeholder="http://127.0.0.1:7897"
                     value={proxyForm.outboundProxyUrl}
                     onChange={(e) => setProxyForm((prev) => ({ ...prev, outboundProxyUrl: e.target.value }))}
                     disabled={loading || proxyLoading}
                   />
-                  <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted">Leave empty to inherit existing env proxy (if any).</p>
+                  <p className="text-xs text-text-muted">Leave empty to inherit existing env proxy (if any).</p>
                 </div>
 
                 <div className="flex flex-col gap-2 pt-2 border-t border-border/50">
-                  <label className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-1.5 block">No Proxy</label>
+                  <label className="text-xs text-text-muted mb-1.5 block">No Proxy</label>
                   <Input
                     placeholder="localhost,127.0.0.1"
                     value={proxyForm.outboundNoProxy}
                     onChange={(e) => setProxyForm((prev) => ({ ...prev, outboundNoProxy: e.target.value }))}
                     disabled={loading || proxyLoading}
                   />
-                  <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted">Comma-separated hostnames/domains to bypass the proxy.</p>
+                  <p className="text-xs text-text-muted">Comma-separated hostnames/domains to bypass the proxy.</p>
                 </div>
 
                 <div className="pt-2 border-t border-border/50 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
@@ -1572,7 +1552,7 @@ export default function ProfilePage() {
             )}
 
             {proxyStatus.message && (
-              <p className={`text-xs sm:text-sm ${proxyStatus.type === "error" ? "text-red-500" : "text-green-500"} pt-2 border-t border-border/50`}>
+              <p className={`text-xs sm:text-sm ${proxyStatus.type === "error" ? "text-danger" : "text-success"} pt-2 border-t border-border/50`}>
                 {proxyStatus.message}
               </p>
             )}
@@ -1582,13 +1562,13 @@ export default function ProfilePage() {
         {/* Observability Settings */}
         <Card className="xl:col-span-4">
           <div className="flex items-center gap-3 mb-4">
-            <span className="material-symbols-outlined text-[24px] shrink-0 text-primary dark:text-primary">monitoring</span>
+            <span className="material-symbols-outlined text-[24px] shrink-0 text-text-subtle">monitoring</span>
             <h3 className="font-display text-base sm:text-lg font-semibold text-text-main">Observability</h3>
           </div>
           <div className="flex items-start sm:items-center justify-between gap-4">
             <div className="flex-1 min-w-0">
               <p className="font-display text-sm sm:text-base font-semibold text-text-main">Enable Observability</p>
-              <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted">
+              <p className="text-xs text-text-muted">
                 Record request details for inspection in the logs view
               </p>
             </div>
@@ -1608,7 +1588,7 @@ export default function ProfilePage() {
             fullWidth
             icon="power_settings_new"
             onClick={() => setShutdownOpen(true)}
-            className="text-red-500 border-red-200 hover:bg-red-50 hover:border-red-300 font-display"
+            className="text-danger border-danger/40 hover:bg-danger/10 hover:border-danger font-display"
           >
             Shutdown
           </Button>
@@ -1617,7 +1597,7 @@ export default function ProfilePage() {
             fullWidth
             icon="logout"
             onClick={handleLogout}
-            className="font-display text-primary dark:text-primary hover:border-primary/60"
+            className="font-display text-text-main hover:border-text-subtle"
           >
             Logout
           </Button>
@@ -1666,7 +1646,7 @@ export default function ProfilePage() {
           </>
         }
       >
-        <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted mb-3">
+        <p className="text-xs text-text-muted mb-3">
           Enter your current password to {dbAuth.mode === "export" ? "export" : "import"} the database.
         </p>
         <Input

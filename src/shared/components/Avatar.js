@@ -31,7 +31,7 @@ export default function Avatar({
   const getColorFromName = (name) => {
     if (!name) return "bg-primary";
     const colors = [
-      "bg-amber-700",
+      "bg-clay-700",
       "bg-yellow-700",
       "bg-neutral-600",
       "bg-neutral-700",

@@ -2,17 +2,15 @@
 
 import { useState } from "react";
 import PropTypes from "prop-types";
-import { useTheme } from "@/shared/hooks/useTheme";
 import { ConfirmModal } from "./Modal";
 
 const ICON_BTN_CLS =
   "flex items-center justify-center p-2 rounded-lg text-text-muted hover:text-primary transition-all";
-const DANGER_BTN_CLS = " hover:text-red-500 dark:hover:text-red-400";
+const DANGER_BTN_CLS = " hover:text-danger";
 
 export default function HeaderMenu({ onLogout }) {
   const [shutdownOpen, setShutdownOpen] = useState(false);
   const [isShuttingDown, setIsShuttingDown] = useState(false);
-  const { toggleTheme, isDark } = useTheme();
 
   const handleShutdown = async () => {
     setIsShuttingDown(true);
@@ -27,12 +25,6 @@ export default function HeaderMenu({ onLogout }) {
 
   return (
     <>
-      <button className={ICON_BTN_CLS} onClick={toggleTheme} title="Theme">
-        <span className="material-symbols-outlined">
-          {isDark ? "light_mode" : "dark_mode"}
-        </span>
-      </button>
-
       <button
         className={ICON_BTN_CLS + DANGER_BTN_CLS}
         onClick={() => setShutdownOpen(true)}

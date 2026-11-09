@@ -6,6 +6,7 @@ import Button from "@/shared/components/Button";
 import Toggle from "@/shared/components/Toggle";
 import Select from "@/shared/components/Select";
 import ModelSelectModal from "@/shared/components/ModelSelectModal";
+import { ConfirmModal } from "@/shared/components/Modal";
 import { translate } from "@/i18n/runtime";
 import { nodePrefixById, displayBacking } from "@/shared/utils/friendlyBacking";
 import { InjectionTester } from "./InjectExtras";
@@ -30,7 +31,7 @@ function nextRole(turns) {
 
 const INPUT_CLASS =
   "w-full rounded-lg border border-border bg-surface px-3 py-2 font-mono text-[13px] text-text-main placeholder:text-text-muted focus:outline-none focus:border-text-subtle transition-colors";
-const MONO_KICKER = "font-mono text-[10px] uppercase tracking-wider text-text-subtle";
+const MONO_KICKER = "text-[11px] text-text-subtle";
 
 // ─── shared editor ──────────────────────────────────────────────────────
 function InjectEditor({ initial, onSave, onClear, saving, clearLabel, compact = false }) {
@@ -124,7 +125,7 @@ function InjectEditor({ initial, onSave, onClear, saving, clearLabel, compact = 
           {turns.map((t, i) => (
             <div key={i} className="flex items-start gap-2">
               <span
-                className={`mt-2 shrink-0 w-16 text-right font-mono text-[10px] uppercase tracking-wider ${
+                className={`mt-2 shrink-0 w-16 text-right text-[11px] ${
                   t.role === "user" ? "text-text-subtle" : "text-text-muted"
                 }`}
               >
@@ -235,7 +236,7 @@ function InjSelect({ label, value, onChange, options = [], placeholder = "Select
                       setOpen(false);
                     }}
                     className={`flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm transition-colors ${
-                      active ? "bg-surface-2 text-text-main" : "text-text-muted hover:text-primary dark:hover:text-primary"
+                      active ? "bg-surface-2 text-text-main" : "text-text-muted hover:text-text-main"
                     }`}
                   >
                     <span className="flex-1 truncate font-display">{option.label}</span>
@@ -258,7 +259,7 @@ function SectionCard({ title, subtitle, icon, children }) {
   return (
     <Card padding="sm">
       <div className="mb-4 flex items-center gap-3">
-        <span className="material-symbols-outlined text-[24px] shrink-0 text-primary dark:text-primary">{icon}</span>
+        <span className="material-symbols-outlined text-[24px] shrink-0 text-text-subtle">{icon}</span>
         <div className="min-w-0">
           <h2 className="font-display text-base font-semibold text-text-main">{title}</h2>
           {subtitle && <p className="mt-0.5 font-mono text-[11px] leading-relaxed text-text-muted">{subtitle}</p>}
@@ -276,6 +277,7 @@ export default function PromptInjectionClient() {
   const [models, setModels] = useState([]);
   const [status, setStatus] = useState("Loading…");
   const [error, setError] = useState(null);
+  const [pendingDelete, setPendingDelete] = useState(null);
 
   const [nodePrefixes, setNodePrefixes] = useState({});
 
@@ -418,10 +420,16 @@ export default function PromptInjectionClient() {
     }
   };
 
-  const deleteVariant = async (name = variantName) => {
+  const deleteVariant = (name = variantName) => {
     const target = String(name || "").trim();
     if (!target) return;
-    if (!window.confirm(translate(`Delete variant "${target}" and its prompt?`))) return;
+    setPendingDelete(target);
+  };
+
+  const confirmDeleteVariant = async () => {
+    const target = pendingDelete;
+    setPendingDelete(null);
+    if (!target) return;
     setSaving(true);
     try {
       await fetch(`${API}?variant=${encodeURIComponent(target)}`, { method: "DELETE" });
@@ -456,7 +464,7 @@ export default function PromptInjectionClient() {
       <div className="space-y-1.5">
         <h1 className="font-display text-2xl font-semibold tracking-tight text-text-main">Prompt Injection</h1>
         <p className={MONO_KICKER}>
-          global · per API key · per variant — system prompt & chat script, wire-aware
+          Inject a system prompt or a scripted chat, globally, per API key, or per variant.
         </p>
       </div>
 
@@ -468,7 +476,7 @@ export default function PromptInjectionClient() {
       )}
 
       {/* Global */}
-      <SectionCard title="Global" icon="public" subtitle="Disuntikkan ke setiap request chat.">
+      <SectionCard title="Global" icon="public" subtitle="Applied to every chat request.">
         <InjectEditor
           initial={globalEntry}
           onSave={(p, empty) => saveInjection(p, empty, { global: p })}
@@ -514,7 +522,7 @@ export default function PromptInjectionClient() {
           <div className="border-t border-border-subtle pt-4">
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div>
-                <label className="mb-1 block font-mono text-[10px] uppercase tracking-wider text-text-subtle">
+                <label className="mb-1 block text-[11px] text-text-subtle">
                   Custom name
                 </label>
                 <input
@@ -525,7 +533,7 @@ export default function PromptInjectionClient() {
                 />
               </div>
               <div>
-                <label className="mb-1 block font-mono text-[10px] uppercase tracking-wider text-text-subtle">
+                <label className="mb-1 block text-[11px] text-text-subtle">
                   Backing model
                 </label>
                 <button
@@ -566,7 +574,7 @@ export default function PromptInjectionClient() {
         <div className="space-y-2">
           {Object.keys(data?.variants || {}).length === 0 ? (
             <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed border-border px-4 py-6 text-center">
-              <span className="material-symbols-outlined text-[28px] text-primary dark:text-primary">badge</span>
+              <span className="material-symbols-outlined text-[28px] text-text-subtle">badge</span>
               <p className="text-sm text-text-muted">
                 No variants yet. Create a custom name + pick a backing model above.
               </p>
@@ -581,14 +589,14 @@ export default function PromptInjectionClient() {
                     key={name}
                     className={`group rounded-xl border p-3 transition-colors ${
                       active
-                        ? "border-primary/50 bg-surface-2"
+                        ? "border-accent/50 bg-surface-2"
                         : "border-border bg-surface hover:border-text-subtle"
                     }`}
                   >
                     <div className="flex items-center gap-2">
                       <div className="min-w-0 flex-1">
                         <p className="break-all font-display text-sm font-semibold text-text-main">{name}</p>
-                        <p className="break-all font-display text-[12px] text-primary">
+                        <p className="break-all font-display text-[12px] text-accent">
                           {displayBacking(v?.model || "", nodePrefixes)}
                         </p>
                       </div>
@@ -616,7 +624,7 @@ export default function PromptInjectionClient() {
       </SectionCard>
 
       {/* Status */}
-      <p className="text-center font-mono text-[10px] uppercase tracking-wider text-text-subtle">
+      <p className="text-center text-[11px] text-text-subtle">
         {status} · {keys.length} key · {models.length} model
       </p>
 
@@ -633,6 +641,17 @@ export default function PromptInjectionClient() {
         closeOnSelect
         selectedModel={variantModel}
         variants={data?.variants || {}}
+      />
+
+      {/* Delete variant confirmation */}
+      <ConfirmModal
+        isOpen={!!pendingDelete}
+        onClose={() => setPendingDelete(null)}
+        onConfirm={confirmDeleteVariant}
+        title="Delete Variant"
+        message={`Delete variant "${pendingDelete}" and its prompt?`}
+        confirmText="Delete"
+        variant="danger"
       />
     </div>
   );

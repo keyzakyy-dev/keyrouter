@@ -32,7 +32,7 @@ export default function RouteRow({ icon, label, desc, tone = "off", toneLabel, c
   return (
     <div className="rounded-xl border border-border bg-surface p-4 transition-colors">
       <div className="flex items-start gap-3.5">
-        <span className="material-symbols-outlined mt-0.5 text-[22px] text-primary dark:text-primary">{icon}</span>
+        <span className="material-symbols-outlined mt-0.5 text-[22px] text-text-subtle">{icon}</span>
         <div className="min-w-0 flex-1 pt-0.5">
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
             <span className="font-display text-[15px] font-semibold text-text-main">{label}</span>

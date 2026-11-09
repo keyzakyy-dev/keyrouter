@@ -1,4 +1,4 @@
-import { Inter, Space_Grotesk } from "next/font/google";
+import { Inter, Source_Serif_4, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import "material-symbols/outlined.css";
@@ -17,9 +17,14 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-const spaceGrotesk = Space_Grotesk({
+const sourceSerif = Source_Serif_4({
   subsets: ["latin"],
-  variable: "--font-space-grotesk",
+  variable: "--font-serif-custom",
+});
+
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-geist-mono",
 });
 
 export const metadata = {
@@ -36,16 +41,14 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className="dark" suppressHydrationWarning>
       <head>
-        {/* Apply persisted theme before first paint so a reload does not flash the
-            default (light) theme before the client store hydrates. Mirrors the
-            zustand-persist "theme" key and the `dark` class applyTheme() sets. */}
+        {/* Force dark mode class before first paint */}
         <Script
           id="theme-bootstrap"
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var s=localStorage.getItem('theme');var t=s?(JSON.parse(s).state||{}).theme:'system';t=t||'system';var m=window.matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(t==='system'&&m)){document.documentElement.classList.add('dark')}}catch(e){}})();`,
+            __html: `document.documentElement.classList.add('dark');`,
           }}
         />
         <Script
@@ -56,7 +59,7 @@ export default function RootLayout({ children }) {
           }}
         />
       </head>
-      <body className={`${inter.variable} ${spaceGrotesk.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} ${sourceSerif.variable} ${geistMono.variable} font-sans antialiased`}>
         <ThemeProvider>
           <RuntimeI18nProvider>
             {children}

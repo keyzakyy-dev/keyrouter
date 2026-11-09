@@ -54,11 +54,11 @@ const FEATURES = [
     title: "OAuth & API Keys", 
     desc: "Securely manage credentials in one vault.", 
     colors: {
-      border: "hover:border-amber-500/50",
-      bg: "hover:bg-amber-500/5",
-      iconBg: "bg-amber-500/10",
-      iconText: "text-amber-500",
-      titleHover: "group-hover:text-amber-400"
+      border: "hover:border-clay-500/50",
+      bg: "hover:bg-clay-500/5",
+      iconBg: "bg-clay-500/10",
+      iconText: "text-clay-500",
+      titleHover: "group-hover:text-clay-400"
     }
   },
   { 

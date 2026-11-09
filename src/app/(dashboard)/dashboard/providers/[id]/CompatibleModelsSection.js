@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 import PropTypes from "prop-types";
-import { Button, Modal } from "@/shared/components";
+import { Button, Modal, ConfirmModal, Checkbox } from "@/shared/components";
 import { getProviderCustomModelRows } from "@/shared/utils/providerCustomModels";
-function CompatibleModelRow({ modelId, fullModel, copied, onCopy, onDeleteAlias, onTest, testStatus, isTesting }) {
+function CompatibleModelRow({ modelId, fullModel, copied, onCopy, onDeleteAlias, onTest, testStatus, isTesting, selectable, selected, onToggleSelect }) {
   const borderColor = testStatus === "ok"
-    ? "border-green-500/40"
+    ? "border-success/40"
     : testStatus === "error"
-    ? "border-red-500/40"
+    ? "border-danger/40"
     : "border-border";
 
   const iconColor = testStatus === "ok"
@@ -19,6 +19,9 @@ function CompatibleModelRow({ modelId, fullModel, copied, onCopy, onDeleteAlias,
 
   return (
     <div className={`flex items-center gap-3 p-3 rounded-lg border ${borderColor} hover:bg-sidebar/50`}>
+      {selectable && (
+        <Checkbox size="sm" checked={selected} onChange={onToggleSelect} />
+      )}
       <span
         className="material-symbols-outlined text-base text-text-muted"
         style={iconColor ? { color: iconColor } : undefined}
@@ -62,7 +65,7 @@ function CompatibleModelRow({ modelId, fullModel, copied, onCopy, onDeleteAlias,
       </div>
       <button
         onClick={onDeleteAlias}
-        className="p-1 hover:bg-red-50 rounded text-red-500"
+        className="p-1 hover:bg-danger/10 rounded text-danger"
         title="Remove model"
       >
         <span className="material-symbols-outlined text-sm">delete</span>
@@ -71,12 +74,28 @@ function CompatibleModelRow({ modelId, fullModel, copied, onCopy, onDeleteAlias,
   );
 }
 
+CompatibleModelRow.propTypes = {
+  modelId: PropTypes.string.isRequired,
+  fullModel: PropTypes.string.isRequired,
+  copied: PropTypes.string,
+  onCopy: PropTypes.func.isRequired,
+  onDeleteAlias: PropTypes.func.isRequired,
+  onTest: PropTypes.func,
+  testStatus: PropTypes.oneOf(["ok", "error"]),
+  isTesting: PropTypes.bool,
+  selectable: PropTypes.bool,
+  selected: PropTypes.bool,
+  onToggleSelect: PropTypes.func,
+};
+
 export default function CompatibleModelsSection({ providerStorageAlias, providerDisplayAlias, modelAliases, customModels, copied, onCopy, onDeleteAlias, onAddCustomModel, onDeleteCustomModel, connections, isAnthropic }) {
   const [newModel, setNewModel] = useState("");
   const [adding, setAdding] = useState(false);
   const [importing, setImporting] = useState(false);
   const [testingModelId, setTestingModelId] = useState(null);
   const [modelTestResults, setModelTestResults] = useState({});
+  const [selectedModelIds, setSelectedModelIds] = useState([]);
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
   // Single dialog state drives every /models import outcome (success, empty, error)
   // so the section never falls back to the browser's native alert().
   const [importDialog, setImportDialog] = useState(null);
@@ -105,6 +124,29 @@ export default function CompatibleModelsSection({ providerStorageAlias, provider
     providerAlias: providerStorageAlias,
     type: "llm",
   });
+
+  const selectedModelSet = new Set(selectedModelIds);
+  const selectedRows = allModels.filter((m) => selectedModelSet.has(m.id));
+  const allModelsSelected = allModels.length > 0 && selectedRows.length === allModels.length;
+  const toggleSelectAllModels = () => setSelectedModelIds(allModelsSelected ? [] : allModels.map((m) => m.id));
+  const toggleSelectModel = (id) => setSelectedModelIds((prev) => (
+    prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+  ));
+  const handleDeleteSelectedModels = () => {
+    if (selectedRows.length === 0) return;
+    setDeleteConfirm({
+      title: `Delete ${selectedRows.length} Model${selectedRows.length > 1 ? "s" : ""}`,
+      message: `Delete ${selectedRows.length} model${selectedRows.length > 1 ? "s" : ""}? This cannot be undone.`,
+      onConfirm: async () => {
+        setDeleteConfirm(null);
+        for (const row of selectedRows) {
+          if (row.source === "custom") await onDeleteCustomModel(row.id);
+          else if (row.alias) await onDeleteAlias(row.alias);
+        }
+        setSelectedModelIds([]);
+      },
+    });
+  };
 
   const handleAdd = async () => {
     if (!newModel.trim() || adding) return;
@@ -168,7 +210,7 @@ export default function CompatibleModelsSection({ providerStorageAlias, provider
 
   return (
     <div className="flex flex-col gap-4">
-      <p className="font-mono text-[10px] uppercase tracking-wider text-text-subtle">
+      <p className="text-[11px] text-text-subtle">
         Add {isAnthropic ? "Anthropic" : "OpenAI"}-compatible models manually or import them from the /models endpoint.
       </p>
 
@@ -201,6 +243,24 @@ export default function CompatibleModelsSection({ providerStorageAlias, provider
 
       {allModels.length > 0 && (
         <div className="flex flex-col gap-3">
+          <div className="flex items-center gap-1.5 border-b border-border-subtle pb-2 dark:border-border-subtle">
+            <Checkbox size="sm" checked={allModelsSelected} onChange={toggleSelectAllModels} />
+            <span
+              className="cursor-pointer select-none text-xs text-text-muted hover:text-primary"
+              onClick={toggleSelectAllModels}
+            >
+              Select All
+            </span>
+            {selectedRows.length > 0 && (
+              <button
+                onClick={handleDeleteSelectedModels}
+                className="ml-auto inline-flex h-7 items-center gap-1.5 rounded-lg border border-danger/40 bg-surface px-2.5 text-[11px] text-danger transition-colors hover:bg-danger/5 hover:border-danger dark:border-danger/40 dark:hover:bg-danger/10"
+              >
+                <span className="material-symbols-outlined text-sm">delete</span>
+                Delete Selected ({selectedRows.length})
+              </button>
+            )}
+          </div>
           {allModels.map(({ id, alias, source }) => (
             <CompatibleModelRow
               key={`${source}-${providerStorageAlias}/${id}`}
@@ -212,6 +272,9 @@ export default function CompatibleModelsSection({ providerStorageAlias, provider
               onTest={connections.length > 0 ? () => handleTestModel(id) : undefined}
               testStatus={modelTestResults[id]}
               isTesting={testingModelId === id}
+              selectable
+              selected={selectedModelSet.has(id)}
+              onToggleSelect={() => toggleSelectModel(id)}
             />
           ))}
         </div>
@@ -231,7 +294,7 @@ export default function CompatibleModelsSection({ providerStorageAlias, provider
         <div className="flex items-start gap-3">
           <span
             className={`material-symbols-outlined text-[22px] ${
-              importDialog?.kind === "success" ? "text-green-500" : importDialog?.kind === "error" ? "text-red-500" : "text-primary"
+              importDialog?.kind === "success" ? "text-success" : importDialog?.kind === "error" ? "text-danger" : "text-primary"
             }`}
           >
             {importDialog?.kind === "success" ? "check_circle" : importDialog?.kind === "error" ? "error" : "info"}
@@ -239,6 +302,15 @@ export default function CompatibleModelsSection({ providerStorageAlias, provider
           <p className="text-sm text-text-muted">{importDialog?.message}</p>
         </div>
       </Modal>
+
+      <ConfirmModal
+        isOpen={!!deleteConfirm}
+        onClose={() => setDeleteConfirm(null)}
+        onConfirm={deleteConfirm?.onConfirm}
+        title={deleteConfirm?.title || "Confirm"}
+        message={deleteConfirm?.message}
+        variant="danger"
+      />
     </div>
   );
 }

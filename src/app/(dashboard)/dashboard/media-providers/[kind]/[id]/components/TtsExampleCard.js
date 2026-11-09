@@ -459,7 +459,7 @@ export function TtsExampleCard({ providerId }) {
                       <span className="ml-1.5 px-1 py-0.5 text-[9px] font-semibold rounded bg-green-500/15 text-green-600 border border-green-500/20">Free</span>
                     )}
                     {v.free_users_allowed === false && (
-                      <span className="ml-1.5 px-1 py-0.5 text-[9px] font-semibold rounded bg-amber-500/15 text-amber-600 border border-amber-500/20">Paid</span>
+                      <span className="ml-1.5 px-1 py-0.5 text-[9px] font-semibold rounded bg-clay-500/15 text-clay-600 border border-clay-500/20">Paid</span>
                     )}
                   </button>
                 ))}
@@ -582,7 +582,7 @@ export function TtsExampleCard({ providerId }) {
                 <button
                   onClick={handleRun}
                   disabled={running || !input.trim() || !modelFull}
-                  className="flex w-full sm:w-auto items-center justify-center gap-1.5 px-3 py-1 rounded-lg bg-primary text-white dark:text-amber-950 text-xs font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex w-full sm:w-auto items-center justify-center gap-1.5 px-3 py-1 rounded-lg bg-primary text-white dark:text-neutral-950 text-xs font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <span className="material-symbols-outlined text-[14px]" style={running ? { animation: "spin 1s linear infinite" } : undefined}>
                     play_arrow
@@ -641,8 +641,7 @@ export function TtsExampleCard({ providerId }) {
       {/* Country Picker Modal */}
       {modalOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-end justify-center sm:items-center"
-          style={{ backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(2px)" }}
+          className="fixed inset-0 z-50 flex items-end justify-center sm:items-center bg-black/60 backdrop-blur-sm"
           onClick={() => setModalOpen(false)}
         >
           <div

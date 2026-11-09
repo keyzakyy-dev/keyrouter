@@ -165,7 +165,7 @@ export default function McpMarketplaceModal({ isOpen, onClose, onAdd, addedNames
                       <div className="flex items-center gap-1.5 flex-wrap">
                         <span className="font-medium text-xs">{s.title}</span>
                         {s.oauth ? (
-                          <span className="px-1 py-0.5 text-[9px] rounded bg-amber-500/10 text-amber-600">OAuth</span>
+                          <span className="px-1 py-0.5 text-[9px] rounded bg-clay-500/10 text-clay-600">OAuth</span>
                         ) : (
                           <span className="px-1 py-0.5 text-[9px] rounded bg-green-500/10 text-green-600">Authless</span>
                         )}
@@ -200,7 +200,7 @@ export default function McpMarketplaceModal({ isOpen, onClose, onAdd, addedNames
                         </div>
                       )}
                       {!isLoadingTools && cache?.requiresAuth && (
-                        <p className="text-[10px] text-amber-600 bg-amber-500/10 px-2 py-1 rounded">
+                        <p className="text-[10px] text-clay-600 bg-clay-500/10 px-2 py-1 rounded">
                           🔐 OAuth required. Add now and authenticate after Apply; tool list will be discovered after first connect.
                         </p>
                       )}
@@ -237,7 +237,7 @@ export default function McpMarketplaceModal({ isOpen, onClose, onAdd, addedNames
                       )}
                       <button
                         onClick={() => confirmAdd(s)}
-                        className="self-end px-2 py-1 rounded text-[10px] font-medium bg-primary text-white dark:text-amber-950 hover:bg-primary/90"
+                        className="self-end px-2 py-1 rounded text-[10px] font-medium bg-primary text-white dark:text-neutral-950 hover:bg-primary/90"
                       >
                         ✓ Confirm Add
                       </button>

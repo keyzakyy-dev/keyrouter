@@ -84,109 +84,61 @@
 .fonts-loaded .material-symbols-outlined { opacity: 1; transition: opacity .12s ease-out; }
 
 /* ============================================================
-   KeyRouter palette
-   Brand = pure black & white (monochrome)
+   KeyRouter palette — CDS "Fizzy Lake" warm-neutral system,
+   dark-only. Tokens are 1:1 with the CDS dark values; the few
+   steps CDS does not name (brand-200, surface-3, primary-hover)
+   are derived from the same ramp and marked "derived" below.
+   The `.dark` class is force-applied on <html> (see layout.js
+   bootstrap) so all `dark:` utility variants stay active.
    ============================================================ */
 :root {
-  /* Brand scale (light) - monochrome near-black */
-  --color-brand-50: #fafafa;
-  --color-brand-100: #f5f5f5;
-  --color-brand-200: #e5e5e5;
-  --color-brand-300: #d4d4d4;
-  --color-brand-400: #a3a3a3;
-  --color-brand-500: #737373;
-  --color-brand-600: #525252;
-  --color-brand-700: #404040;
-  --color-brand-800: #262626;
-  --color-brand-900: #171717;
+  /* Brand scale (dark) — ramp inverted for contrast on dark.
+     Anchors: page #151515, gray-800 #202020, picto #454442,
+     gray-500 #6b6b6b … gray-100 #e0e0e0, fg #f0efec. */
+  --color-brand-50: #151515; /* CDS --page dark */
+  --color-brand-100: #202020; /* CDS gray-800 dark */
+  --color-brand-200: #303030; /* derived: between gray-800 and picto */
+  --color-brand-300: #454442; /* CDS --picto dark */
+  --color-brand-400: #6b6b6b; /* CDS gray-500 dark */
+  --color-brand-500: #878787; /* CDS gray-400 dark */
+  --color-brand-600: #a4a4a4; /* CDS gray-300 dark */
+  --color-brand-700: #c2c2c2; /* CDS gray-200 dark */
+  --color-brand-800: #e0e0e0; /* CDS gray-100 dark */
+  --color-brand-900: #f0efec; /* CDS --fg dark */
 
-  /* Primary (accent = neutral gray in light mode; yellow reserved for dark) */
-  --color-primary: #525252;
-  --color-primary-hover: #3f3f46;
+  --color-primary: #ffffff; /* CDS --primary dark */
+  --color-primary-hover: #e6e4e1; /* derived: dimmed warm white */
 
-  /* Surfaces & backgrounds (light - instrument paper) */
-  --color-bg: #f2f0e9;
-  --color-bg-alt: #ece9df;
-  --color-surface: #faf8f2;
-  --color-surface-2: #f4f1e9;
-  --color-surface-3: #ebe7db;
-  --color-sidebar: rgba(246, 244, 237, 0.85);
+  /* Clay accent — constant across themes (CDS clay) */
+  --color-clay: #d97757;
+  --color-clay-emphasized: #c6613f;
 
-  /* Borders */
-  --color-border: #dcd7ca;
-  --color-border-subtle: #e7e3d7;
+  /* Surfaces (dark) — CDS page / surface-1 / bg / surf */
+  --color-bg: #151515; /* CDS --page dark */
+  --color-bg-alt: #191919; /* CDS surface-1 dark */
+  --color-surface: #1a1a19; /* CDS --bg dark */
+  --color-surface-2: #20201f; /* CDS --surf dark */
+  --color-surface-3: #282827; /* derived: above surf */
+  --color-sidebar: rgba(21, 21, 21, 0.85);
 
-  /* Text */
-  --color-text: #1a1a1a;
-  --color-text-main: #1a1a1a;
-  --color-text-muted: #5a564c;
-  --color-text-subtle: #8a857a;
+  --color-border: rgba(255, 255, 255, 0.10);
+  --color-border-subtle: rgba(255, 255, 255, 0.05);
 
-  /* Status */
-  --color-danger: #c92832;
-  --color-success: #15803d;
-  --color-warning: #b7791f;
-  --color-info: #2563eb;
+  --color-text: #f0efec; /* CDS --fg dark */
+  --color-text-main: #f0efec;
+  --color-text-muted: #c3c2b7; /* CDS --mut dark */
+  --color-text-subtle: #898781; /* CDS gray-400 (readable on dark) */
+
+  --color-danger: #f17778;
+  --color-success: #32d74b;
+  --color-warning: #fbbf24;
+  --color-info: #7fb4f8; /* derived: CDS blue brightened for dark contrast */
 
   /* Radius */
   --radius-brand: 10px;
   --radius-brand-lg: 14px;
 
   /* Shadows */
-  --shadow-soft: 0 1px 2px 0 rgba(26, 26, 26, 0.04);
-  --shadow-warm: 0 2px 14px -2px rgba(23, 23, 23, 0.14);
-  --shadow-elevated: 0 12px 28px -4px rgba(26, 26, 26, 0.08);
-  --shadow-elev:
-    inset 0 1px 0 0 rgba(255,255,255,0.6),
-    0 1px 2px rgba(26,26,26,0.03),
-    0 12px 36px -8px rgba(26,26,26,0.09);
-  --shadow-focus: 0 0 0 3px rgba(23, 23, 23, 0.16);
-
-  /* Topology theming (light) */
-  --color-topo-core: #3f3f46;
-  --color-topo-frame: var(--color-surface);
-  --color-topo-router-active: #b45309;
-
-  color-scheme: light;
-}
-
-.dark {
-  /* Brand scale (dark) - neutral gray (inverted for contrast on dark) */
-  --color-brand-50: #171717;
-  --color-brand-100: #262626;
-  --color-brand-200: #3a3a3a;
-  --color-brand-300: #4d4d4d;
-  --color-brand-400: #6b6b6b;
-  --color-brand-500: #969696;
-  --color-brand-600: #c4c4c4;
-  --color-brand-700: #d6d6d6;
-  --color-brand-800: #ebebeb;
-  --color-brand-900: #f4f4f4;
-
-  --color-primary: #fbbf24;
-  --color-primary-hover: #f59e0b;
-
-  /* Surfaces (dark - near-black neutral, deep but not pure black) */
-  --color-bg: #0f0f0f;
-  --color-bg-alt: #151515;
-  --color-surface: #1a1a1a;
-  --color-surface-2: #222222;
-  --color-surface-3: #2b2b2b;
-  --color-sidebar: rgba(18, 18, 18, 0.85);
-
-  --color-border: #2e2e2e;
-  --color-border-subtle: #242424;
-
-  --color-text: #ececec;
-  --color-text-main: #ececec;
-  --color-text-muted: #a3a3a3;
-  --color-text-subtle: #787878;
-
-  --color-danger: #f19090;
-  --color-success: #4ade80;
-  --color-warning: #fbbf24;
-  --color-info: #7fb4f8;
-
   --shadow-soft: 0 1px 2px 0 rgba(0,0,0,0.35);
   --shadow-warm: 0 2px 12px -2px rgba(0, 0, 0, 0.3);
   --shadow-elevated: 0 12px 28px -4px rgba(0, 0, 0, 0.5);
@@ -196,27 +148,22 @@
     0 16px 48px -8px rgba(0,0,0,0.6);
   --shadow-focus: 0 0 0 3px rgba(0, 0, 0, 0.25);
 
-  /* Topology theming (dark) */
-  --color-topo-core: #f8fafc;
+  /* Topology theming */
+  --color-topo-core: #f0efec;
   --color-topo-frame: var(--color-surface-2);
-  --color-topo-router-active: #fde047;
+  --color-topo-router-active: #d97757; /* clay */
 
   color-scheme: dark;
 }
 
 /* ============================================================
-   Fix native select dropdowns in dark mode
+   Native select dropdowns (dark)
    ============================================================ */
 select {
-  color-scheme: light;
-}
-
-.dark select {
   color-scheme: dark;
 }
 
 select option {
-  font-family: var(--font-mono), ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace;
   font-size: 12px;
   letter-spacing: 0.02em;
   color: var(--color-text-main);
@@ -266,18 +213,36 @@ select option {
   --color-info: var(--color-info);
 
   /* Static fallbacks (explicit per-mode usage if needed) */
-  --color-bg-light: #fafafc;
-  --color-bg-dark: #121218;
+  --color-bg-light: #fcfcfb;
+  --color-bg-dark: #151515;
   --color-surface-light: #ffffff;
-  --color-surface-dark: #1d1d26;
-  --color-sidebar-light: #F3F3F7;
-  --color-sidebar-dark: #181820;
-  --color-border-light: #e3e3ea;
-  --color-border-dark: #2c2c38;
-  --color-text-main-light: #0d0d14;
-  --color-text-main-dark: #ececf2;
-  --color-text-muted-light: #5f6272;
-  --color-text-muted-dark: #9a9db0;
+  --color-surface-dark: #1a1a19;
+  --color-sidebar-light: #fcfcfb;
+  --color-sidebar-dark: #191919;
+  --color-border-light: #e6e5e1;
+  --color-border-dark: #2e2e2d;
+  --color-text-main-light: #0b0b0b;
+  --color-text-main-dark: #f0efec;
+  --color-text-muted-light: #52514e;
+  --color-text-muted-dark: #c3c2b7;
+
+  /* Clay accent scale — terracotta ramp anchored on CDS clay
+     (#d97757 / #c6613f); constant across light & dark. */
+  --color-clay-50: #fdf6f3;
+  --color-clay-100: #fbeae2;
+  --color-clay-200: #f6d4c4;
+  --color-clay-300: #edb697;
+  --color-clay-400: #e28e63;
+  --color-clay-500: #d97757;
+  --color-clay-600: #c6613f;
+  --color-clay-700: #a84e31;
+  --color-clay-800: #883e27;
+  --color-clay-900: #6c3120;
+  --color-clay-950: #391a0f;
+
+  /* Accent aliases: accent = clay (CDS: links, active icons, badges) */
+  --color-accent: var(--color-clay);
+  --color-accent-hover: var(--color-clay-emphasized);
 
   /* Radius */
   --radius-brand: var(--radius-brand);
@@ -290,9 +255,17 @@ select option {
   --shadow-elev: var(--shadow-elev);
   --shadow-focus: var(--shadow-focus);
 
-  /* Font - Inter body / Space Grotesk display */
+  /* Fonts — CDS pattern: one sans for UI + display, serif for
+     special moments (greeting/wordmark). Inter stands in for the
+     proprietary anthropic-sans; Source Serif 4 for anthropic-serif. */
   --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', system-ui, sans-serif;
-  --font-display: var(--font-space-grotesk), 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+  --font-display: var(--font-inter), -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+  --font-serif: var(--font-serif-custom), 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  /* Endpoint URL font: Geist Mono */
+  --font-geist: var(--font-geist-mono), 'Geist Mono', ui-monospace, monospace;
+  /* No mono face by design (client call): data text rides the sans.
+     The font-mono utility (394 usages) maps to the sans stack. */
+  --font-mono: var(--font-sans);
 }
 
 /* Base */
@@ -304,20 +277,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Headings use the Space Grotesk display face */
+/* Headings use the same sans as the UI, tightened — CDS anthropic-sans-display pattern */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-space-grotesk), 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
-  letter-spacing: -0.01em;
+  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+  letter-spacing: -0.02em;
 }
 
-/* Selection - brand-tinted */
+/* Selection - clay-tinted (CDS accent) */
 ::selection {
-  background-color: rgba(0, 0, 0, 0.22);
-  color: var(--color-primary);
-}
-.dark ::selection {
-  background-color: rgba(255, 255, 255, 0.3);
-  color: var(--color-brand-300);
+  background-color: rgba(217, 119, 87, 0.40);
+  color: #f0efec;
 }
 
 /* iOS keyboard accent */
@@ -343,19 +312,13 @@ input, textarea {
 /* Thin horizontal scrollbar - monochrome */
 .scroll-thin-x {
   scrollbar-width: thin;
-  scrollbar-color: rgba(0, 0, 0, 0.55) transparent;
-}
-.dark .scroll-thin-x {
   scrollbar-color: rgba(255, 255, 255, 0.45) transparent;
 }
 .scroll-thin-x::-webkit-scrollbar { height: 3px; }
 .scroll-thin-x::-webkit-scrollbar-track { background: transparent; }
 .scroll-thin-x::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.55);
-  border-radius: 3px;
-}
-.dark .scroll-thin-x::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.45);
+  border-radius: 3px;
 }
 
 /* Hide scrollbar but keep scrolling (use on overflow containers) */
@@ -370,9 +333,6 @@ input, textarea {
 /* Global thin mac-like scrollbars (overrides clunky Windows/Linux default) */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(120, 120, 120, 0.35) transparent;
-}
-.dark * {
   scrollbar-color: rgba(180, 180, 180, 0.3) transparent;
 }
 *::-webkit-scrollbar {
@@ -383,18 +343,12 @@ input, textarea {
   background: transparent;
 }
 *::-webkit-scrollbar-thumb {
-  background-color: rgba(120, 120, 120, 0.35);
+  background-color: rgba(180, 180, 180, 0.3);
   border-radius: 9999px;
   border: 2px solid transparent;
   background-clip: padding-box;
 }
 *::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(120, 120, 120, 0.55);
-}
-.dark *::-webkit-scrollbar-thumb {
-  background-color: rgba(180, 180, 180, 0.3);
-}
-.dark *::-webkit-scrollbar-thumb:hover {
   background-color: rgba(180, 180, 180, 0.5);
 }
 
@@ -419,10 +373,7 @@ input, textarea {
 .bg-vibrancy {
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  background: rgba(255, 255, 255, 0.72);
-}
-.dark .bg-vibrancy {
-  background: rgba(38, 38, 38, 0.72);
+  background: rgba(32, 32, 31, 0.72); /* CDS --surf dark */
 }
 
 /* macOS Traffic Lights */
@@ -465,6 +416,27 @@ input, textarea {
 button {
   -webkit-user-select: none;
   user-select: none;
+}
+
+/* Keyboard focus: one visible ring everywhere. :where() keeps specificity
+   at 0 so component styles can still override. Clay passes the 3:1
+   focus-indicator requirement on both surfaces (3.12 light / 5.58 dark). */
+:where(a, button, [role="button"], input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-clay);
+  outline-offset: 2px;
+}
+
+/* Motion floor: respect prefers-reduced-motion globally. Decorative loops
+   (topology, sheen, cta) render their final state once instead of looping. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Tailwind v4 dropped default button cursor — restore globally */
@@ -524,6 +496,18 @@ button:disabled,
 .fade-in { animation: fadeIn 0.2s ease-out forwards; }
 .slide-in-top { animation: slideInFromTop 0.18s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
 
+/* Modal entrance: one orchestrated moment — scrim fades, panel rises. */
+@keyframes modalOverlayIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes modalPanelIn {
+  from { opacity: 0; transform: translateY(10px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.modal-overlay-in { animation: modalOverlayIn 0.15s ease-out forwards; }
+.modal-panel-in { animation: modalPanelIn 0.18s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+
 @keyframes pulseGlow {
   0%, 100% { opacity: 0.4; transform: scale(1); }
   50% { opacity: 0.7; transform: scale(1.05); }
@@ -563,11 +547,6 @@ button:disabled,
 .dot-grid-bg {
   background-color: var(--color-bg);
   background-image:
-    radial-gradient(circle at 15% 20%, rgba(0, 0, 0, 0.10) 0%, transparent 40%),
-    radial-gradient(circle at 85% 80%, rgba(0, 0, 0, 0.06) 0%, transparent 40%);
-}
-.dark .dot-grid-bg {
-  background-image:
     radial-gradient(circle at 15% 20%, rgba(255, 255, 255, 0.18) 0%, transparent 40%),
     radial-gradient(circle at 85% 80%, rgba(255, 255, 255, 0.10) 0%, transparent 40%);
 }
@@ -577,28 +556,28 @@ button:disabled,
   0%, 100% {
     transform: scale(1);
     box-shadow:
-      0 0 8px #fde047,
+      0 0 8px #d97757,
       0 0 20px color-mix(in srgb, var(--color-primary) 65%, transparent),
-      0 0 32px rgba(34, 211, 238, 0.4),
+      0 0 32px rgba(217, 119, 87, 0.4),
       inset 0 0 10px rgba(253, 224, 71, 0.3);
   }
   50% {
     transform: scale(1.06);
     box-shadow:
-      0 0 14px #fef08a,
-      0 0 28px #facc15,
-      0 0 44px rgba(34, 211, 238, 0.6),
+      0 0 14px #e28e63,
+      0 0 28px #c6613f,
+      0 0 44px rgba(217, 119, 87, 0.6),
       inset 0 0 14px rgba(255, 255, 255, 0.25);
   }
 }
 @keyframes topology-router-icon-shake {
-  0%, 100% { transform: rotate(0deg) scale(1); filter: drop-shadow(0 0 2px #fde047); }
-  25% { transform: rotate(-5deg) scale(1.08); filter: drop-shadow(0 0 6px #facc15); }
-  75% { transform: rotate(5deg) scale(1.08); filter: drop-shadow(0 0 6px #22d3ee); }
+  0%, 100% { transform: rotate(0deg) scale(1); filter: drop-shadow(0 0 2px #d97757); }
+  25% { transform: rotate(-5deg) scale(1.08); filter: drop-shadow(0 0 6px #c6613f); }
+  75% { transform: rotate(5deg) scale(1.08); filter: drop-shadow(0 0 6px #d97757); }
 }
 @keyframes topology-router-label-flicker {
-  0%, 100% { text-shadow: 0 0 6px #fde047, 0 0 12px #22d3ee; }
-  50% { text-shadow: 0 0 10px #fff, 0 0 18px #facc15; }
+  0%, 100% { text-shadow: 0 0 6px #d97757, 0 0 12px #d97757; }
+  50% { text-shadow: 0 0 10px #fff, 0 0 18px #c6613f; }
 }
 @keyframes topology-edge-dash {
   to { stroke-dashoffset: -36; }
@@ -611,7 +590,7 @@ button:disabled,
 }
 .topology-router-core {
   animation: topology-router-pulse 0.75s ease-in-out infinite;
-  border-color: #fde047 !important;
+  border-color: #d97757 !important;
 }
 .topology-router-icon {
   animation: topology-router-icon-shake 0.45s ease-in-out infinite;
@@ -620,7 +599,7 @@ button:disabled,
   animation: topology-router-label-flicker 0.7s ease-in-out infinite;
 }
 .topology-router-badge {
-  box-shadow: 0 0 10px #fde047, 0 0 16px rgba(34, 211, 238, 0.6);
+  box-shadow: 0 0 10px #d97757, 0 0 16px rgba(217, 119, 87, 0.6);
 }
 .topology-edge-kame {
   stroke-dasharray: 8 6;
@@ -761,7 +740,6 @@ button:disabled,
   padding: 0.1rem 0.35rem;
   border-radius: 4px;
   font-size: 0.875em;
-  font-family: ui-monospace, monospace;
 }
 .changelog-body a {
   color: var(--color-primary);

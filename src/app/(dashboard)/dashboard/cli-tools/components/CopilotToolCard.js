@@ -193,9 +193,9 @@ export default function CopilotToolCard({ tool, isExpanded, onToggle, baseUrl, a
           <div className="min-w-0">
             <div className="flex min-w-0 flex-wrap items-center gap-2">
               <h3 className="font-medium text-sm">{tool.name}</h3>
-              {configStatus === "configured" && <span className="px-1.5 py-0.5 text-[10px] font-medium bg-green-500/10 text-green-600 dark:text-green-400 rounded-full">Connected</span>}
-              {configStatus === "not_configured" && <span className="px-1.5 py-0.5 text-[10px] font-medium bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 rounded-full">Not configured</span>}
-              {configStatus === "other" && <span className="px-1.5 py-0.5 text-[10px] font-medium bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-full">Other</span>}
+              {configStatus === "configured" && <span className="px-1.5 py-0.5 text-[10px] font-medium bg-success/10 text-success rounded-full">Connected</span>}
+              {configStatus === "not_configured" && <span className="px-1.5 py-0.5 text-[10px] font-medium bg-warning/10 text-warning rounded-full">Not configured</span>}
+              {configStatus === "other" && <span className="px-1.5 py-0.5 text-[10px] font-medium bg-info/10 text-info rounded-full">Other</span>}
             </div>
             <p className="font-display text-xs text-text-muted truncate">{tool.description}</p>
           </div>
@@ -214,10 +214,10 @@ export default function CopilotToolCard({ tool, isExpanded, onToggle, baseUrl, a
 
           {!checking && (
             <>
-              <div className="flex items-start gap-3 p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg">
-                <span className="material-symbols-outlined text-blue-500 text-lg">info</span>
-                <div className="text-xs text-blue-700 dark:text-blue-300">
-                  <p className="font-medium">Writes to <code className="px-1 bg-black/5 dark:bg-white/10 rounded">chatLanguageModels.json</code></p>
+              <div className="flex items-start gap-3 p-3 bg-info/10 border border-info/30 rounded-lg">
+                <span className="material-symbols-outlined text-info text-lg">info</span>
+                <div className="text-xs text-info dark:text-info">
+                  <p className="font-medium">Writes to <code className="px-1 bg-surface-2 rounded">chatLanguageModels.json</code></p>
                   <p className="mt-0.5 opacity-80">Reload VS Code after applying for changes to take effect.</p>
                 </div>
               </div>
@@ -256,9 +256,9 @@ export default function CopilotToolCard({ tool, isExpanded, onToggle, baseUrl, a
                         <span className="text-xs text-text-muted">No models selected</span>
                       ) : (
                         selectedModels.map((model) => (
-                          <span key={model} className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs bg-black/5 dark:bg-white/5 text-text-muted border border-transparent hover:border-border">
+                          <span key={model} className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs bg-surface-2 text-text-muted border border-transparent hover:border-border">
                             {model}
-                            <button onClick={(e) => { e.stopPropagation(); removeModel(model); }} className="ml-0.5 hover:text-red-500">
+                            <button onClick={(e) => { e.stopPropagation(); removeModel(model); }} className="ml-0.5 hover:text-danger">
                               <span className="material-symbols-outlined text-[12px]">close</span>
                             </button>
                           </span>
@@ -273,7 +273,7 @@ export default function CopilotToolCard({ tool, isExpanded, onToggle, baseUrl, a
               </div>
 
               {message && (
-                <div className={`flex items-center gap-2 px-2 py-1.5 rounded text-xs ${message.type === "success" ? "bg-green-500/10 text-green-600" : "bg-red-500/10 text-red-600"}`}>
+                <div className={`flex items-center gap-2 px-2 py-1.5 rounded text-xs ${message.type === "success" ? "bg-success/10 text-success" : "bg-danger/10 text-danger"}`}>
                   <span className="material-symbols-outlined text-[14px]">{message.type === "success" ? "check_circle" : "error"}</span>
                   <span>{message.text}</span>
                 </div>

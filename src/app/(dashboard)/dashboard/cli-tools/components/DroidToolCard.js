@@ -234,9 +234,9 @@ export default function DroidToolCard({
           <div className="min-w-0">
             <div className="flex min-w-0 flex-wrap items-center gap-2">
               <h3 className="font-medium text-sm">{tool.name}</h3>
-              {configStatus === "configured" && <span className="px-1.5 py-0.5 text-[10px] font-medium bg-green-500/10 text-green-600 dark:text-green-400 rounded-full">Connected</span>}
-              {configStatus === "not_configured" && <span className="px-1.5 py-0.5 text-[10px] font-medium bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 rounded-full">Not configured</span>}
-              {configStatus === "other" && <span className="px-1.5 py-0.5 text-[10px] font-medium bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-full">Other</span>}
+              {configStatus === "configured" && <span className="px-1.5 py-0.5 text-[10px] font-medium bg-success/10 text-success rounded-full">Connected</span>}
+              {configStatus === "not_configured" && <span className="px-1.5 py-0.5 text-[10px] font-medium bg-warning/10 text-warning rounded-full">Not configured</span>}
+              {configStatus === "other" && <span className="px-1.5 py-0.5 text-[10px] font-medium bg-info/10 text-info rounded-full">Other</span>}
             </div>
             <p className="font-display text-xs text-text-muted truncate">{tool.description}</p>
           </div>
@@ -280,9 +280,9 @@ export default function DroidToolCard({
                   <div className="space-y-3 text-sm">
                     <div>
                       <p className="text-text-muted mb-1">macOS / Linux / Windows:</p>
-                      <code className="block px-3 py-2 bg-black/5 dark:bg-white/5 rounded font-mono text-xs">curl -fsSL https://app.factory.ai/cli | sh</code>
+                      <code className="block px-3 py-2 bg-surface-2 rounded font-mono text-xs">curl -fsSL https://app.factory.ai/cli | sh</code>
                     </div>
-                    <p className="text-text-muted">After installation, run <code className="px-1 bg-black/5 dark:bg-white/5 rounded">droid</code> to verify.</p>
+                    <p className="text-text-muted">After installation, run <code className="px-1 bg-surface-2 rounded">droid</code> to verify.</p>
                   </div>
                 </div>
               )}
@@ -339,7 +339,7 @@ export default function DroidToolCard({
                         {modelList.map((id) => (
                           <div key={id} className="flex items-center gap-1.5 px-2 py-1 bg-bg-secondary rounded border border-border">
                             <span className="flex-1 text-xs font-mono truncate">{id}</span>
-                            <button onClick={() => removeModel(id)} className="text-text-muted hover:text-red-500 transition-colors shrink-0" title="Remove">
+                            <button onClick={() => removeModel(id)} className="text-text-muted hover:text-danger transition-colors shrink-0" title="Remove">
                               <span className="material-symbols-outlined text-[12px]">close</span>
                             </button>
                           </div>
@@ -354,7 +354,7 @@ export default function DroidToolCard({
                         onChange={(e) => setModelInput(e.target.value)}
                         onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addModel(); } }}
                         placeholder="provider/model-id"
-                        className="w-full min-w-0 px-2 py-2 bg-surface rounded border border-border text-xs focus:outline-none focus:ring-1 focus:ring-primary/50 sm:py-1.5"
+                        className="w-full min-w-0 px-2 py-2 bg-surface rounded border border-border text-xs sm:py-1.5"
                       />
                       <button
                         onClick={() => setModalOpen(true)}
@@ -372,7 +372,7 @@ export default function DroidToolCard({
               </div>
 
               {message && (
-                <div className={`flex items-center gap-2 px-2 py-1.5 rounded text-xs ${message.type === "success" ? "bg-green-500/10 text-green-600" : "bg-red-500/10 text-red-600"}`}>
+                <div className={`flex items-center gap-2 px-2 py-1.5 rounded text-xs ${message.type === "success" ? "bg-success/10 text-success" : "bg-danger/10 text-danger"}`}>
                   <span className="material-symbols-outlined text-[14px]">{message.type === "success" ? "check_circle" : "error"}</span>
                   <span>{message.text}</span>
                 </div>

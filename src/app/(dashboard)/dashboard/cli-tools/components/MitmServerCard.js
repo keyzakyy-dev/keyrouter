@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Card, Button, Badge, Input } from "@/shared/components";
+import { Card, Button, Badge, Input, Modal } from "@/shared/components";
 
 const DEFAULT_MITM_ROUTER_BASE = "http://localhost:20131";
 
@@ -152,7 +152,7 @@ export default function MitmServerCard({ apiKeys, cloudEnabled, onStatusChange }
                 { label: "Trusted", ok: status?.certTrusted },
                 { label: "Server", ok: isRunning },
               ].map(({ label, ok }) => (
-                <span key={label} className={`flex items-center gap-0.5 px-1.5 py-0.5 rounded ${ok ? "text-green-600" : "text-text-muted"}`}>
+                <span key={label} className={`flex items-center gap-0.5 px-1.5 py-0.5 rounded ${ok ? "text-success" : "text-text-muted"}`}>
                   <span className="material-symbols-outlined text-[12px]">
                     {ok ? "check_circle" : "cancel"}
                   </span>
@@ -183,7 +183,7 @@ export default function MitmServerCard({ apiKeys, cloudEnabled, onStatusChange }
                 onChange={(e) => setMitmRouterBaseUrl(e.target.value)}
                 placeholder={DEFAULT_MITM_ROUTER_BASE}
                 disabled={isRunning}
-                className="flex-1 min-w-0 px-2 py-1.5 bg-surface rounded border border-border text-xs text-text-main focus:outline-none focus:ring-1 focus:ring-primary/50 disabled:opacity-50"
+                className="flex-1 min-w-0 px-2 py-1.5 bg-surface rounded border border-border text-xs text-text-main disabled:opacity-50"
               />
             </div>
             {!isRunning && (
@@ -196,7 +196,7 @@ export default function MitmServerCard({ apiKeys, cloudEnabled, onStatusChange }
                   value={selectedApiKey}
                   onChange={(e) => setSelectedApiKey(e.target.value)}
                   placeholder={cloudEnabled ? "Enter or pick API key" : "sk_keyrouter (default)"}
-                  className="flex-1 min-w-0 px-2 py-1.5 bg-surface rounded border border-border text-xs text-text-main focus:outline-none focus:ring-1 focus:ring-primary/50"
+                  className="flex-1 min-w-0 px-2 py-1.5 bg-surface rounded border border-border text-xs text-text-main"
                 />
                 {apiKeys?.length > 0 && (
                   <datalist id="mitm-api-keys">
@@ -215,7 +215,7 @@ export default function MitmServerCard({ apiKeys, cloudEnabled, onStatusChange }
               <button
                 onClick={() => handleAction("trust-cert")}
                 disabled={loading}
-                className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-yellow-500/30 bg-yellow-500/10 px-4 py-2 text-xs font-medium text-yellow-600 transition-colors hover:bg-yellow-500/20 disabled:opacity-50 sm:w-auto sm:py-1.5"
+                className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-warning/30 bg-warning/10 px-4 py-2 text-xs font-medium text-warning transition-colors hover:bg-warning/20 disabled:opacity-50 sm:w-auto sm:py-1.5"
               >
                 <span className="material-symbols-outlined text-[16px]">verified_user</span>
                 Trust Cert
@@ -225,7 +225,7 @@ export default function MitmServerCard({ apiKeys, cloudEnabled, onStatusChange }
               <button
                 onClick={() => handleAction("stop")}
                 disabled={loading}
-                className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-2 text-xs font-medium text-red-500 transition-colors hover:bg-red-500/20 disabled:opacity-50 sm:w-auto sm:py-1.5"
+                className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-danger/30 bg-danger/10 px-4 py-2 text-xs font-medium text-danger transition-colors hover:bg-danger/20 disabled:opacity-50 sm:w-auto sm:py-1.5"
               >
                 <span className="material-symbols-outlined text-[16px]">stop_circle</span>
                 Stop Server
@@ -248,7 +248,7 @@ export default function MitmServerCard({ apiKeys, cloudEnabled, onStatusChange }
 
           {/* Action error */}
           {actionError && (
-            <div className="flex items-start gap-2 px-2 py-1.5 rounded text-xs bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20">
+            <div className="flex items-start gap-2 px-2 py-1.5 rounded text-xs bg-danger/10 text-danger border border-danger/20">
               <span className="material-symbols-outlined text-[14px] mt-0.5 shrink-0">error</span>
               <span>{actionError}</span>
             </div>
@@ -256,7 +256,7 @@ export default function MitmServerCard({ apiKeys, cloudEnabled, onStatusChange }
 
           {/* Windows admin warning */}
           {serverIsWindows && !isAdmin && (
-            <div className="flex items-center gap-2 px-2 py-1.5 rounded text-xs bg-red-500/10 text-red-600 border border-red-500/20">
+            <div className="flex items-center gap-2 px-2 py-1.5 rounded text-xs bg-danger/10 text-danger border border-danger/20">
               <span className="material-symbols-outlined text-[14px]">shield_lock</span>
               <span>Administrator required - restart KeyRouter as Administrator to use MITM</span>
             </div>
@@ -266,11 +266,15 @@ export default function MitmServerCard({ apiKeys, cloudEnabled, onStatusChange }
 
       {/* Password Modal */}
       {showPasswordModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="mx-4 flex w-full max-w-sm flex-col gap-4 rounded-xl border border-border bg-surface p-5 shadow-xl sm:p-6">
-            <h3 className="font-semibold text-text-main">Sudo Password Required</h3>
-            <div className="flex items-start gap-3 p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
-              <span className="material-symbols-outlined text-yellow-500 text-[20px]">warning</span>
+        <Modal
+          isOpen={showPasswordModal}
+          onClose={() => { if (!loading) { setShowPasswordModal(false); setSudoPassword(""); setModalError(null); } }}
+          title="Sudo Password Required"
+          size="sm"
+        >
+          <div className="flex flex-col gap-4">
+            <div className="flex items-start gap-3 p-3 bg-warning/10 border border-warning/30 rounded-lg">
+              <span className="material-symbols-outlined text-warning text-[20px]">warning</span>
               <p className="text-xs text-text-muted">Required for SSL certificate and server startup</p>
             </div>
             <Input
@@ -281,7 +285,7 @@ export default function MitmServerCard({ apiKeys, cloudEnabled, onStatusChange }
               onKeyDown={(e) => { if (e.key === "Enter" && !loading) handleConfirmPassword(); }}
             />
             {modalError && (
-              <div className="flex items-center gap-2 px-2 py-1.5 rounded text-xs bg-red-500/10 text-red-600">
+              <div className="flex items-center gap-2 px-2 py-1.5 rounded text-xs bg-danger/10 text-danger">
                 <span className="material-symbols-outlined text-[14px]">error</span>
                 <span>{modalError}</span>
               </div>
@@ -295,16 +299,19 @@ export default function MitmServerCard({ apiKeys, cloudEnabled, onStatusChange }
               </Button>
             </div>
           </div>
-        </div>
+        </Modal>
       )}
 
       {/* Port 443 Conflict Modal */}
       {port443Conflict && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="mx-4 flex w-full max-w-md flex-col gap-4 rounded-xl border border-border bg-surface p-5 shadow-xl sm:p-6">
-            <h3 className="font-semibold text-text-main">Port 443 Already In Use</h3>
-            <div className="flex items-start gap-3 p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
-              <span className="material-symbols-outlined text-yellow-500 text-[20px]">warning</span>
+        <Modal
+          isOpen={!!port443Conflict}
+          onClose={() => { setPort443Conflict(null); setLoading(false); }}
+          title="Port 443 Already In Use"
+        >
+          <div className="flex flex-col gap-4">
+            <div className="flex items-start gap-3 p-3 bg-warning/10 border border-warning/30 rounded-lg">
+              <span className="material-symbols-outlined text-warning text-[20px]">warning</span>
               <div className="flex flex-col gap-1 text-xs text-text-muted">
                 <p>Port 443 is currently used by another process:</p>
                 <p className="font-mono text-text-main" data-i18n-skip="true">
@@ -322,7 +329,7 @@ export default function MitmServerCard({ apiKeys, cloudEnabled, onStatusChange }
               </Button>
             </div>
           </div>
-        </div>
+        </Modal>
       )}
     </>
   );

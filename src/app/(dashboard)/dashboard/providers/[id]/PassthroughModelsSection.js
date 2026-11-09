@@ -1,5 +1,6 @@
 "use client";
 
+import { useNotificationStore } from "@/store/notificationStore";
 import { useState } from "react";
 import PropTypes from "prop-types";
 import { Button } from "@/shared/components";
@@ -7,9 +8,9 @@ import { getProviderCustomModelRows } from "@/shared/utils/providerCustomModels"
 
 function PassthroughModelRow({ modelId, fullModel, copied, onCopy, onDeleteAlias, onTest, testStatus, isTesting }) {
   const borderColor = testStatus === "ok"
-    ? "border-green-500/40"
+    ? "border-success/40"
     : testStatus === "error"
-    ? "border-red-500/40"
+    ? "border-danger/40"
     : "border-border";
 
   const iconColor = testStatus === "ok"
@@ -67,7 +68,7 @@ function PassthroughModelRow({ modelId, fullModel, copied, onCopy, onDeleteAlias
       {/* Delete button */}
       <button
         onClick={onDeleteAlias}
-        className="p-1 hover:bg-red-50 rounded text-red-500"
+        className="p-1 hover:bg-danger/10 rounded text-danger"
         title="Remove model"
       >
         <span className="material-symbols-outlined text-sm">delete</span>
@@ -90,6 +91,7 @@ PassthroughModelRow.propTypes = {
 export default function PassthroughModelsSection({ providerAlias, modelAliases, customModels, copied, onCopy, onDeleteAlias, onAddCustomModel, onDeleteCustomModel }) {
   const [newModel, setNewModel] = useState("");
   const [adding, setAdding] = useState(false);
+  const notify = useNotificationStore();
 
   const allModels = getProviderCustomModelRows({
     customModels,
@@ -103,7 +105,7 @@ export default function PassthroughModelsSection({ providerAlias, modelAliases, 
     const modelId = newModel.trim();
 
     if (allModels.some((model) => model.id === modelId)) {
-      alert("Model already exists for this provider.");
+      notify.warning("Model already exists for this provider.");
       return;
     }
 

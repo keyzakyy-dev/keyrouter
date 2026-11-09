@@ -195,7 +195,7 @@ export default function WebLoginButton({ providerId, onConnected, size = "sm" })
 
           <div>
             <div className="mb-2 flex items-center justify-between">
-              <span className="text-xs font-medium uppercase tracking-wide text-text-muted">
+              <span className="text-xs font-medium text-text-muted">
                 {translate("Browser profile")}
               </span>
               <button
@@ -235,17 +235,17 @@ export default function WebLoginButton({ providerId, onConnected, size = "sm" })
           {phase !== "idle" && (
             <div className="rounded border border-accent/20 bg-sidebar/50 p-3">
               {phase === "success" ? (
-                <div className="flex items-center gap-2 text-sm font-medium text-green-400">
+                <div className="flex items-center gap-2 text-sm font-medium text-success">
                   <span className="material-symbols-outlined text-[18px]">check_circle</span>
                   ✓ {message || translate("Connection saved")}
                 </div>
               ) : phase === "error" ? (
                 <div className="flex flex-col gap-1">
-                  <div className="flex items-center gap-2 text-sm font-medium text-yellow-400">
+                  <div className="flex items-center gap-2 text-sm font-medium text-warning">
                     <span className="material-symbols-outlined text-[18px]">error</span>
                     {translate("Login failed")}
                   </div>
-                  {message && <p className="pl-6 text-xs text-red-500 break-words">{message}</p>}
+                  {message && <p className="pl-6 text-xs text-danger break-words">{message}</p>}
                 </div>
               ) : (
                 <ol className="flex flex-col gap-2">
@@ -256,7 +256,7 @@ export default function WebLoginButton({ providerId, onConnected, size = "sm" })
                       <li
                         key={stage.key}
                         className={`flex items-center gap-2 text-sm ${
-                          done ? "text-green-400" : active ? "text-primary" : "text-text-muted opacity-50"
+                          done ? "text-success" : active ? "text-primary" : "text-text-muted opacity-50"
                         }`}
                       >
                         <span className={`material-symbols-outlined text-[18px] ${active ? "animate-pulse" : ""}`}>

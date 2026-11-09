@@ -48,7 +48,7 @@ function UsageContent() {
         <h1 className="font-display text-2xl font-semibold tracking-tight text-text-main">
           Usage
         </h1>
-        <p className="font-mono text-[10px] uppercase tracking-wider text-text-subtle">
+        <p className="text-xs text-text-subtle">
           Usage across every provider connection - real-time requests, tokens, and estimated cost.
         </p>
       </div>

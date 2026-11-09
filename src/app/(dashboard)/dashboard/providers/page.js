@@ -8,6 +8,7 @@ import {
   CardSkeleton,
   Badge,
   Button,
+  Modal,
   Toggle,
 } from "@/shared/components";
 import ProviderIcon from "@/shared/components/ProviderIcon";
@@ -419,13 +420,34 @@ function ProvidersContent() {
     uniqueProviders: new Set(connections.map((c) => c.provider)).size,
   };
 
+  // Failing connections for the status strip: provider display name + error tag.
+  const displayName = (p) =>
+    OAUTH_PROVIDERS[p]?.name ||
+    APIKEY_PROVIDERS[p]?.name ||
+    FREE_PROVIDERS[p]?.name ||
+    FREE_TIER_PROVIDERS[p]?.name ||
+    WEB_COOKIE_PROVIDERS[p]?.name ||
+    p;
+  const errorProviders = connections
+    .filter((c) => {
+      const s = getEffectiveConnStatus(c);
+      return s === "error" || s === "expired" || s === "unavailable";
+    })
+    .sort((a, b) => (b.lastErrorAt || 0) < (a.lastErrorAt || 0) ? -1 : 1)
+    .slice(0, 8)
+    .map((c) => ({
+      provider: c.provider,
+      label: displayName(c.provider),
+      code: getConnectionErrorTag(c),
+    }));
+
   const renderTestButton = (mode) => (
     <button
       onClick={() => handleBatchTest(mode)}
       disabled={!!testingMode}
       className={`flex w-full items-center justify-center gap-2 rounded-lg px-3.5 py-2 font-display text-sm font-medium transition-colors sm:w-auto ${
         testingMode === mode
-          ? "bg-primary text-white dark:text-amber-950 animate-pulse"
+          ? "bg-primary text-white dark:text-neutral-950 animate-pulse"
           : "border border-border bg-surface text-text-muted hover:border-text-subtle hover:text-text-main"
       }`}
       title={`Test all ${mode} connections`}
@@ -451,7 +473,7 @@ function ProvidersContent() {
   const makeTiles = (items, getItem) =>
     items.map((item) => {
       const { id, key, info, stats, authType, onToggle } = getItem(item);
-      return { key: key ?? id, id, info, stats, authType, onToggle, size: "compact" };
+      return { key: key ?? id, id, info, stats, authType, onToggle };
     });
 
   const customTiles = makeTiles(
@@ -525,7 +547,6 @@ function ProvidersContent() {
           stats={tile.stats}
           authType={tile.authType}
           onToggle={tile.onToggle}
-          size={tile.size}
         />
       ))}
     </div>
@@ -533,12 +554,49 @@ function ProvidersContent() {
 
   return (
     <div className="flex min-w-0 flex-col gap-6 px-1 sm:px-0">
-      {/* Summary ribbon */}
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <SummaryStat icon="hub" label="Total koneksi" value={summary.total} />
-        <SummaryStat icon="check_circle" label="Connected" value={summary.connected} tone="success" />
-        <SummaryStat icon="error" label="Error" value={summary.errors} tone="danger" />
-        <SummaryStat icon="toggle_on" label="Provider aktif" value={summary.activeProviders} />
+      {/* Status strip: healthy count + clickable error chips (filter shortcuts) */}
+      <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5">
+        <p className="text-sm text-text-muted">
+          <span className="font-display font-semibold text-text-main">{summary.connected}</span>
+          {" "}of {summary.total} connections healthy
+          {summary.errors > 0 ? ` · ${summary.errors} down` : ""}
+        </p>
+        {errorProviders.length > 0 && (
+          <div className="flex flex-wrap items-center gap-1.5">
+            {errorProviders.slice(0, 3).map((row, i) => (
+              <button
+                key={`${row.provider}-${i}`}
+                type="button"
+                onClick={() => setStatusFilter(statusFilter === "error" ? "all" : "error")}
+                className={`inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-xs transition-colors ${
+                  statusFilter === "error"
+                    ? "border-danger bg-danger/15 text-danger"
+                    : "border-danger/30 bg-danger/10 text-danger hover:border-danger"
+                }`}
+                title="Filter to providers with errors"
+              >
+                {row.label}
+                {row.code ? <span className="text-text-muted">{row.code}</span> : null}
+              </button>
+            ))}
+            {errorProviders.length > 3 && (
+              <button
+                type="button"
+                onClick={() => setStatusFilter(statusFilter === "error" ? "all" : "error")}
+                className="inline-flex items-center rounded-md border border-border bg-surface px-2 py-0.5 text-xs text-text-muted transition-colors hover:text-text-main"
+                title="Filter to providers with errors"
+              >
+                +{errorProviders.length - 3} more
+              </button>
+            )}
+          </div>
+        )}
+        {summary.errors === 0 && summary.total > 0 && (
+          <span className="inline-flex items-center gap-1 text-xs text-success">
+            <span className="material-symbols-outlined text-[14px]">check_circle</span>
+            All healthy
+          </span>
+        )}
       </div>
 
       {/* Filter + Tabs */}
@@ -553,7 +611,7 @@ function ProvidersContent() {
                   role="tab"
                   aria-selected={active}
                   onClick={() => handleTabChange(t.id)}
-                  className={`flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.5 font-display text-[13px] font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-text-subtle/60 focus-visible:ring-offset-1 focus-visible:ring-offset-surface-2 ${
+                  className={`flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.5 font-display text-[13px] font-medium transition-all duration-150 ${
                     active
                       ? "bg-surface text-primary shadow-[var(--shadow-soft)] dark:text-primary"
                       : "text-text-muted hover:text-text-main"
@@ -595,48 +653,32 @@ function ProvidersContent() {
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h2 className="font-display text-lg font-semibold text-text-main">Custom Providers</h2>
-              <p className="mt-0.5 font-mono text-[10px] uppercase tracking-wider text-text-subtle">OpenAI- & Anthropic-compatible endpoints</p>
+              <p className="mt-0.5 text-[11px] text-text-subtle">OpenAI- & Anthropic-compatible endpoints</p>
             </div>
             <div className="grid grid-cols-1 gap-2 sm:flex sm:w-auto">
               <button
                 onClick={() => setShowAddAnthropicCompatibleModal(true)}
-                className="group flex items-center gap-3 rounded-xl border border-border bg-surface px-4 py-2.5 text-left transition-colors hover:border-text-subtle hover:bg-surface-2"
+                className="flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-surface px-3.5 py-2 font-display text-sm font-medium text-text-muted transition-colors hover:border-text-subtle hover:text-text-main sm:w-auto"
               >
-                <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-surface-2">
-                  <ProviderIcon
-                    src="/providers/anthropic-m.png"
-                    alt="Anthropic Compatible"
-                    size={24}
-                    className="object-contain rounded-md"
-                  />
-                </span>
-                <span className="min-w-0">
-                  <span className="block truncate font-display text-sm font-semibold text-text-main">Anthropic Compatible</span>
-                  <span className="mt-0.5 block text-xs text-text-muted">
-                    <span className="font-mono" aria-hidden="true">+</span>{" "}
-                    endpoint
-                  </span>
-                </span>
+                <ProviderIcon
+                  src="/providers/anthropic-m.png"
+                  alt="Anthropic Compatible"
+                  size={16}
+                  className="object-contain rounded"
+                />
+                Anthropic endpoint
               </button>
               <button
                 onClick={() => setShowAddCompatibleModal(true)}
-                className="group flex items-center gap-3 rounded-xl border border-border bg-surface px-4 py-2.5 text-left transition-colors hover:border-text-subtle hover:bg-surface-2"
+                className="flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-surface px-3.5 py-2 font-display text-sm font-medium text-text-muted transition-colors hover:border-text-subtle hover:text-text-main sm:w-auto"
               >
-                <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-surface-2">
-                  <ProviderIcon
-                    src="/providers/oai-cc.png"
-                    alt="OpenAI Compatible"
-                    size={24}
-                    className="object-contain rounded-md"
-                  />
-                </span>
-                <span className="min-w-0">
-                  <span className="block truncate font-display text-sm font-semibold text-text-main">OpenAI Compatible</span>
-                  <span className="mt-0.5 block text-xs text-text-muted">
-                    <span className="font-mono" aria-hidden="true">+</span>{" "}
-                    endpoint
-                  </span>
-                </span>
+                <ProviderIcon
+                  src="/providers/oai-cc.png"
+                  alt="OpenAI Compatible"
+                  size={16}
+                  className="object-contain rounded"
+                />
+                OpenAI endpoint
               </button>
             </div>
           </div>
@@ -665,8 +707,8 @@ function ProvidersContent() {
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-text-subtle">Sign in with provider account</p>
-              <h2 className="mt-0.5 text-lg font-semibold text-text-main">OAuth Providers</h2>
+              <h2 className="text-lg font-semibold text-text-main">OAuth Providers</h2>
+              <p className="mt-0.5 text-xs text-text-subtle">Sign in with provider account</p>
             </div>
             <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
               <ModelAvailabilityBadge />
@@ -682,8 +724,8 @@ function ProvidersContent() {
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-text-subtle">No-key / trial providers</p>
-              <h2 className="mt-0.5 text-lg font-semibold text-text-main">Free Tier Providers</h2>
+              <h2 className="text-lg font-semibold text-text-main">Free Tier Providers</h2>
+              <p className="mt-0.5 text-xs text-text-subtle">No-key / trial providers</p>
             </div>
             {renderTestButton("free")}
           </div>
@@ -696,8 +738,8 @@ function ProvidersContent() {
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-text-subtle">Providers using an API key</p>
-              <h2 className="mt-0.5 text-lg font-semibold text-text-main">API Key Providers</h2>
+              <h2 className="text-lg font-semibold text-text-main">API Key Providers</h2>
+              <p className="mt-0.5 text-xs text-text-subtle">Providers using an API key</p>
             </div>
             {renderTestButton("apikey")}
           </div>
@@ -705,7 +747,7 @@ function ProvidersContent() {
           {!isApikeySearching && !showAllApikey && hiddenApikeyCount > 0 && (
             <button
               onClick={() => setShowAllApikey(true)}
-              className="flex w-full items-center justify-center gap-1.5 rounded-full border border-dashed border-text-subtle px-3 py-2.5 font-mono text-sm uppercase tracking-wider text-text-muted transition-colors hover:border-text-main hover:text-text-main focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-text-subtle/60"
+              className="flex w-full items-center justify-center gap-1.5 rounded-full border border-dashed border-text-subtle px-3 py-2.5 text-sm text-text-muted transition-colors hover:border-text-main hover:text-text-main"
             >
               <span className="material-symbols-outlined text-[16px]">expand_more</span>
               Show all {apikeyEntries.length} providers
@@ -734,76 +776,19 @@ function ProvidersContent() {
       />
 
       {/* Test Results Modal */}
-      {testResults && (
-        <div
-          className="fixed inset-0 z-50 flex items-start justify-center px-3 pt-[6vh] sm:pt-[10vh]"
-          onClick={() => setTestResults(null)}
-        >
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
-          <div
-            className="relative bg-surface border border-border rounded-md w-full max-w-[600px] max-h-[86vh] sm:max-h-[80vh] overflow-y-auto shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="sticky top-0 z-10 flex items-center justify-between px-5 py-3 border-b border-border bg-surface/95 backdrop-blur-sm rounded-t-md">
-              <h3 className="font-semibold">Test Results</h3>
-              <button
-                onClick={() => setTestResults(null)}
-                className="p-1 rounded-lg hover:bg-bg text-text-muted hover:text-text-main transition-colors"
-                aria-label="Close test results"
-              >
-                <span className="material-symbols-outlined text-lg">close</span>
-              </button>
-            </div>
-            <div className="p-5">
-              <ProviderTestResultsView results={testResults} />
-            </div>
-          </div>
-        </div>
-      )}
+      <Modal
+        isOpen={!!testResults}
+        title="Test Results"
+        onClose={() => setTestResults(null)}
+      >
+        <ProviderTestResultsView results={testResults || {}} />
+      </Modal>
     </div>
   );
 }
 
-function SummaryStat({ icon, label, value, sub, tone }) {
-  const toneClass = {
-    default: "text-text-main",
-    success: "text-success",
-    danger: "text-danger",
-    brand: "text-text-main",
-  }[tone || "default"];
-  const iconClass = {
-    default: "text-primary dark:text-primary",
-    success: "text-success",
-    danger: "text-danger",
-    brand: "text-primary dark:text-primary",
-  }[tone || "default"];
-
-  return (
-    <Card padding="none" className="flex items-center gap-2 p-2.5 pl-4">
-      <span className={`material-symbols-outlined !text-[18px] shrink-0 ${iconClass}`}>{icon}</span>
-      <div className="min-w-0 leading-none">
-        <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-text-muted leading-none">
-          {label}
-        </p>
-        <p className={`font-display text-sm font-bold leading-none mt-0.5 ${toneClass}`}>
-          {value}
-        </p>
-        {sub && <p className="truncate text-[10px] text-text-muted leading-none mt-0.5">{sub}</p>}
-      </div>
-    </Card>
-  );
-}
-
-SummaryStat.propTypes = {
-  icon: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-  value: PropTypes.number.isRequired,
-  sub: PropTypes.string,
-  tone: PropTypes.string,
-};
-
-function ProviderCard({ providerId, provider, stats, authType, onToggle, size = "compact" }) {
-  const { connected, error, errorCode, errorTime, allDisabled } = stats;
+function ProviderCard({ providerId, provider, stats, authType, onToggle }) {
+  const { connected, error, errorCode, allDisabled } = stats;
   const isNoAuth = !!provider.noAuth;
   const isCompatible = providerId.startsWith(OPENAI_COMPATIBLE_PREFIX);
   const isAnthropicCompatible = providerId.startsWith(
@@ -825,7 +810,7 @@ function ProviderCard({ providerId, provider, stats, authType, onToggle, size = 
       ? "bg-danger"
       : connected > 0
         ? "bg-success"
-        : "bg-warning";
+        : "bg-text-subtle/40";
 
   const modeLabel =
     {
@@ -836,15 +821,7 @@ function ProviderCard({ providerId, provider, stats, authType, onToggle, size = 
       compatible: "Compatible",
     }[authType] || "Provider";
 
-  const lampLabel = allDisabled
-    ? "Disabled"
-    : error > 0
-      ? "Error"
-      : connected > 0
-        ? "Connected"
-        : "Idle";
-
-  // Minimal focused status row: lamp + short label (+ relative time on large cards).
+  // Minimal focused status row: lamp + short label.
   const renderStatus = () => {
     if (allDisabled)
       return (
@@ -863,75 +840,25 @@ function ProviderCard({ providerId, provider, stats, authType, onToggle, size = 
       <span className="flex items-center gap-1.5">
         <span className={`size-2 rounded-full ${lampClass}`} />
         <span className="text-xs font-medium text-text-muted">{label}</span>
-        {size === "large" && errorTime && (
-          <span className="font-mono text-[10px] uppercase tracking-wider text-text-subtle">
-            {errorTime}
-          </span>
-        )}
       </span>
     );
   };
 
   const toggleControl = stats.total > 0 && (
     <div
-      title={allDisabled ? "Enable provider" : "Disable provider"}
       onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
-        onToggle(!allDisabled ? false : true);
       }}
     >
-      <Toggle size="sm" checked={!allDisabled} onChange={() => {}} />
+      <Toggle
+        size="sm"
+        checked={!allDisabled}
+        onChange={() => onToggle(!allDisabled ? false : true)}
+        title={allDisabled ? "Enable provider" : "Disable provider"}
+      />
     </div>
   );
-
-  if (size === "large") {
-    return (
-      <Link href={`/dashboard/providers/${providerId}`} className="group min-w-0 sm:col-span-2">
-        <Card
-          padding="none"
-          className={`relative h-full overflow-hidden transition-colors hover:bg-surface-2 cursor-pointer ${allDisabled ? "opacity-60" : ""}`}
-        >
-          <div className="flex items-center justify-between gap-2 px-4 pt-3">
-            <div className="flex items-center gap-2">
-              <span className={`size-2 rounded-full ${lampClass}`} />
-              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-text-subtle">
-                {lampLabel}
-              </span>
-            </div>
-            <Badge variant="default" size="sm">{modeLabel}</Badge>
-          </div>
-          <div className="flex items-center gap-4 p-4 pt-3">
-            <div className="grid size-12 shrink-0 place-items-center rounded-xl bg-surface-2">
-              <ProviderIcon
-                src={getIconPath()}
-                alt={provider.name}
-                size={28}
-                className="object-contain rounded-md max-w-[30px] max-h-[30px]"
-                fallbackText={provider.textIcon || provider.id.slice(0, 2).toUpperCase()}
-                fallbackColor={provider.color}
-              />
-            </div>
-            <div className="min-w-0 flex-1">
-              <h3 className="truncate font-display text-base font-semibold text-text-main">
-                {provider.name}
-              </h3>
-              <div className="mt-1.5 flex min-w-0 flex-wrap items-center gap-2">
-                {renderStatus()}
-              </div>
-            </div>
-            <div className="flex shrink-0 items-center gap-2">
-              {toggleControl}
-              <span className="inline-flex h-7 items-center gap-1 rounded-md bg-bg px-2.5 text-xs font-medium text-text-muted transition-colors group-hover:text-text-main">
-                Manage
-                <span className="material-symbols-outlined text-[14px]">chevron_right</span>
-              </span>
-            </div>
-          </div>
-        </Card>
-      </Link>
-    );
-  }
 
   return (
     <Link href={`/dashboard/providers/${providerId}`} className="group min-w-0">
@@ -990,17 +917,16 @@ ProviderCard.propTypes = {
   }).isRequired,
   authType: PropTypes.string,
   onToggle: PropTypes.func,
-  size: PropTypes.oneOf(["compact", "large"]),
 };
 
 function ProviderTestResultsView({ results }) {
   if (results.error && !results.results) {
     return (
       <div className="text-center py-6">
-        <span className="material-symbols-outlined text-red-500 text-[32px] mb-2 block">
+        <span className="material-symbols-outlined text-danger text-[32px] mb-2 block">
           error
         </span>
-        <p className="text-sm text-red-400">{results.error}</p>
+        <p className="text-sm text-danger">{results.error}</p>
       </div>
     );
   }
@@ -1021,11 +947,11 @@ function ProviderTestResultsView({ results }) {
       {summary && (
         <div className="flex flex-wrap items-center gap-2 text-xs mb-1 sm:gap-3">
           <span className="text-text-muted">{modeLabel} Test</span>
-          <span className="px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 font-medium">
+          <span className="px-2 py-0.5 rounded bg-success/15 text-success font-medium">
             {summary.passed} passed
           </span>
           {summary.failed > 0 && (
-            <span className="px-2 py-0.5 rounded bg-red-500/15 text-red-400 font-medium">
+            <span className="px-2 py-0.5 rounded bg-danger/15 text-danger font-medium">
               {summary.failed} failed
             </span>
           )}
@@ -1040,7 +966,7 @@ function ProviderTestResultsView({ results }) {
           className="flex min-w-0 flex-wrap items-center gap-2 rounded-md bg-surface-2 px-3 py-2 text-xs sm:flex-nowrap"
         >
           <span
-            className={`material-symbols-outlined text-[16px] ${r.valid ? "text-emerald-500" : "text-red-500"}`}
+            className={`material-symbols-outlined text-[16px] ${r.valid ? "text-success" : "text-danger"}`}
           >
             {r.valid ? "check_circle" : "error"}
           </span>
@@ -1060,8 +986,8 @@ function ProviderTestResultsView({ results }) {
           <span
             className={`shrink-0 text-[10px] uppercase font-bold px-1.5 py-0.5 rounded ${
               r.valid
-                ? "bg-emerald-500/15 text-emerald-400"
-                : "bg-red-500/15 text-red-400"
+                ? "bg-success/15 text-success"
+                : "bg-danger/15 text-danger"
             }`}
           >
             {r.valid ? "OK" : r.diagnosis?.type || "ERROR"}

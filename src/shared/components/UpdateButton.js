@@ -69,7 +69,7 @@ export default function UpdateButton() {
       <button
         type="button"
         onClick={() => setShowUpdateModal(true)}
-        className="group hidden md:inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full border border-amber-500/40 bg-amber-500/10 px-2.5 py-1 text-[11px] font-semibold text-amber-600 transition-colors hover:bg-amber-500/20 dark:text-amber-400"
+        className="group hidden md:inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full border border-clay-500/40 bg-clay-500/10 px-2.5 py-1 text-[11px] font-semibold text-clay-600 transition-colors hover:bg-clay-500/20 dark:text-clay-400"
         title={`Update KeyRouter to v${updateInfo.latestVersion}`}
       >
         <span className="material-symbols-outlined text-[13px]">arrow_upward</span>
@@ -84,7 +84,7 @@ export default function UpdateButton() {
             <button
               type="button"
               onClick={() => setShowUpdateModal(true)}
-              className="group flex w-full cursor-pointer items-center justify-between gap-2 rounded-xl border border-amber-500/40 bg-amber-500/10 px-3.5 py-2 text-xs font-semibold text-amber-600 shadow-[var(--shadow-elev)] transition-colors hover:bg-amber-500/20 dark:text-amber-400"
+              className="group flex w-full cursor-pointer items-center justify-between gap-2 rounded-xl border border-clay-500/40 bg-clay-500/10 px-3.5 py-2 text-xs font-semibold text-clay-600 shadow-[var(--shadow-elev)] transition-colors hover:bg-clay-500/20 dark:text-clay-400"
             >
               <span className="flex min-w-0 items-center gap-2">
                 <span className="material-symbols-outlined shrink-0 text-[16px]">arrow_upward</span>
@@ -108,7 +108,7 @@ export default function UpdateButton() {
       />
 
       {(isDisconnected || isUpdating) && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-6 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-6">
           {isUpdating ? (
             <ManualUpdatePanel
               latestVersion={updateInfo?.latestVersion}
@@ -142,7 +142,7 @@ function ManualUpdatePanel({ latestVersion, installCmd, copied, onCopyAndShutdow
   return (
     <div className="w-full max-w-lg rounded-xl border border-white/10 bg-neutral-900/95 p-6 text-white">
       <div className="mb-4 flex items-center gap-3">
-        <div className="flex size-11 items-center justify-center rounded-full bg-amber-500/20 text-amber-400">
+        <div className="flex size-11 items-center justify-center rounded-full bg-clay-500/20 text-clay-400">
           <span className="material-symbols-outlined text-[24px]">content_copy</span>
         </div>
         <div>
@@ -159,7 +159,7 @@ function ManualUpdatePanel({ latestVersion, installCmd, copied, onCopyAndShutdow
 
       <p className="mb-2 text-sm text-white/80">Install command:</p>
       <div className="mb-4 w-full rounded bg-white/5 px-3 py-2">
-        <code className="break-all font-mono text-xs text-amber-400">{installCmd}</code>
+        <code className="break-all font-mono text-xs text-clay-400">{installCmd}</code>
       </div>
 
       <ol className="mb-4 list-inside list-decimal space-y-1 text-xs text-white/70">

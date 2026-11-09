@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
-import { CapacityBadges } from "@/shared/components";
+import { CapacityBadges, Checkbox } from "@/shared/components";
 
-export default function ModelRow({ model, fullModel, alias, copied, onCopy, testStatus, isCustom, isFree, onDeleteAlias, onTest, isTesting, onDisable, caps, thinkingSuffix }) {
+export default function ModelRow({ model, fullModel, alias, copied, onCopy, testStatus, isCustom, isFree, onDeleteAlias, onTest, isTesting, onDisable, caps, thinkingSuffix, selectable, selected, onToggleSelect }) {
   const displayModel = thinkingSuffix ? `${fullModel}(${thinkingSuffix})` : fullModel;
 
   const borderColor = testStatus === "ok"
@@ -21,6 +21,9 @@ export default function ModelRow({ model, fullModel, alias, copied, onCopy, test
   return (
     <div className={`group w-full sm:w-auto min-w-0 max-w-full rounded-lg border px-3 py-2 ${borderColor} transition-colors hover:bg-surface-2/60`}>
       <div className="flex min-w-0 items-start gap-2 sm:items-center">
+        {selectable && (
+          <Checkbox size="sm" checked={selected} onChange={onToggleSelect} className="mt-0.5 sm:mt-0" />
+        )}
         <span className={`material-symbols-outlined shrink-0 text-base mt-0.5 sm:mt-0 ${iconClass}`}>
           {iconName}
         </span>
@@ -100,4 +103,7 @@ ModelRow.propTypes = {
   onDisable: PropTypes.func,
   caps: PropTypes.object,
   thinkingSuffix: PropTypes.string,
+  selectable: PropTypes.bool,
+  selected: PropTypes.bool,
+  onToggleSelect: PropTypes.func,
 };

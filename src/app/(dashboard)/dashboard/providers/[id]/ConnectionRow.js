@@ -252,7 +252,7 @@ export default function ConnectionRow({ connection, proxyPools, isOAuth, isFirst
                 {proxyDisplayText}
               </span>
               {maskedProxyUrl && (
-                <code className="max-w-full truncate rounded bg-black/5 px-1 py-0.5 font-mono text-[10px] text-text-muted dark:bg-white/5 sm:max-w-[260px]">
+                <code className="max-w-full truncate rounded bg-surface-2 px-1 py-0.5 font-mono text-[10px] text-text-muted bg-surface-2 sm:max-w-[260px]">
                   {maskedProxyUrl}
                 </code>
               )}
@@ -273,7 +273,7 @@ export default function ConnectionRow({ connection, proxyPools, isOAuth, isFirst
               <button
                 ref={proxyBtnRef}
                 onClick={toggleProxyDropdown}
-                className={`flex w-full flex-col items-center rounded px-2 py-1 transition-colors hover:bg-black/5 dark:hover:bg-white/5 ${hasAnyProxy ? "text-primary" : "text-text-muted hover:text-primary"}`}
+                className={`flex w-full flex-col items-center rounded px-2 py-1 transition-colors hover:bg-surface-2 ${hasAnyProxy ? "text-primary" : "text-text-muted hover:text-primary"}`}
                 disabled={updatingProxy}
               >
                 <span className="material-symbols-outlined text-[18px]">
@@ -289,7 +289,7 @@ export default function ConnectionRow({ connection, proxyPools, isOAuth, isFirst
                 >
                   <button
                     onClick={() => handleSelectProxy("__none__")}
-                    className={`w-full text-left px-3 py-1.5 text-sm hover:bg-black/5 dark:hover:bg-white/5 ${!boundProxyPoolId ? "text-primary font-medium" : "text-text-main"}`}
+                    className={`w-full text-left px-3 py-1.5 text-sm hover:bg-surface-2 ${!boundProxyPoolId ? "text-primary font-medium" : "text-text-main"}`}
                   >
                     None
                   </button>
@@ -297,7 +297,7 @@ export default function ConnectionRow({ connection, proxyPools, isOAuth, isFirst
                     <button
                       key={pool.id}
                       onClick={() => handleSelectProxy(pool.id)}
-                      className={`w-full text-left px-3 py-1.5 text-sm hover:bg-black/5 dark:hover:bg-white/5 ${boundProxyPoolId === pool.id ? "text-primary font-medium" : "text-text-main"}`}
+                      className={`w-full text-left px-3 py-1.5 text-sm hover:bg-surface-2 ${boundProxyPoolId === pool.id ? "text-primary font-medium" : "text-text-main"}`}
                     >
                       {pool.name}
                     </button>
@@ -311,18 +311,18 @@ export default function ConnectionRow({ connection, proxyPools, isOAuth, isFirst
             <Tooltip text={autoPingTooltip}>
               <button
                 onClick={autoPing.onConfigure}
-                className={`flex w-full flex-col items-center rounded px-2 py-1 transition-colors hover:bg-black/5 dark:hover:bg-white/5 ${autoPing.isActive ? "text-primary" : "text-text-muted hover:text-primary"}`}
+                className={`flex w-full flex-col items-center rounded px-2 py-1 transition-colors hover:bg-surface-2 ${autoPing.isActive ? "text-primary" : "text-text-muted hover:text-primary"}`}
               >
                 <span className="material-symbols-outlined text-[18px]">bolt</span>
                 <span className="text-[10px] leading-tight">Auto-ping</span>
               </button>
             </Tooltip>
           )}
-          <button onClick={onEdit} className="flex flex-col items-center rounded px-2 py-1 text-text-muted hover:bg-black/5 hover:text-primary dark:hover:bg-white/5">
+          <button onClick={onEdit} className="flex flex-col items-center rounded px-2 py-1 text-text-muted hover:bg-surface-2 hover:text-primary">
             <span className="material-symbols-outlined text-[18px]">edit</span>
             <span className="text-[10px] leading-tight">Edit</span>
           </button>
-          <button onClick={onDelete} className="flex flex-col items-center rounded px-2 py-1 text-text-muted hover:bg-red-500/10 hover:text-danger">
+          <button onClick={onDelete} className="flex flex-col items-center rounded px-2 py-1 text-text-muted hover:bg-danger/10 hover:text-danger">
             <span className="material-symbols-outlined text-[18px]">delete</span>
             <span className="text-[10px] leading-tight">Delete</span>
           </button>

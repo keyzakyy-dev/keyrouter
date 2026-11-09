@@ -47,44 +47,46 @@ export default function Modal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Overlay */}
       <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-[2px] fade-in"
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm modal-overlay-in"
         onClick={closeOnOverlay ? onClose : undefined}
       />
 
       {/* Modal content */}
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
         className={cn(
           "relative w-full bg-surface",
           "border border-border-subtle",
           "rounded-[14px] shadow-[var(--shadow-elev)]",
-          "fade-in",
+          "modal-panel-in",
           sizes[size],
           className
         )}
       >
         {/* Header */}
         {(title || showTrafficLights) && (
-          <div className="flex items-center justify-between p-2 border-b border-border-subtle">
+          <div className="flex items-center justify-between p-3 border-b border-border-subtle">
             <div className="flex items-center">
-              {/* Traffic lights — desktop only */}
+              {/* Traffic lights — desktop only. One live red close dot; the two
+                  dead macOS dots are gone (decoration without information). */}
               {showTrafficLights && (
-                <div className="hidden md:flex items-center gap-2 mr-4 ml-2">
+                <div className="hidden md:flex items-center mr-3 ml-1">
                   <Tooltip text="Close" position="top" color="#FF5F56">
                     <button
                       onClick={onClose}
                       aria-label="Close"
                       title="Close"
-                      className="w-4 h-4 rounded-full bg-[#FF5F56] hover:brightness-90 transition-all cursor-pointer flex items-center justify-center group/dot"
+                      className="w-3.5 h-3.5 rounded-full bg-[#FF5F56] hover:brightness-90 transition-all cursor-pointer flex items-center justify-center group/dot"
                     >
-                      <span className="text-[9px] font-bold text-white opacity-0 group-hover/dot:opacity-100 transition-opacity leading-none">✕</span>
+                      <span className="text-[8px] font-bold text-white opacity-0 group-hover/dot:opacity-100 transition-opacity leading-none">✕</span>
                     </button>
                   </Tooltip>
-                  <div className="w-4 h-4 rounded-full bg-[#3a3a3a]/20 dark:bg-white/15 cursor-not-allowed" />
-                  <div className="w-4 h-4 rounded-full bg-[#3a3a3a]/20 dark:bg-white/15 cursor-not-allowed" />
                 </div>
               )}
               {title && (
-                <h2 className="font-display text-lg font-semibold text-text-main">{title}</h2>
+                <h2 className="font-display text-base font-semibold text-text-main">{title}</h2>
               )}
             </div>
             {/* X button — mobile only */}
@@ -99,11 +101,11 @@ export default function Modal({
         )}
 
         {/* Body */}
-        <div className="p-6 max-h-[calc(85vh-100px)] overflow-y-auto custom-scrollbar">{children}</div>
+        <div className="p-5 max-h-[calc(85vh-96px)] overflow-y-auto custom-scrollbar">{children}</div>
 
         {/* Footer */}
         {footer && (
-          <div className="flex items-center justify-end gap-3 p-6 border-t border-border-subtle">
+          <div className="flex items-center justify-end gap-3 px-5 py-3.5 border-t border-border-subtle">
             {footer}
           </div>
         )}
@@ -141,7 +143,7 @@ export function ConfirmModal({
         </>
       }
     >
-      <p className={messageClassName ?? "text-text-muted"}>{message}</p>
+      <p className={messageClassName ?? "text-sm leading-relaxed text-text-muted"}>{message}</p>
     </Modal>
   );
 }

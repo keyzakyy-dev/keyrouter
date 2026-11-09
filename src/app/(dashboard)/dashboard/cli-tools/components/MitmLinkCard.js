@@ -29,7 +29,7 @@ export default function MitmLinkCard({ tool }) {
             <div className="min-w-0">
               <div className="flex items-center gap-2">
                 <h3 className="truncate font-display text-[13px] font-medium text-text-main">{tool.name}</h3>
-                <span className="rounded-full bg-surface-2 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-text-muted">MITM</span>
+                <span className="rounded-full bg-surface-2 px-2 py-0.5 text-[11px] text-text-muted">MITM</span>
               </div>
               <p className="font-display truncate text-xs text-text-muted">{tool.description}</p>
             </div>

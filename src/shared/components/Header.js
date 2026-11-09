@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import PropTypes from "prop-types";
@@ -111,11 +111,34 @@ export default function Header({ nav = null }) {
 
 function HeaderSearch() {
   const visible = useHeaderSearchStore((s) => s.visible);
+  const open = useHeaderSearchStore((s) => s.open);
+  const setOpen = useHeaderSearchStore((s) => s.setOpen);
   const query = useHeaderSearchStore((s) => s.query);
   const placeholder = useHeaderSearchStore((s) => s.placeholder);
   const setQuery = useHeaderSearchStore((s) => s.setQuery);
+  const inputRef = useRef(null);
 
   if (!visible) return null;
+
+  const close = () => {
+    setQuery("");
+    setOpen(false);
+  };
+
+  // Collapsed: click the icon first to reveal the input.
+  if (!open) {
+    return (
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="flex size-8 items-center justify-center rounded-lg text-text-muted transition-colors hover:bg-surface-2 hover:text-text-main"
+        title={placeholder || "Search"}
+        aria-label={placeholder || "Search"}
+      >
+        <span className="material-symbols-outlined text-[18px]">search</span>
+      </button>
+    );
+  }
 
   return (
     <div className="relative w-[160px] sm:w-[220px]">
@@ -123,22 +146,26 @@ function HeaderSearch() {
         search
       </span>
       <input
+        ref={inputRef}
         type="text"
+        autoFocus
         value={query}
         onChange={(e) => setQuery(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") close();
+        }}
         placeholder={placeholder}
         className="w-full h-8 pl-7 pr-7 rounded-lg border border-border bg-surface/60 text-sm focus:outline-none focus:border-primary/50 transition-colors"
       />
-      {query && (
-        <button
-          type="button"
-          onClick={() => setQuery("")}
-          className="absolute right-1 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-main p-0.5 rounded"
-          aria-label="Clear search"
-        >
-          <span className="material-symbols-outlined text-[16px]">close</span>
-        </button>
-      )}
+      <button
+        type="button"
+        onClick={() => (query ? setQuery("") : close())}
+        className="absolute right-1 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-main p-0.5 rounded"
+        aria-label={query ? "Clear search" : "Close search"}
+        title={query ? "Clear" : "Close"}
+      >
+        <span className="material-symbols-outlined text-[16px]">close</span>
+      </button>
     </div>
   );
 }

@@ -163,7 +163,7 @@ export default function AutoPingScheduleModal({ isOpen, onClose, onSave, connect
 
             {previewSlots.length > 0 && (
               <div className="rounded-[10px] bg-surface-2 px-3 py-2.5">
-                <p className="text-xs font-medium uppercase tracking-wide text-text-muted">
+                <p className="text-xs font-medium text-text-muted">
                   Daily slots ({form.timezone})
                 </p>
                 <p className="mt-1 text-sm font-medium text-text-main">{previewSlots.join("  →  ")}</p>

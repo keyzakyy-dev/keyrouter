@@ -15,7 +15,7 @@ import {
 import Card from "@/shared/components/Card";
 import { cn } from "@/shared/utils/cn";
 
-const COLORS = ["#a3a3a3", "#b4b4bb", "#c4c4cb", "#d4d4d8", "#71717a"];
+const COLORS = ["#d97757", "#c6613f", "#898781", "#6d6b67", "#52514e"];
 
 const fmtTokens = (n) => {
   if (n >= 1000000) return `${(n / 1000000).toFixed(1)}M`;
@@ -84,17 +84,17 @@ export default function TopModelsChart({ byModel, bare = false }) {
       {chartData.length > 0 && (
         <div className="grid grid-cols-3 gap-2 rounded-lg bg-surface-2/50 p-2.5">
           <div className="min-w-0">
-            <div className="font-mono text-[10px] uppercase tracking-wider text-text-subtle">Total {label}</div>
+            <div className="text-xs text-text-subtle">Total {label}</div>
             <div className="truncate font-display text-sm font-bold text-text-main">{fmtFull(total)}</div>
           </div>
           <div className="min-w-0">
-            <div className="font-mono text-[10px] uppercase tracking-wider text-text-subtle">Top model</div>
+            <div className="text-xs text-text-subtle">Top model</div>
             <div className="truncate font-display text-sm font-bold text-text-main" title={top?.name}>
               {top?.name || "-"}
             </div>
           </div>
           <div className="min-w-0">
-            <div className="font-mono text-[10px] uppercase tracking-wider text-text-subtle">Shown</div>
+            <div className="text-xs text-text-subtle">Shown</div>
             <div className="truncate font-display text-sm font-bold text-text-main">{chartData.length}</div>
           </div>
         </div>
@@ -103,7 +103,7 @@ export default function TopModelsChart({ byModel, bare = false }) {
       {/* Chart / empty */}
       {!chartData.length ? (
         <div className="h-44 flex flex-col items-center justify-center gap-1 text-text-muted">
-          <span className="material-symbols-outlined text-[26px] text-primary dark:text-primary">smart_toy</span>
+          <span className="material-symbols-outlined text-[26px] text-text-subtle">smart_toy</span>
           <span className="text-sm">No model usage yet</span>
         </div>
       ) : (
@@ -130,7 +130,7 @@ export default function TopModelsChart({ byModel, bare = false }) {
               width={90}
             />
             <Tooltip
-              cursor={{ fill: "var(--color-bg-subtle)", opacity: 0.6 }}
+              cursor={{ fill: "var(--color-surface-2)", opacity: 0.6 }}
               contentStyle={{
                 backgroundColor: "var(--color-surface)",
                 border: "1px solid var(--color-border)",

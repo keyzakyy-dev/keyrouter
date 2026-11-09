@@ -320,10 +320,10 @@ export default function XiaomiMimoAuthModal({ isOpen, onSuccess, onClose }) {
         {/* No local desktop credentials */}
         {phase === "not-found" && (
           <div className="flex flex-col gap-3">
-            <div className="bg-amber-50 dark:bg-amber-900/20 p-3 rounded-lg border border-amber-200 dark:border-amber-800">
+            <div className="bg-clay-50 dark:bg-clay-900/20 p-3 rounded-lg border border-clay-200 dark:border-clay-800">
               <div className="flex gap-2.5 items-start">
-                <span className="material-symbols-outlined text-amber-600 dark:text-amber-400 text-lg mt-0.5">info</span>
-                <div className="text-sm text-amber-800 dark:text-amber-200">
+                <span className="material-symbols-outlined text-clay-600 dark:text-clay-400 text-lg mt-0.5">info</span>
+                <div className="text-sm text-clay-800 dark:text-clay-200">
                   <p className="font-medium">No local Desktop credentials found</p>
                   <p className="text-xs mt-0.5 opacity-80">
                     You can still sign in via browser - no Desktop client needed.

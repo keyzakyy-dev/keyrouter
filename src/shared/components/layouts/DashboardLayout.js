@@ -21,7 +21,7 @@ function getToastStyle(type) {
   }
   if (type === "warning") {
     return {
-      wrapper: "border-amber-500/30 bg-amber-500/10 text-amber-600 dark:text-amber-400",
+      wrapper: "border-clay-500/30 bg-clay-500/10 text-clay-600 dark:text-clay-400",
       icon: "warning",
     };
   }

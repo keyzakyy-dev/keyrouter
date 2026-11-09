@@ -414,14 +414,14 @@ export default function KiroAuthModal({ isOpen, onMethodSelect, onClose }) {
         {/* Social Login Info (Google) */}
         {selectedMethod === "social-google" && (
           <div className="space-y-4">
-            <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-lg border border-amber-200 dark:border-amber-800">
+            <div className="bg-clay-50 dark:bg-clay-900/20 p-4 rounded-lg border border-clay-200 dark:border-clay-800">
               <div className="flex gap-2">
-                <span className="material-symbols-outlined text-amber-600 dark:text-amber-400">info</span>
+                <span className="material-symbols-outlined text-clay-600 dark:text-clay-400">info</span>
                 <div className="flex-1 text-sm">
-                  <p className="font-medium text-amber-900 dark:text-amber-100 mb-1">
+                  <p className="font-medium text-clay-900 dark:text-clay-100 mb-1">
                     Manual Callback Required
                   </p>
-                  <p className="text-amber-800 dark:text-amber-200">
+                  <p className="text-clay-800 dark:text-clay-200">
                     After login, you&apos;ll need to copy the callback URL from your browser and paste it back here.
                   </p>
                 </div>
@@ -442,14 +442,14 @@ export default function KiroAuthModal({ isOpen, onMethodSelect, onClose }) {
         {/* Social Login Info (GitHub) */}
         {selectedMethod === "social-github" && (
           <div className="space-y-4">
-            <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-lg border border-amber-200 dark:border-amber-800">
+            <div className="bg-clay-50 dark:bg-clay-900/20 p-4 rounded-lg border border-clay-200 dark:border-clay-800">
               <div className="flex gap-2">
-                <span className="material-symbols-outlined text-amber-600 dark:text-amber-400">info</span>
+                <span className="material-symbols-outlined text-clay-600 dark:text-clay-400">info</span>
                 <div className="flex-1 text-sm">
-                  <p className="font-medium text-amber-900 dark:text-amber-100 mb-1">
+                  <p className="font-medium text-clay-900 dark:text-clay-100 mb-1">
                     Manual Callback Required
                   </p>
-                  <p className="text-amber-800 dark:text-amber-200">
+                  <p className="text-clay-800 dark:text-clay-200">
                     After login, you&apos;ll need to copy the callback URL from your browser and paste it back here.
                   </p>
                 </div>

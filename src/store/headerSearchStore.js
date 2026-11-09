@@ -9,11 +9,14 @@ export const useHeaderSearchStore = create((set) => ({
   query: "",
   placeholder: "",
   visible: false,
+  open: false,
 
   setQuery: (query) => set({ query }),
+  setOpen: (open) => set({ open }),
 
   register: (placeholder = "Search...") =>
-    set({ visible: true, placeholder, query: "" }),
+    set({ visible: true, placeholder, query: "", open: false }),
 
-  unregister: () => set({ visible: false, placeholder: "", query: "" }),
+  unregister: () =>
+    set({ visible: false, placeholder: "", query: "", open: false }),
 }));

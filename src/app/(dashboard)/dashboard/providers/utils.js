@@ -1,5 +1,6 @@
 export const STATUS_FILTER_OPTIONS = [
   { value: "all", label: "All" },
+  { value: "error", label: "Errors" },
   { value: "active", label: "Active" },
   { value: "inactive", label: "Inactive" },
   { value: "none", label: "No connection" },
@@ -15,5 +16,6 @@ export function getConnectionStatus(stats, isNoAuth = false) {
 
 export function matchesStatusFilter(statusFilter, stats, isNoAuth = false) {
   if (statusFilter === "all") return true;
+  if (statusFilter === "error") return (stats?.error || 0) > 0;
   return getConnectionStatus(stats, isNoAuth) === statusFilter;
 }

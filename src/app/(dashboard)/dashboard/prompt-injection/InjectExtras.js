@@ -99,21 +99,21 @@ function ResultCard({ title, result }) {
   if (!result) return null;
   const color =
     result.verdict === "ANSWERED"
-      ? "bg-emerald-500/15 text-emerald-500"
+      ? "bg-success/15 text-success"
       : result.verdict === "REFUSED"
-        ? "bg-red-500/15 text-red-500"
-        : "bg-amber-500/15 text-amber-500";
+        ? "bg-danger/15 text-danger"
+        : "bg-clay-500/15 text-clay-500";
   return (
     <div className="rounded-xl border border-border bg-surface p-4">
       <div className="mb-1 flex flex-wrap items-center gap-2">
-        <span className="text-xs font-semibold uppercase tracking-wider text-text-muted">{title}</span>
+        <span className="text-xs font-semibold text-text-muted">{title}</span>
         <span className={`rounded-md px-2 py-0.5 text-xs font-bold ${color}`}>{result.verdict}</span>
         <span className="ml-auto text-xs text-text-muted">
           {result.ms}s{result.tokens != null ? ` · ${result.tokens} tok` : ""}
         </span>
       </div>
-      <p className="mb-2 break-all text-xs text-primary">{result.model}</p>
-      {result.note && <p className="mb-1 text-xs italic text-amber-500">{result.note}</p>}
+      <p className="mb-2 break-all text-xs text-text-muted">{result.model}</p>
+      {result.note && <p className="mb-1 text-xs italic text-clay-500">{result.note}</p>}
       <div className="max-h-56 overflow-y-auto whitespace-pre-wrap text-sm leading-relaxed text-text-main">
         {result.text}
       </div>
@@ -196,7 +196,7 @@ export function InjectionTester() {
 
   const segBtn = (active) =>
     `px-3 py-1.5 font-display font-medium transition-colors ${
-      active ? "bg-primary text-white dark:text-amber-950" : "bg-surface text-text-muted hover:text-text-main"
+      active ? "bg-primary text-white dark:text-neutral-950" : "bg-surface text-text-muted hover:text-text-main"
     }`;
   const modelField = (label, value, setValue, which) => (
     <label className="flex flex-col gap-1 text-sm">
@@ -257,7 +257,7 @@ export function InjectionTester() {
               key={p.label}
               type="button"
               onClick={() => setPrompt(p.text)}
-              className="rounded-full border border-dashed border-border px-3 py-1 text-xs text-text-muted transition-colors hover:border-primary hover:text-primary"
+              className="rounded-full border border-dashed border-border px-3 py-1 text-xs text-text-muted transition-colors hover:border-text-subtle hover:text-text-main"
             >
               {p.label}
             </button>
@@ -282,8 +282,8 @@ export function InjectionTester() {
             {running ? "Testing…" : "Run test"}
           </Button>
           {running && (
-            <span className="font-mono text-[11px] uppercase tracking-wider text-text-muted">
-              streaming ke model…
+            <span className="text-[11px] text-text-muted">
+              Running…
             </span>
           )}
         </div>

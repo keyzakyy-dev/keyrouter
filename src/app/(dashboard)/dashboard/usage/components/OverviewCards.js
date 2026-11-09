@@ -22,17 +22,17 @@ export default function OverviewCards({ stats }) {
       {/* Cost banner */}
       <Card className="flex min-w-0 flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
         <div className="flex items-center justify-between gap-3 sm:flex-1">
-          <span className="font-mono text-[10px] uppercase tracking-wider text-text-subtle">
+          <span className="text-xs text-text-subtle">
             Est. Cost
           </span>
-          <span className="material-symbols-outlined text-[22px] shrink-0 text-primary dark:text-primary sm:hidden">payments</span>
+          <span className="material-symbols-outlined text-[22px] shrink-0 text-text-subtle sm:hidden">payments</span>
         </div>
         <div className="flex items-center gap-3">
           <div className="font-display text-3xl font-bold tracking-tight text-text-main sm:text-4xl">
             {fmtCost(cost)}
           </div>
         </div>
-        <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted sm:max-w-[160px] sm:text-right">
+        <p className="text-[11px] text-text-muted sm:max-w-[160px] sm:text-right">
           Estimated, not actual billing
         </p>
       </Card>
@@ -42,12 +42,12 @@ export default function OverviewCards({ stats }) {
         {METRICS.map((m) => (
           <Card key={m.valueKey} className="flex min-w-0 items-center justify-between gap-3 px-4 py-3.5">
             <div className="min-w-0">
-              <div className="font-mono text-[10px] uppercase tracking-wider text-text-muted">{m.label}</div>
+              <div className="text-xs text-text-muted">{m.label}</div>
               <div className="mt-1 truncate font-display text-xl font-bold text-text-main" title={fmt(stats[m.valueKey])}>
                 {fmt(stats[m.valueKey])}
               </div>
             </div>
-            <span className="material-symbols-outlined text-[22px] shrink-0 text-primary dark:text-primary">{m.icon}</span>
+            <span className="material-symbols-outlined text-[22px] shrink-0 text-text-subtle">{m.icon}</span>
           </Card>
         ))}
       </div>

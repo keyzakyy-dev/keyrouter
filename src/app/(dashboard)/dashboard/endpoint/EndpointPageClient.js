@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import PropTypes from "prop-types";
 import { Card, Button, Input, Modal, CardSkeleton, Toggle, ConfirmModal } from "@/shared/components";
 import { useCopyToClipboard } from "@/shared/hooks/useCopyToClipboard";
+import { cn } from "@/shared/utils/cn";
 import {
   TUNNEL_BENEFITS,
   TUNNEL_PING_INTERVAL_MS,
@@ -19,6 +20,7 @@ import SecurityWarning from "./components/SecurityWarning";
 import KeyAccessControls from "./components/KeyAccessControls";
 import UrlField from "./components/UrlField";
 import RouteRow from "./components/RouteRow";
+import KeyRow from "./components/KeyRow";
 export default function APIPageClient({ machineId }) {
   const [keys, setKeys] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -30,6 +32,7 @@ export default function APIPageClient({ machineId }) {
   const [requireApiKey, setRequireApiKey] = useState(false);
   const [requireLogin, setRequireLogin] = useState(true);
   const [hasPassword, setHasPassword] = useState(true);
+  const [remoteOpen, setRemoteOpen] = useState(false);
  const [tunnelDashboardAccess, setTunnelDashboardAccess] = useState(false);
 
  // Cloudflare Tunnel state
@@ -688,11 +691,6 @@ export default function APIPageClient({ machineId }) {
     }
   };
 
-  const maskKey = (fullKey) => {
-    if (!fullKey || fullKey.length <= 10) return fullKey || "";
-    return fullKey.slice(0, 6) + "•".repeat(fullKey.length - 10) + fullKey.slice(-4);
-  };
-
   const toggleKeyVisibility = (keyId) => {
     setVisibleKeys(prev => {
       const next = new Set(prev);
@@ -701,6 +699,31 @@ export default function APIPageClient({ machineId }) {
       return next;
     });
   };
+
+  // Shared key-row handlers: pause and restrict confirms are identical for every key.
+  const handleKeyToggle = (key) => (checked) => {
+    if (key.isActive && !checked) {
+      setConfirmState({
+        title: "Pause API Key",
+        message: `Pause API key "${key.name}"?\n\nThis key will stop working immediately but can be resumed later.`,
+        onConfirm: async () => {
+          setConfirmState(null);
+          handleToggleKey(key.id, checked);
+        }
+      });
+    } else {
+      handleToggleKey(key.id, checked);
+    }
+  };
+
+  const restrictKeyConfirm = (key) => () => setConfirmState({
+    title: "Restrict API Key",
+    message: `Restrict API key "${key.name}"?\n\nIt will only be able to call the combos and models you add. Until you add one, it can call nothing.`,
+    onConfirm: async () => {
+      setConfirmState(null);
+      handleUpdateKeyAccess(key.id, { restricted: true, allow: key.access?.allow || [] });
+    }
+  });
 
   const [baseUrl, setBaseUrl] = useState("/v1");
 
@@ -774,7 +797,7 @@ export default function APIPageClient({ machineId }) {
         <h2 className="font-display text-lg font-semibold text-text-main">
           OpenAI-compatible base URL
         </h2>
-        <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-text-subtle">
+        <p className="mt-1 text-xs text-text-subtle">
           One address in front of every provider connection.
         </p>
         <div className="mt-3">
@@ -789,14 +812,41 @@ export default function APIPageClient({ machineId }) {
         </div>
       </Card>
 
-      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_520px] lg:items-stretch">
+      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_520px]">
         {/* Left column: remote access */}
         <div className="flex flex-col">
           <Card className="h-full">
-            <div className="mb-3 flex items-center justify-between">
-              <h2 className="font-display text-base font-semibold text-text-main">Remote access</h2>
+            {/* Accordion header — mobile only; desktop stays expanded */}
+            <div
+              role="button"
+              tabIndex={0}
+              onClick={() => setRemoteOpen((v) => !v)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  setRemoteOpen((v) => !v);
+                }
+              }}
+              aria-expanded={remoteOpen}
+              className="mb-3 flex items-center justify-between gap-2 cursor-pointer sm:cursor-default sm:pointer-events-none"
+            >
+              <div className="flex items-center gap-2 min-w-0">
+                <h2 className="font-display text-base font-semibold text-text-main">Remote access</h2>
+                <span className="sm:hidden text-xs text-text-muted">
+                  · {tunnelActive ? "Active" : "Off"}
+                </span>
+              </div>
+              <span
+                className={cn(
+                  "material-symbols-outlined shrink-0 text-[20px] text-text-muted transition-transform duration-150 sm:hidden",
+                  remoteOpen ? "rotate-180" : ""
+                )}
+                aria-hidden="true"
+              >
+                expand_more
+              </span>
             </div>
-            <div className="flex flex-col gap-2">
+            <div className={cn("flex flex-col gap-2", !remoteOpen && "hidden sm:block")}>
                 <RouteRow
                   icon="cloud_upload"
                   label="Cloudflare Tunnel"
@@ -880,7 +930,7 @@ export default function APIPageClient({ machineId }) {
                     </div>
                   ) : (
                     <div className="flex items-center justify-between gap-2">
-                      <p className="font-mono text-[10px] text-text-subtle">Requires login + API key.</p>
+                      <p className="text-[11px] text-text-subtle">Requires login + API key.</p>
                       <Button
                         size="sm"
                         variant="secondary"
@@ -980,7 +1030,7 @@ export default function APIPageClient({ machineId }) {
                     </div>
                   ) : (
                     <div className="flex items-center justify-between gap-2">
-                      <p className="font-mono text-[10px] text-text-subtle">Requires a Tailscale account.</p>
+                      <p className="text-[11px] text-text-subtle">Requires a Tailscale account.</p>
                       <Button
                         size="sm"
                         variant="secondary"
@@ -1002,7 +1052,7 @@ export default function APIPageClient({ machineId }) {
 
             {/* Security gate banner: explains why Enable is blocked */}
             {isLoginUnsafe && !tunnelEnabled && !tsEnabled && (
-              <div className="mt-4">
+              <div className={cn("mt-4", !remoteOpen && "hidden sm:block")}>
                 <SecurityWarning
                   message={unsafeReason}
                   action={{ label: "Open settings", href: "/dashboard/profile" }}
@@ -1018,11 +1068,11 @@ export default function APIPageClient({ machineId }) {
           <div>
             <h2 className="flex items-center gap-2 font-display text-lg font-semibold text-text-main">
               API keys
-              <span className="rounded-[5px] bg-surface-2 px-2 py-0.5 font-mono text-[11px] uppercase tracking-wider text-text-muted">
+              <span className="rounded-full bg-surface-2 px-2 py-0.5 text-[11px] text-text-muted">
                 {keys.length}
               </span>
             </h2>
-            <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-text-subtle">
+            <p className="mt-1 text-xs text-text-subtle">
               Keys authenticate clients against this gateway.
             </p>
           </div>
@@ -1033,11 +1083,11 @@ export default function APIPageClient({ machineId }) {
 
         <div className="mt-4 flex items-center justify-between gap-3 rounded-xl bg-surface p-4">
           <div className="flex min-w-0 items-center gap-3">
-            <span className="material-symbols-outlined text-[22px] shrink-0 text-primary dark:text-primary">vpn_key</span>
+            <span className="material-symbols-outlined text-[22px] shrink-0 text-text-subtle">vpn_key</span>
             <div className="min-w-0">
               <div className="flex items-center gap-2">
                 <p className="font-display text-[15px] font-semibold text-text-main">Require API key</p>
-                <span className="rounded-full bg-surface-2 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-text-muted">
+                <span className="rounded-full bg-surface-2 px-2 py-0.5 text-[11px] text-text-muted">
                   {requireApiKey ? "On" : "Off"}
                 </span>
               </div>
@@ -1060,9 +1110,9 @@ export default function APIPageClient({ machineId }) {
 
         {otherKeys.length === 0 ? (
           <div className="mt-4 rounded-md border border-dashed border-border px-6 py-10 text-center">
-            <span className="material-symbols-outlined mb-3 block text-[32px] text-primary dark:text-primary">vpn_key</span>
+            <span className="material-symbols-outlined mb-3 block text-[32px] text-text-subtle">vpn_key</span>
             <p className="font-display text-base font-semibold text-text-main">No keys yet</p>
-            <p className="mx-auto mt-1 mb-4 max-w-xs font-mono text-[10px] uppercase tracking-wider text-text-muted">
+            <p className="mx-auto mt-1 mb-4 max-w-xs text-xs text-text-muted">
               Create a key, then point your client at the endpoint above.
             </p>
             <Button icon="add" className="font-display" onClick={() => setShowAddModal(true)}>
@@ -1071,102 +1121,24 @@ export default function APIPageClient({ machineId }) {
           </div>
         ) : (
           <div className="mt-3 flex flex-col gap-2">
-            {otherKeys.map((key) => {
-              return (
-                <div
-                  key={key.id}
-                  className={`group rounded-xl border border-border-subtle bg-surface px-3.5 py-3 transition ${
-                    key.isActive === false ? "opacity-60" : ""
-                  }`}
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex min-w-0 items-center gap-2.5">
-                      <div className="min-w-0">
-                        <p className="truncate font-display text-[15px] font-semibold text-text-main">{key.name}</p>
-                      </div>
-                    </div>
-                    <div className="flex shrink-0 items-center gap-1.5">
-                      <Toggle
-                        size="sm"
-                        checked={key.isActive ?? true}
-                        onChange={(checked) => {
-                          if (key.isActive && !checked) {
-                            setConfirmState({
-                              title: "Pause API Key",
-                              message: `Pause API key "${key.name}"?\n\nThis key will stop working immediately but can be resumed later.`,
-                              onConfirm: async () => {
-                                setConfirmState(null);
-                                handleToggleKey(key.id, checked);
-                              }
-                            });
-                          } else {
-                            handleToggleKey(key.id, checked);
-                          }
-                        }}
-                        title={key.isActive ? "Pause key" : "Resume key"}
-                      />
-                      <button
-                        onClick={() => handleDeleteKey(key.id)}
-                        className="grid size-8 place-items-center rounded-lg text-text-muted transition hover:bg-danger/10 hover:text-danger"
-                        title="Delete key"
-                      >
-                        <span className="material-symbols-outlined text-[17px]">delete</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="mt-3 flex items-center gap-1.5">
-                    <code className="min-w-0 flex-1 truncate rounded-lg bg-bg px-3 py-2 font-mono text-[11.5px] text-text-muted">
-                      {visibleKeys.has(key.id) ? key.key : maskKey(key.key)}
-                    </code>
-                    <button
-                      onClick={() => toggleKeyVisibility(key.id)}
-                      className="grid size-9 shrink-0 place-items-center rounded-lg text-text-muted transition hover:bg-surface-2 hover:text-text-main"
-                      title={visibleKeys.has(key.id) ? "Hide key" : "Show key"}
-                    >
-                      <span className="material-symbols-outlined text-[16px]">
-                        {visibleKeys.has(key.id) ? "visibility_off" : "visibility"}
-                      </span>
-                    </button>
-                    <button
-                      onClick={() => copy(key.key, key.id)}
-                      className={`grid size-9 shrink-0 place-items-center rounded-lg transition ${
-                        copied === key.id
-                          ? "bg-success/10 text-success"
-                          : "text-text-muted hover:bg-surface-2 hover:text-text-main"
-                      }`}
-                      title="Copy key"
-                    >
-                      <span className="material-symbols-outlined text-[16px]">
-                        {copied === key.id ? "check" : "content_copy"}
-                      </span>
-                    </button>
-                  </div>
-
-                  {key.isActive === false && (
-                    <p className="mt-2 flex items-center gap-1 text-[11px] text-warning">
-                      <span className="material-symbols-outlined text-[13px]">pause_circle</span>
-                      Paused - clients using this key get rejected.
-                    </p>
-                  )}
-
-                  <div className="mt-3">
-                    <KeyAccessControls
-                      apiKey={key}
-                      onChange={(access) => handleUpdateKeyAccess(key.id, access)}
-                      onRequestRestrict={() => setConfirmState({
-                        title: "Restrict API Key",
-                        message: `Restrict API key "${key.name}"?\n\nIt will only be able to call the combos and models you add. Until you add one, it can call nothing.`,
-                        onConfirm: async () => {
-                          setConfirmState(null);
-                          handleUpdateKeyAccess(key.id, { restricted: true, allow: key.access?.allow || [] });
-                        }
-                      })}
-                    />
-                  </div>
-                </div>
-              );
-            })}
+            {otherKeys.map((key) => (
+              <KeyRow
+                key={key.id}
+                apiKey={key}
+                visible={visibleKeys.has(key.id)}
+                copied={copied === key.id}
+                onToggleVisibility={() => toggleKeyVisibility(key.id)}
+                onCopy={() => copy(key.key, key.id)}
+                onToggle={handleKeyToggle(key)}
+                onDelete={() => handleDeleteKey(key.id)}
+              >
+                <KeyAccessControls
+                  apiKey={key}
+                  onChange={(access) => handleUpdateKeyAccess(key.id, access)}
+                  onRequestRestrict={restrictKeyConfirm(key)}
+                />
+              </KeyRow>
+            ))}
           </div>
         )}
       </Card>
@@ -1180,107 +1152,31 @@ export default function APIPageClient({ machineId }) {
               <h2 className="flex items-center gap-2 font-display text-lg font-semibold text-text-main">
                 Default key
               </h2>
-              <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-text-subtle">
+              <p className="mt-1 text-xs text-text-subtle">
                 Auto-provisioned key so the endpoint works out of the box.
               </p>
             </div>
           </div>
 
-          <div className="flex flex-col gap-3">
+          <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
             {defaultKeys.map((key) => (
-              <div
+              <KeyRow
                 key={key.id}
-                className={`group rounded-xl border border-border bg-surface p-4 transition ${
-                  key.isActive === false ? "opacity-60" : ""
-                }`}
+                apiKey={key}
+                icon="key"
+                visible={visibleKeys.has(key.id)}
+                copied={copied === key.id}
+                onToggleVisibility={() => toggleKeyVisibility(key.id)}
+                onCopy={() => copy(key.key, key.id)}
+                onToggle={handleKeyToggle(key)}
+                onDelete={() => handleDeleteKey(key.id)}
               >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex min-w-0 items-center gap-2.5">
-                    <span className="material-symbols-outlined text-[20px] text-primary dark:text-primary">key</span>
-                    <div className="min-w-0">
-                      <p className="truncate font-display text-[15px] font-semibold text-text-main">{key.name}</p>
-                    </div>
-                  </div>
-                  <div className="flex shrink-0 items-center gap-1.5">
-                    <Toggle
-                      size="sm"
-                      checked={key.isActive ?? true}
-                      onChange={(checked) => {
-                        if (key.isActive && !checked) {
-                          setConfirmState({
-                            title: "Pause API Key",
-                            message: `Pause API key "${key.name}"?\n\nThis key will stop working immediately but can be resumed later.`,
-                            onConfirm: async () => {
-                              setConfirmState(null);
-                              handleToggleKey(key.id, checked);
-                            }
-                          });
-                        } else {
-                          handleToggleKey(key.id, checked);
-                        }
-                      }}
-                      title={key.isActive ? "Pause key" : "Resume key"}
-                    />
-                    <button
-                      onClick={() => handleDeleteKey(key.id)}
-                      className="grid size-8 place-items-center rounded-lg text-text-muted transition hover:bg-danger/10 hover:text-danger"
-                      title="Delete key"
-                    >
-                      <span className="material-symbols-outlined text-[17px]">delete</span>
-                    </button>
-                  </div>
-                </div>
-
-                <div className="mt-3 flex items-center gap-1.5">
-                  <code className="min-w-0 flex-1 truncate rounded-lg border border-border-subtle bg-bg px-3 py-2 font-mono text-[11.5px] text-text-muted">
-                    {visibleKeys.has(key.id) ? key.key : maskKey(key.key)}
-                  </code>
-                  <button
-                    onClick={() => toggleKeyVisibility(key.id)}
-                    className="grid size-9 shrink-0 place-items-center rounded-lg text-text-muted transition hover:bg-surface-2 hover:text-text-main"
-                    title={visibleKeys.has(key.id) ? "Hide key" : "Show key"}
-                  >
-                    <span className="material-symbols-outlined text-[16px]">
-                      {visibleKeys.has(key.id) ? "visibility_off" : "visibility"}
-                    </span>
-                  </button>
-                  <button
-                    onClick={() => copy(key.key, key.id)}
-                    className={`grid size-9 shrink-0 place-items-center rounded-lg transition ${
-                      copied === key.id
-                        ? "bg-success/10 text-success"
-                        : "text-text-muted hover:bg-surface-2 hover:text-text-main"
-                    }`}
-                    title="Copy key"
-                  >
-                    <span className="material-symbols-outlined text-[16px]">
-                      {copied === key.id ? "check" : "content_copy"}
-                    </span>
-                  </button>
-                </div>
-
-                {key.isActive === false && (
-                  <p className="mt-2 flex items-center gap-1 text-[11px] text-warning">
-                    <span className="material-symbols-outlined text-[13px]">pause_circle</span>
-                    Paused - clients using this key get rejected.
-                  </p>
-                )}
-
-                <div className="mt-3">
-                  <KeyAccessControls
-                    apiKey={key}
-                    onChange={(access) => handleUpdateKeyAccess(key.id, access)}
-                    onRequestRestrict={() => setConfirmState({
-                      title: "Restrict API Key",
-                      message: `Restrict API key "${key.name}"?\n\nIt will only be able to call the combos and models you add. Until you add one, it can call nothing.`,
-                      onConfirm: async () => {
-                        setConfirmState(null);
-                        handleUpdateKeyAccess(key.id, { restricted: true, allow: key.access?.allow || [] });
-                      }
-                    })}
-                  />
-                </div>
-              </div>
+                <KeyAccessControls
+                  apiKey={key}
+                  onChange={(access) => handleUpdateKeyAccess(key.id, access)}
+                  onRequestRestrict={restrictKeyConfirm(key)}
+                />
+              </KeyRow>
             ))}
           </div>
         </Card>
@@ -1391,7 +1287,7 @@ export default function APIPageClient({ machineId }) {
             ))}
           </div>
 
-          <p className="font-mono text-[10px] uppercase tracking-wider text-text-muted">
+          <p className="text-[11px] text-text-muted">
             Requires outbound port 7844 (TCP/UDP). Connection may take 10-30s.
           </p>
 
@@ -1457,7 +1353,7 @@ export default function APIPageClient({ machineId }) {
                 Installing Tailscale...
               </div>
               {tsInstallLog.length > 0 && (
-                <div ref={tsLogRef} className="bg-black/5 dark:bg-white/5 rounded p-2 max-h-40 overflow-y-auto font-mono text-xs text-text-muted">
+                <div ref={tsLogRef} className="bg-surface-2 rounded p-2 max-h-40 overflow-y-auto font-mono text-xs text-text-muted">
                   {tsInstallLog.map((line, i) => (
                     <div key={i}>{line}</div>
                   ))}
@@ -1469,7 +1365,7 @@ export default function APIPageClient({ machineId }) {
           {/* Installed: show Connect button */}
           {tsInstalled === true && !tsInstalling && (
             <div className="flex flex-col gap-3">
-              <div className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400">
+              <div className="flex items-center gap-2 text-sm text-success">
                 <span className="material-symbols-outlined text-[16px]">check_circle</span>
                 Tailscale installed
               </div>
