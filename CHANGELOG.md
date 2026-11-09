@@ -1,3 +1,8 @@
+# v1.3.0 (2026-11-09)
+
+## Features
+- **dashboard**: dark-only CDS redesign, system tokens, and page relayouts
+
 # v1.2.2 (2026-11-07)
 
 ## Fixes
