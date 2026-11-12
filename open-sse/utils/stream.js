@@ -1,7 +1,7 @@
 import { translateResponse, initState } from "../translator/index.js";
 import { FORMATS } from "../translator/formats.js";
 import { PROVIDERS } from "../config/providers.js";
-import { liftReasoningAliases } from "../translator/concerns/reasoning.js";
+import { liftReasoningAliases, createInlineThinkSplitter, splitInlineThink } from "../translator/concerns/reasoning.js";
 import { trackPendingRequest, appendRequestLog } from "@/lib/usageDb.js";
 import { extractUsage, mergeUsage, hasValidUsage, estimateUsage, logUsage, addBufferToUsage, filterUsageForFormat, COLORS } from "./usageTracking.js";
 import { parseSSELine, hasValuableContent, fixInvalidId, formatSSE, ensureStreamToolCallIds } from "./streamHelpers.js";
@@ -104,6 +104,32 @@ export function createSSEStream(options = {}) {
   // Free's MiMo route does. Lift it on every passthrough delta so OpenAI-shaped
   // clients, the thinking accumulation below and usage accounting see the text.
   const liftAliases = mode === STREAM_MODE.PASSTHROUGH && !!PROVIDERS[provider]?.quirks?.reasoningAliasFields;
+
+  // Some upstreams stream reasoning inline in `content` as <think>…</think>
+  // (MiniMax M3.x via community lanes). Reclassify it into reasoning_content
+  // before translation/accumulation so clients never see raw tags. One
+  // splitter per stream — it is stateful across chunks.
+  const inlineThinkSplitter = createInlineThinkSplitter();
+  const stripInlineThink = (delta) => {
+    if (typeof delta?.content !== "string" || !delta.content) return delta;
+    const { thinking, content } = inlineThinkSplitter.feed(delta.content);
+    if (!thinking && content === delta.content) return delta;
+    const next = { ...delta };
+    if (content) next.content = content; else delete next.content;
+    if (thinking) next.reasoning_content = (delta.reasoning_content || "") + thinking;
+    return next;
+  };
+  const applyInlineThinkSplit = (parsed) => {
+    if (!parsed?.choices) return false;
+    let touched = false;
+    for (const choice of parsed.choices) {
+      if (choice?.delta) {
+        const next = stripInlineThink(choice.delta);
+        if (next !== choice.delta) { choice.delta = next; touched = true; }
+      }
+    }
+    return touched;
+  };
 
   // Usage/logging tail, callable from transform() as well as flush(): a client that
   // closes right after the terminal event cancels the reader, and flush() never runs.
@@ -238,6 +264,9 @@ export function createSSEStream(options = {}) {
                 }
               }
 
+              // Inline <think> reclassification (passthrough path)
+              if (applyInlineThinkSplit(parsed)) fieldsInjected = true;
+
               // Strip empty tool_calls arrays that break AI SDK reasoning tracking.
               // Some providers (e.g. CodeBuddy CN) include `"tool_calls": []` in
               // every streaming delta. @ai-sdk/openai-compatible checks
@@ -360,6 +389,10 @@ export function createSSEStream(options = {}) {
           if (keepsOpenAIResponsesFormat) openAIResponsesDoneSent = true;
           continue;
         }
+
+        // Inline <think> reclassification on the OpenAI upstream chunk, before
+        // translation and the accumulators below see it.
+        applyInlineThinkSplit(parsed);
 
         // Claude format - content
         if (parsed.delta?.text) {

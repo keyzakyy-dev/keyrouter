@@ -1,6 +1,7 @@
 import { FORMATS } from "../../translator/formats.js";
 import { needsTranslation } from "../../translator/index.js";
 import { openAICompletionToClaudeMessage } from "../../translator/concerns/claudeMessage.js";
+import { splitInlineThink } from "../../translator/concerns/reasoning.js";
 import { ollamaBodyToOpenAI } from "../../translator/response/ollama-to-openai.js";
 import { addBufferToUsage, filterUsageForFormat } from "../../utils/usageTracking.js";
 import { createErrorResult } from "../../utils/error.js";
@@ -302,6 +303,22 @@ export async function handleNonStreamingResponse({ providerResponse, provider, m
     const hasToolCalls = Array.isArray(msg?.tool_calls) && msg.tool_calls.length > 0;
     if (hasToolCalls && choice.finish_reason !== "tool_calls") {
       choice.finish_reason = "tool_calls";
+    }
+  }
+
+  // Inline <think> reasoning: some upstreams (MiniMax M3.x on community lanes)
+  // embed reasoning in content wrapped in <think>…</think>. Move it to
+  // reasoning_content so clients render it as thinking, not answer text.
+  if (!isClaudeMessageResponse && !isResponsesResponse && translatedResponse?.choices) {
+    for (const choice of translatedResponse.choices) {
+      const content = choice?.message?.content;
+      if (typeof content === "string" && content.includes("<think>")) {
+        const { thinking, content: clean } = splitInlineThink(content);
+        if (thinking) {
+          choice.message.content = clean || "";
+          choice.message.reasoning_content = (choice.message.reasoning_content || "") + thinking;
+        }
+      }
     }
   }
 
