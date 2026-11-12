@@ -24,6 +24,7 @@ import p21 from "./comfyui.js";
 import p22 from "./commandcode.js";
 import p23 from "./coqui.js";
 import p24 from "./cursor.js";
+import p24z from "./deepai.js";
 import p25 from "./deepgram.js";
 import p26 from "./deepseek.js";
 import p27 from "./edge-tts.js";
@@ -55,6 +56,7 @@ import p52 from "./kimchi.js";
 import p53 from "./kimi.js";
 import p54 from "./kiro.js";
 import p55 from "./linkup.js";
+import p55z from "./llmtr.js";
 import p56 from "./local-device.js";
 import p57 from "./mimo-free.js";
 import p58 from "./minimax-cn.js";
@@ -173,6 +175,7 @@ export default [
   p22,
   p23,
   p24,
+  p24z,
   p25,
   p26,
   p27,
@@ -204,6 +207,7 @@ export default [
   p53,
   p54,
   p55,
+  p55z,
   p56,
   p57,
   p58,
