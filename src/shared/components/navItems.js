@@ -14,6 +14,7 @@ export const managementNavItems = [
 
 export const monitoringNavItems = [
   { href: "/dashboard/usage", label: "Usage", icon: "bar_chart" },
+  { href: "/dashboard/api-key-usage", label: "Key Usage", icon: "key" },
   { href: "/dashboard/quota", label: "Quota", icon: "data_usage" },
   { href: "/dashboard/token-saver", label: "Saver", icon: "savings" },
 ];
