@@ -116,19 +116,27 @@ function InjectEditor({ initial, onSave, onClear, saving, clearLabel, compact = 
         <Toggle checked={enabled} onChange={setEnabled} size="sm" label="Enabled" />
 
         <div className="ml-auto flex items-center gap-2">
-          <span className={MONO_KICKER}>{estimateTokens(text)} tok</span>
+          <span className={`${MONO_KICKER} tabular-nums`}>{estimateTokens(text)} tok</span>
         </div>
       </div>
 
       {mode === "chat" ? (
         <div className="space-y-2">
           {turns.map((t, i) => (
-            <div key={i} className="flex items-start gap-2">
+            <div key={i} className="group flex items-start gap-2">
               <span
-                className={`mt-2 shrink-0 w-16 text-right text-[11px] ${
-                  t.role === "user" ? "text-text-subtle" : "text-text-muted"
+                className={`mt-1.5 inline-flex h-6 w-20 shrink-0 items-center justify-center gap-1.5 rounded-full font-display text-[11px] font-medium ${
+                  t.role === "user"
+                    ? "bg-primary/10 text-primary"
+                    : "bg-surface-2 text-text-muted"
                 }`}
               >
+                <span
+                  className={`size-1.5 rounded-full ${
+                    t.role === "user" ? "bg-primary" : "bg-text-subtle/60"
+                  }`}
+                  aria-hidden="true"
+                />
                 {t.role}
               </span>
               <textarea
@@ -141,7 +149,7 @@ function InjectEditor({ initial, onSave, onClear, saving, clearLabel, compact = 
               <button
                 type="button"
                 onClick={() => removeTurn(i)}
-                className="mt-2 shrink-0 text-text-muted hover:text-danger transition-colors"
+                className="mt-1.5 shrink-0 rounded-md p-0.5 text-text-subtle opacity-0 transition-all hover:bg-danger/10 hover:text-danger focus-visible:opacity-100 group-hover:opacity-100"
                 title="Remove turn"
               >
                 <span className="material-symbols-outlined text-[18px]">close</span>
@@ -151,7 +159,7 @@ function InjectEditor({ initial, onSave, onClear, saving, clearLabel, compact = 
           <button
             type="button"
             onClick={addTurn}
-            className="inline-flex items-center gap-1.5 font-display text-xs font-medium text-text-muted hover:text-text-main transition-colors"
+            className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-display text-xs font-medium text-text-muted transition-colors hover:bg-surface-2 hover:text-text-main"
           >
             <span className="material-symbols-outlined text-[16px]">add</span>
             Add {nextRole(turns)} turn
@@ -259,10 +267,12 @@ function SectionCard({ title, subtitle, icon, children }) {
   return (
     <Card padding="sm">
       <div className="mb-4 flex items-center gap-3">
-        <span className="material-symbols-outlined text-[24px] shrink-0 text-text-subtle">{icon}</span>
+        <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+          <span className="material-symbols-outlined text-[20px] text-primary">{icon}</span>
+        </span>
         <div className="min-w-0">
-          <h2 className="font-display text-base font-semibold text-text-main">{title}</h2>
-          {subtitle && <p className="mt-0.5 font-mono text-[11px] leading-relaxed text-text-muted">{subtitle}</p>}
+          <h2 className="font-display text-sm font-semibold text-text-main">{title}</h2>
+          {subtitle && <p className="mt-0.5 text-[11px] uppercase tracking-wider text-text-subtle">{subtitle}</p>}
         </div>
       </div>
       {children}
@@ -459,12 +469,12 @@ export default function PromptInjectionClient() {
   const selectedKeyEntry = keySel && data?.userPrompts?.[keySel] ? data.userPrompts[keySel] : null;
 
   return (
-    <div className="space-y-6">
+    <div className="flex min-w-0 flex-col gap-6 px-1 sm:px-0">
       {/* Header */}
-      <div className="space-y-1.5">
+      <div className="flex flex-col gap-2">
         <h1 className="font-display text-2xl font-semibold tracking-tight text-text-main">Prompt Injection</h1>
-        <p className={MONO_KICKER}>
-          Inject a system prompt or a scripted chat, globally, per API key, or per variant.
+        <p className="text-xs text-text-subtle">
+          Inject a system prompt or a scripted chat - globally, per API key, or per variant.
         </p>
       </div>
 
@@ -475,7 +485,7 @@ export default function PromptInjectionClient() {
         </div>
       )}
 
-      {/* Global */}
+      {/* Row 1: Global — full width */}
       <SectionCard title="Global" icon="public" subtitle="Applied to every chat request.">
         <InjectEditor
           initial={globalEntry}
@@ -486,135 +496,132 @@ export default function PromptInjectionClient() {
         />
       </SectionCard>
 
-      {/* Per API key + Variants — 1 kolom */}
-      <div className="grid grid-cols-1 items-start gap-6">
+      {/* Row 2: Per API key + Variants — matched heights */}
+      <div className="grid grid-cols-1 items-stretch gap-4 lg:grid-cols-2">
         <SectionCard
           title="Per API Key"
           icon="vpn_key"
           subtitle="Persona for anyone holding that key."
         >
-          <div className="mb-4">
-            <InjSelect
-              label="API Key"
-              value={keySel}
-              onChange={setKeySel}
-              placeholder={translate("Select API key…")}
-              options={keys.map((k) => ({ value: k.id, label: k.name || k.id.slice(0, 8) }))}
-            />
-          </div>
+          <InjSelect
+            label="API Key"
+            value={keySel}
+            onChange={setKeySel}
+            placeholder={translate("Select API key…")}
+            options={keys.map((k) => ({ value: k.id, label: k.name || k.id.slice(0, 8) }))}
+          />
           {keySel ? (
-            <InjectEditor
-              key={keySel}
-              initial={selectedKeyEntry}
-              onSave={(p, empty) => saveInjection(p, empty, { keyId: keySel })}
-              onClear={() => clearInjection({ keyId: keySel })}
-              saving={saving}
-              clearLabel="Delete"
-            />
-          ) : null}
+            <div className="mt-4">
+              <InjectEditor
+                key={keySel}
+                initial={selectedKeyEntry}
+                onSave={(p, empty) => saveInjection(p, empty, { keyId: keySel })}
+                onClear={() => clearInjection({ keyId: keySel })}
+                saving={saving}
+                clearLabel="Delete"
+                compact
+              />
+            </div>
+          ) : (
+            <p className="mt-3 text-xs text-text-subtle">
+              Select a key to edit the prompt injected into its requests.
+            </p>
+          )}
         </SectionCard>
 
         <SectionCard
           title="Variants"
           icon="badge"
-          subtitle="Custom name → model + prompt; a raw model without a prompt."
+          subtitle="Custom name → backing model + prompt."
         >
-          <div className="border-t border-border-subtle pt-4">
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <div>
-                <label className="mb-1 block text-[11px] text-text-subtle">
-                  Custom name
-                </label>
-                <input
-                  value={variantName}
-                  onChange={(e) => setVariantName(e.target.value)}
-                  placeholder="e.g. dahlunce"
-                  className={INPUT_CLASS}
-                />
-              </div>
-              <div>
-                <label className="mb-1 block text-[11px] text-text-subtle">
-                  Backing model
-                </label>
-                <button
-                  type="button"
-                  onClick={() => setShowModelSelect(true)}
-                  className="flex w-full items-center justify-between gap-2 rounded-lg border border-border bg-surface px-3 py-2 text-left text-sm text-text-main transition-colors hover:border-text-subtle cursor-pointer"
-                >
-                  <span className={variantModel ? "" : "text-text-muted"}>
-                    {variantModel || "Select model…"}
-                  </span>
-                  <span className="material-symbols-outlined text-[18px] text-text-muted">add</span>
-                </button>
-              </div>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div>
+              <label className="mb-1 block text-[11px] text-text-subtle">
+                Custom name
+              </label>
+              <input
+                value={variantName}
+                onChange={(e) => setVariantName(e.target.value)}
+                placeholder="e.g. dahlunce"
+                className={INPUT_CLASS}
+              />
             </div>
-            {variantName.trim() && variantModel ? (
-              <div className="mt-4">
-                <InjectEditor
-                  key={variantName}
-                  initial={activeVariant}
-                  onSave={(p, empty) => saveVariant(p, empty)}
-                  onClear={() => deleteVariant()}
-                  saving={saving}
-                  clearLabel="Delete variant"
-                  compact
-                />
+            <div>
+              <label className="mb-1 block text-[11px] text-text-subtle">
+                Backing model
+              </label>
+              <button
+                type="button"
+                onClick={() => setShowModelSelect(true)}
+                className="flex w-full items-center justify-between gap-2 rounded-lg border border-border bg-surface px-3 py-2 text-left text-sm text-text-main transition-colors hover:border-text-subtle cursor-pointer"
+              >
+                <span className={`truncate ${variantModel ? "" : "text-text-muted"}`}>
+                  {variantModel || "Select model…"}
+                </span>
+                <span className="material-symbols-outlined text-[18px] shrink-0 text-text-muted">
+                  {variantModel ? "edit" : "add"}
+                </span>
+              </button>
+            </div>
+          </div>
+          {variantName.trim() && variantModel ? (
+            <div className="mt-4">
+              <InjectEditor
+                key={variantName}
+                initial={activeVariant}
+                onSave={(p, empty) => saveVariant(p, empty)}
+                onClear={() => deleteVariant()}
+                saving={saving}
+                clearLabel="Delete variant"
+                compact
+              />
+            </div>
+          ) : null}
+
+          <div className="mt-4 border-t border-border-subtle pt-3">
+            {Object.keys(data?.variants || {}).length === 0 ? (
+              <p className="text-xs text-text-subtle">
+                No variants yet - pick a name and a backing model above.
+              </p>
+            ) : (
+              <div className="space-y-1">
+                {Object.entries(data?.variants || {})
+                  .sort(([a], [b]) => a.localeCompare(b))
+                  .map(([name, v]) => {
+                    const active = name === variantName;
+                    return (
+                      <div
+                        key={name}
+                        className={`group flex items-center gap-3 rounded-lg px-2.5 py-2 transition-colors ${
+                          active ? "bg-surface-2" : "hover:bg-surface-2/60"
+                        }`}
+                      >
+                        <span
+                          className={`size-1.5 shrink-0 rounded-full ${active ? "bg-primary" : "bg-text-subtle/40"}`}
+                          aria-hidden="true"
+                        />
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate font-display text-sm font-medium text-text-main">{name}</p>
+                          <p className="truncate font-mono text-[11px] text-text-subtle">
+                            {displayBacking(v?.model || "", nodePrefixes)}
+                          </p>
+                        </div>
+                        <Button size="xs" className="font-display" variant={active ? "primary" : "ghost"} onClick={() => selectVariant(name)}>
+                          {active ? "Editing" : "Select"}
+                        </Button>
+                        <Button size="xs" className="font-display" variant="ghost" icon="delete" onClick={() => deleteVariant(name)}>
+                          Delete
+                        </Button>
+                      </div>
+                    );
+                  })}
               </div>
-            ) : null}
+            )}
           </div>
         </SectionCard>
       </div>
 
-      {/* Daftar model varian — section terpisah */}
-      <SectionCard
-        title="Variant list"
-        icon="badge"
-        subtitle="Custom name → backing model; select to edit or delete."
-      >
-        <div className="space-y-2">
-          {Object.keys(data?.variants || {}).length === 0 ? (
-            <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed border-border px-4 py-6 text-center">
-              <span className="material-symbols-outlined text-[28px] text-text-subtle">badge</span>
-              <p className="text-sm text-text-muted">
-                No variants yet. Create a custom name + pick a backing model above.
-              </p>
-            </div>
-          ) : (
-            Object.entries(data?.variants || {})
-              .sort(([a], [b]) => a.localeCompare(b))
-              .map(([name, v]) => {
-                const active = name === variantName;
-                return (
-                  <div
-                    key={name}
-                    className={`group rounded-xl border p-3 transition-colors ${
-                      active
-                        ? "border-accent/50 bg-surface-2"
-                        : "border-border bg-surface hover:border-text-subtle"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <div className="min-w-0 flex-1">
-                        <p className="break-all font-display text-sm font-semibold text-text-main">{name}</p>
-                        <p className="break-all font-display text-[12px] text-accent">
-                          {displayBacking(v?.model || "", nodePrefixes)}
-                        </p>
-                      </div>
-                      <Button size="xs" className="font-display" variant={active ? "primary" : "outline"} onClick={() => selectVariant(name)}>
-                        {active ? "Editing" : "Select"}
-                      </Button>
-                      <Button size="xs" className="font-display" variant="ghost" icon="delete" onClick={() => deleteVariant(name)}>
-                        Delete
-                      </Button>
-                    </div>
-                  </div>
-                );
-              })
-          )}
-        </div>
-      </SectionCard>
-
-      {/* Injection tester — Single / VS */}
+      {/* Row 3: Injection tester — full width */}
       <SectionCard
         title="Injection tester"
         icon="science"

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { CardSkeleton } from "@/shared/components";
+import { CardSkeleton, BackLink } from "@/shared/components";
 import { CLI_TOOLS } from "@/shared/constants/cliTools";
 import { getModelsByProviderId, PROVIDER_ID_TO_ALIAS } from "@/shared/constants/models";
 import {
@@ -182,10 +182,7 @@ export default function ToolDetailClient({ toolId, machineId }) {
   if (!tool) {
     return (
       <div className="flex w-full flex-col gap-4 px-1 sm:px-0">
-        <Link href="/dashboard/cli-tools" className="mb-4 inline-flex h-8 items-center gap-1.5 rounded-lg border border-border bg-surface pl-1.5 pr-3 text-sm font-display font-medium text-text-main transition-colors hover:border-text-subtle hover:bg-surface-2 w-fit">
-          <span className="material-symbols-outlined text-[17px] text-text-muted">arrow_back</span>
-          Back to CLI Tools
-        </Link>
+        <BackLink href="/dashboard/cli-tools">Back to CLI Tools</BackLink>
         <p className="text-sm text-text-muted">Tool not found or disabled.</p>
       </div>
     );
@@ -193,10 +190,7 @@ export default function ToolDetailClient({ toolId, machineId }) {
 
   return (
     <div className="flex w-full flex-col gap-4 px-1 sm:px-0">
-      <Link href="/dashboard/cli-tools" className="mb-4 inline-flex h-8 items-center gap-1.5 rounded-lg border border-border bg-surface pl-1.5 pr-3 text-sm font-display font-medium text-text-main transition-colors hover:border-text-subtle hover:bg-surface-2 w-fit">
-        <span className="material-symbols-outlined text-[17px] text-text-muted">arrow_back</span>
-        Back to CLI Tools
-      </Link>
+      <BackLink href="/dashboard/cli-tools">Back to CLI Tools</BackLink>
       <div className="flex flex-col gap-1">
         <h1 className="text-xl font-semibold text-text-main sm:text-2xl">{tool.name}</h1>
         <p className="font-display text-sm text-text-muted">{tool.description}</p>

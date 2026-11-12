@@ -92,7 +92,7 @@ export default function EndpointPresetControl({
   return (
     <div className="flex items-center gap-2">
       <span className="w-32 shrink-0 text-sm font-semibold text-text-main text-right">Preset</span>
-      <span className="material-symbols-outlined text-text-muted text-[14px]">arrow_forward</span>
+      <span className="material-symbols-outlined hidden sm:inline text-text-muted text-[14px]">arrow_forward</span>
       <Dropdown
         value={selectedName}
         onChange={handleSelect}

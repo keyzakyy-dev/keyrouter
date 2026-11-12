@@ -80,7 +80,7 @@ export default function SkillsPage() {
         </div>
       </Card>
 
-      <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {SKILLS.map((skill) => (
           <SkillRow key={skill.id} skill={skill} />
         ))}

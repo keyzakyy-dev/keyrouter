@@ -556,6 +556,26 @@ export function parseQuotaData(provider, data) {
         }
         break;
 
+      case "glm":
+      case "glm-cn":
+        // Balance-gateway rows: plan validity (recurring:false → hard expiry,
+        // worded "expires in") plus recurring Start Plan windows. `remaining`
+        // is already a 0-100 percent; do not drop it or the bar inverts
+        // (used/total are unit counts, not percentages).
+        if (data.quotas) {
+          Object.entries(data.quotas).forEach(([name, quota]) => {
+            normalizedQuotas.push({
+              name,
+              used: quota.used || 0,
+              total: quota.total || 0,
+              remaining: quota.remaining,
+              resetAt: quota.resetAt || null,
+              recurring: quota.recurring !== false,
+            });
+          });
+        }
+        break;
+
       case "qoder":
       case "qoder-cn":
         // Qoder ships a `user` quota, an optional `organization` quota and —

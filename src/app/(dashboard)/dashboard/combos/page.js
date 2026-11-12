@@ -415,9 +415,11 @@ export default function CombosPage() {
           </p>
         </div>
         <div className="flex w-full flex-col gap-2 sm:w-auto sm:items-stretch">
-          <Button icon="add" onClick={() => setShowCreateModal(true)} className="w-full sm:w-auto whitespace-nowrap font-display">
-            Create Combo
-          </Button>
+          {combos.length > 0 && (
+            <Button icon="add" onClick={() => setShowCreateModal(true)} className="w-full sm:w-auto whitespace-nowrap font-display">
+              Create Combo
+            </Button>
+          )}
           <div className="hidden">
             <Button
               variant="secondary"
@@ -468,8 +470,8 @@ export default function CombosPage() {
         <Card>
           <div className="text-center py-12">
             <span className="material-symbols-outlined text-[32px] text-text-subtle mb-4 block">layers</span>
-            <p className="text-text-main font-display font-medium mb-1">No combos yet</p>
-            <p className="text-sm text-text-muted mb-4">Create model combos with fallback support</p>
+            <p className="font-geist-sans text-text-main font-medium mb-1">No combos yet</p>
+            <p className="font-geist-sans text-sm text-text-muted mb-4">Create model combos with fallback support</p>
             <Button icon="add" onClick={() => setShowCreateModal(true)} className="w-full sm:w-auto font-display">
               Create Combo
             </Button>

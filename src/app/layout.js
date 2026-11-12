@@ -1,7 +1,6 @@
-import { Inter, Source_Serif_4, Geist_Mono } from "next/font/google";
+import { Inter, Source_Serif_4, Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import { GoogleAnalytics } from "@next/third-parties/google";
-import "material-symbols/outlined.css";
 import "./globals.css";
 import { ThemeProvider } from "@/shared/components/ThemeProvider";
 import "@/lib/network/initOutboundProxy"; // Auto-initialize outbound proxy env
@@ -27,6 +26,11 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
 });
 
+const geistSans = Geist({
+  subsets: ["latin"],
+  variable: "--font-geist-sans-face",
+});
+
 export const metadata = {
   title: "KeyRouter - AI Infrastructure Management",
   description: "One endpoint for all your AI providers. Manage keys, monitor usage, and scale effortlessly.",
@@ -41,7 +45,11 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`dark ${inter.variable} ${sourceSerif.variable} ${geistMono.variable} ${geistSans.variable}`}
+      suppressHydrationWarning
+    >
       <head>
         {/* Force dark mode class before first paint */}
         <Script
@@ -59,7 +67,7 @@ export default function RootLayout({ children }) {
           }}
         />
       </head>
-      <body className={`${inter.variable} ${sourceSerif.variable} ${geistMono.variable} font-sans antialiased`}>
+      <body className="font-sans antialiased">
         <ThemeProvider>
           <RuntimeI18nProvider>
             {children}

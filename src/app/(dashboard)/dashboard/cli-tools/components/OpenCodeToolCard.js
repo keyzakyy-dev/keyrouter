@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Card, Button, ModelSelectModal, ManualConfigModal } from "@/shared/components";
+import { Card, Button, ModelSelectModal, ManualConfigModal, Tooltip } from "@/shared/components";
 import Image from "next/image";
 import BaseUrlSelect from "./BaseUrlSelect";
 import { rememberEndpoint } from "./cliEndpointPresets";
@@ -288,11 +288,11 @@ export default function OpenCodeToolCard({ tool, isExpanded, onToggle, baseUrl, 
 
           {!checking && status?.installed && (
             <>
-              <div className="flex flex-col gap-2">
+              <div className="rounded-xl border border-border bg-surface-2/40 p-3 sm:p-4 flex flex-col gap-2.5">
                 {/* Current base URL */}
                 {/* Endpoint (selector) */}
                 <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-[8rem_auto_1fr] sm:items-center sm:gap-2">
-                  <span className="text-xs font-semibold text-text-main sm:text-right sm:text-sm">Select Endpoint</span>
+                  <span className="text-xs font-medium text-text-muted sm:text-right sm:text-sm">Select Endpoint</span>
                   <span className="material-symbols-outlined hidden text-text-muted text-[14px] sm:inline">arrow_forward</span>
                   <BaseUrlSelect
                     value={customBaseUrl || getDisplayUrl()}
@@ -308,10 +308,10 @@ export default function OpenCodeToolCard({ tool, isExpanded, onToggle, baseUrl, 
 
                 {/* Current configured */}
                 {status?.config?.provider?.["keyrouter"]?.options?.baseURL && (
-                  <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-[8rem_auto_1fr_auto] sm:items-center sm:gap-2">
-                    <span className="text-xs font-semibold text-text-main sm:text-right sm:text-sm">Current</span>
-                    <span className="material-symbols-outlined hidden text-text-muted text-[14px] sm:inline">arrow_forward</span>
-                    <span className="min-w-0 truncate rounded bg-surface/40 px-2 py-2 text-xs text-text-muted sm:py-1.5">
+                  <div className="flex items-center gap-2 pl-7 sm:pl-[8.75rem] -mt-1 sm:-mt-1">
+                    <span className="material-symbols-outlined text-[13px] text-text-subtle">subdirectory_arrow_right</span>
+                    <span className="text-[11px] text-text-subtle">Current:</span>
+                    <span className="min-w-0 truncate text-[11px] font-mono text-text-muted">
                       {status.config.provider["keyrouter"].options.baseURL}
                     </span>
                   </div>
@@ -319,15 +319,15 @@ export default function OpenCodeToolCard({ tool, isExpanded, onToggle, baseUrl, 
 
                 {/* API Key */}
                 <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-[8rem_auto_1fr_auto] sm:items-center sm:gap-2">
-                  <span className="text-xs font-semibold text-text-main sm:text-right sm:text-sm">API Key</span>
+                  <span className="text-xs font-medium text-text-muted sm:text-right sm:text-sm">API Key</span>
                   <span className="material-symbols-outlined hidden text-text-muted text-[14px] sm:inline">arrow_forward</span>
                   <ApiKeySelect value={selectedApiKey} onChange={setSelectedApiKey} apiKeys={apiKeys} cloudEnabled={cloudEnabled} />
                 </div>
 
                 {/* Models */}
                 <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-[8rem_auto_1fr] sm:items-start sm:gap-2">
-                  <span className="w-32 shrink-0 text-sm font-semibold text-text-main text-right pt-1">Models</span>
-                  <span className="material-symbols-outlined text-text-muted text-[14px] mt-1.5">arrow_forward</span>
+                  <span className="sm:w-32 shrink-0 text-sm font-medium text-text-muted sm:text-right pt-1">Models</span>
+                  <span className="material-symbols-outlined hidden sm:inline text-text-muted text-[14px] mt-1.5">arrow_forward</span>
                   <div className="flex-1 flex flex-col gap-2">
                     <div className="flex flex-wrap gap-1.5 min-h-[28px] px-2 py-1.5 bg-surface rounded border border-border">
                       {selectedModels.length === 0 ? (
@@ -406,7 +406,7 @@ export default function OpenCodeToolCard({ tool, isExpanded, onToggle, baseUrl, 
 
                 {/* Subagent Model */}
                 <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-[8rem_auto_1fr_auto] sm:items-center sm:gap-2">
-                  <span className="text-xs font-semibold text-text-main sm:text-right sm:text-sm">Subagent Model</span>
+                  <span className="text-xs font-medium text-text-muted sm:text-right sm:text-sm">Subagent Model</span>
                   <span className="material-symbols-outlined hidden text-text-muted text-[14px] sm:inline">arrow_forward</span>
                   <input
                     type="text"
@@ -415,22 +415,24 @@ export default function OpenCodeToolCard({ tool, isExpanded, onToggle, baseUrl, 
                     placeholder={selectedModel || "provider/model-id (defaults to main model)"}
                     className="w-full min-w-0 px-2 py-2 bg-surface rounded border border-border text-xs sm:py-1.5"
                   />
-                  <button
-                    onClick={() => setSubagentModalOpen(true)}
-                    disabled={!activeProviders?.length}
-                    className={`w-full sm:w-auto rounded border px-2 py-2 text-xs transition-colors sm:py-1.5 whitespace-nowrap sm:shrink-0 ${activeProviders?.length ? "bg-surface border-border text-text-main hover:border-primary cursor-pointer" : "opacity-50 cursor-not-allowed border-border"}`}
-                  >
-                    Select Model
-                  </button>
-                  {subagentModel && (
+                  <div className="flex items-center gap-1.5">
                     <button
-                      onClick={() => setSubagentModel("")}
-                      className="p-1 text-text-muted hover:text-danger rounded transition-colors"
-                      title="Clear (will use main model)"
+                      onClick={() => setSubagentModalOpen(true)}
+                      disabled={!activeProviders?.length}
+                      className={`w-full sm:w-auto rounded border px-2 py-2 text-xs transition-colors sm:py-1.5 whitespace-nowrap sm:shrink-0 ${activeProviders?.length ? "bg-surface border-border text-text-main hover:border-primary cursor-pointer" : "opacity-50 cursor-not-allowed border-border"}`}
                     >
-                      <span className="material-symbols-outlined text-[14px]">close</span>
+                      Select Model
                     </button>
-                  )}
+                    {subagentModel && (
+                      <button
+                        onClick={() => setSubagentModel("")}
+                        className="p-1 text-text-muted hover:text-danger rounded transition-colors"
+                        title="Clear (will use main model)"
+                      >
+                        <span className="material-symbols-outlined text-[14px]">close</span>
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -441,16 +443,20 @@ export default function OpenCodeToolCard({ tool, isExpanded, onToggle, baseUrl, 
                 </div>
               )}
 
-              <div className="grid grid-cols-1 gap-2 sm:flex sm:items-center">
+              <div className="flex items-center justify-end gap-2 border-t border-border pt-3 mt-1">
                 <Button variant="primary" size="sm" onClick={handleApply} disabled={selectedModels.length === 0} loading={applying}>
-                  <span className="material-symbols-outlined text-[14px] mr-1">save</span>Apply
+                  Apply
                 </Button>
-                <Button variant="outline" size="sm" onClick={handleReset} disabled={!status.hasKeyRouter} loading={restoring}>
-                  <span className="material-symbols-outlined text-[14px] mr-1">restore</span>Reset
-                </Button>
-                <Button variant="ghost" size="sm" onClick={() => setShowManualConfigModal(true)}>
-                  <span className="material-symbols-outlined text-[14px] mr-1">content_copy</span>Manual Config
-                </Button>
+                <Tooltip text="Restore OpenCode settings to KeyRouter defaults">
+                  <Button variant="ghost" size="sm" aria-label="Reset" onClick={handleReset} disabled={!status.hasKeyRouter} loading={restoring}>
+                    <span className="material-symbols-outlined text-[18px]">restore</span>
+                  </Button>
+                </Tooltip>
+                <Tooltip text="View the raw config file written for this tool">
+                  <Button variant="ghost" size="sm" aria-label="Manual Config" onClick={() => setShowManualConfigModal(true)}>
+                    <span className="material-symbols-outlined text-[18px]">content_copy</span>
+                  </Button>
+                </Tooltip>
               </div>
             </>
           )}

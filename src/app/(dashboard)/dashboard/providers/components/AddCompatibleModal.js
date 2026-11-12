@@ -153,6 +153,7 @@ function AddCompatibleModal({ variant, isOpen, onClose, onCreated }) {
         {config.hasApiType && (
           <Select
             label="API Type"
+            labelClassName="font-mono text-[11px] font-normal uppercase tracking-[0.15em] text-text-muted"
             options={API_TYPE_OPTIONS}
             value={formData.apiType}
             onChange={(e) => setFormData({ ...formData, apiType: e.target.value })}

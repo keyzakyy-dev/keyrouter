@@ -195,13 +195,16 @@ export function InjectionTester() {
   const verdictColor = running ? "opacity-60 pointer-events-none" : "";
 
   const segBtn = (active) =>
-    `px-3 py-1.5 font-display font-medium transition-colors ${
-      active ? "bg-primary text-white dark:text-neutral-950" : "bg-surface text-text-muted hover:text-text-main"
+    `shrink-0 rounded-full px-3 py-1 font-display text-xs font-medium transition-colors ${
+      active ? "bg-surface text-text-main" : "text-text-muted hover:text-text-main"
     }`;
-  const modelField = (label, value, setValue, which) => (
-    <label className="flex flex-col gap-1 text-sm">
-      <span className="font-display text-text-muted">{label}</span>
-      <span className="flex gap-2">
+  const modelField = (label, value, setValue, which, inline = false) => (
+    <label className={inline ? "flex min-w-[220px] flex-1 items-center gap-2" : "flex flex-col gap-1 text-sm"}>
+      {!inline && <span className="font-display text-text-muted">{label}</span>}
+      {inline && (
+        <span className="shrink-0 text-[11px] text-text-subtle">{label}</span>
+      )}
+      <span className="flex min-w-0 flex-1 gap-2">
         <input
           value={value}
           onChange={(e) => setValue(e.target.value)}
@@ -212,7 +215,7 @@ export function InjectionTester() {
         <button
           type="button"
           onClick={() => setPickerFor(which)}
-          className="shrink-0 cursor-pointer whitespace-nowrap rounded border border-border bg-surface px-2.5 py-2 text-xs text-text-main transition-colors hover:border-primary"
+          className="shrink-0 cursor-pointer whitespace-nowrap rounded-lg px-2.5 py-2 text-xs font-medium text-text-muted transition-colors hover:bg-surface-2 hover:text-text-main"
         >
           Select
         </button>
@@ -221,20 +224,17 @@ export function InjectionTester() {
   );
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-3">
-        <div className="flex flex-wrap gap-2">
-          <div className="flex overflow-hidden rounded-lg border border-border text-sm">
-            <button type="button" onClick={() => setMode("single")} className={segBtn(mode === "single")}>
-              Single
-            </button>
-            <button type="button" onClick={() => setMode("vs")} className={segBtn(mode === "vs")}>
-              VS
-            </button>
-          </div>
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-wrap items-center gap-2">
+        <div className="inline-flex items-center gap-1 rounded-full bg-surface-2 p-1">
+          <button type="button" onClick={() => setMode("single")} className={segBtn(mode === "single")}>
+            Single
+          </button>
+          <button type="button" onClick={() => setMode("vs")} className={segBtn(mode === "vs")}>
+            VS
+          </button>
         </div>
-        <label className="flex flex-col gap-1 text-sm">
-          <span className="font-display text-text-muted">Client key</span>
+        <div className="min-w-[180px] flex-1">
           <Dropdown
             value={keyId}
             onChange={setKeyId}
@@ -243,50 +243,52 @@ export function InjectionTester() {
                 ? [{ value: "", label: "No keys found" }]
                 : keys.map((k) => ({ value: k.id, label: k.name || k.id }))
             }
-            buttonClassName="rounded-lg px-3 py-2"
+            buttonClassName="h-9 w-full justify-between rounded-lg px-3 text-sm"
           />
-        </label>
-        {modelField(mode === "vs" ? "Model A" : "Model", modelA, setModelA, "A")}
-        {mode === "vs" && modelField("Model B", modelB, setModelB, "B")}
-        <datalist id="inject-tester-models">
-          {models.map((m) => <option key={m} value={m} />)}
-        </datalist>
-        <div className="flex flex-wrap gap-2">
-          {PROBES.map((p) => (
-            <button
-              key={p.label}
-              type="button"
-              onClick={() => setPrompt(p.text)}
-              className="rounded-full border border-dashed border-border px-3 py-1 text-xs text-text-muted transition-colors hover:border-text-subtle hover:text-text-main"
-            >
-              {p.label}
-            </button>
-          ))}
         </div>
-        <textarea
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
-          rows={3}
-          className="rounded-lg border border-border bg-surface px-3 py-2 text-sm"
-          placeholder="Type any prompt — the model's raw reply is the verdict…"
-        />
-        <div className="flex items-center gap-3">
-          <Button
+        {modelField(mode === "vs" ? "Model A" : "Model", modelA, setModelA, "A", true)}
+        {mode === "vs" && modelField("Model B", modelB, setModelB, "B", true)}
+      </div>
+      <datalist id="inject-tester-models">
+        {models.map((m) => <option key={m} value={m} />)}
+      </datalist>
+      <div className="flex flex-wrap items-center gap-1.5">
+        <span className="text-[11px] text-text-subtle mr-0.5">Probes:</span>
+        {PROBES.map((p) => (
+          <button
+            key={p.label}
             type="button"
-            onClick={run}
-            disabled={!selectedKey?.key || !modelA.trim()}
-            loading={running}
-            icon={running ? undefined : "play_arrow"}
-            className="font-display tracking-wide"
+            onClick={() => setPrompt(p.text)}
+            className="rounded-full px-2.5 py-1 text-xs text-text-muted transition-colors hover:bg-surface-2 hover:text-text-main"
+            title={p.text}
           >
-            {running ? "Testing…" : "Run test"}
-          </Button>
-          {running && (
-            <span className="text-[11px] text-text-muted">
-              Running…
-            </span>
-          )}
-        </div>
+            {p.label}
+          </button>
+        ))}
+      </div>
+      <textarea
+        value={prompt}
+        onChange={(e) => setPrompt(e.target.value)}
+        rows={3}
+        className="rounded-lg border border-border bg-surface px-3 py-2 text-sm"
+        placeholder="Type any prompt — the model's raw reply is the verdict…"
+      />
+      <div className="flex items-center gap-3">
+        <Button
+          type="button"
+          onClick={run}
+          disabled={!selectedKey?.key || !modelA.trim()}
+          loading={running}
+          icon={running ? undefined : "play_arrow"}
+          className="font-display tracking-wide"
+        >
+          {running ? "Testing…" : "Run test"}
+        </Button>
+        {running && (
+          <span className="text-[11px] text-text-muted">
+            Running…
+          </span>
+        )}
       </div>
       <div className={`flex flex-col gap-4 ${mode === "vs" ? "sm:grid sm:grid-cols-2 sm:items-start" : ""} ${verdictColor}`}>
         <ResultCard title={mode === "vs" ? "Model A" : "Result"} result={resA} />

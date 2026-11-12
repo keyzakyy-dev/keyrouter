@@ -6,7 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { getProviderIconSrc, markProviderIconMissing, needsDarkInvert } from "@/shared/utils/providerIcon";
-import { Card, Button, Badge, Input, Modal, CardSkeleton, OAuthModal, KiroOAuthWrapper, CursorAuthModal, ZedAuthModal, XiaomiMimoAuthModal, IFlowCookieModal, GitLabAuthModal, Toggle, Checkbox, Select, EditConnectionModal, NoAuthProxyCard, ConfirmModal } from "@/shared/components";
+import { Card, Button, Badge, Input, Modal, CardSkeleton, OAuthModal, KiroOAuthWrapper, CursorAuthModal, ZedAuthModal, XiaomiMimoAuthModal, IFlowCookieModal, GitLabAuthModal, Toggle, Checkbox, Select, EditConnectionModal, NoAuthProxyCard, ConfirmModal, BackLink } from "@/shared/components";
 import Dropdown from "@/shared/components/Dropdown";
 import { OAUTH_PROVIDERS, APIKEY_PROVIDERS, FREE_PROVIDERS, FREE_TIER_PROVIDERS, WEB_COOKIE_PROVIDERS, getProviderAlias, isOpenAICompatibleProvider, isAnthropicCompatibleProvider, AI_PROVIDERS } from "@/shared/constants/providers";
 import { getModelsByProviderId, getModelKind } from "@/shared/constants/models";
@@ -1592,13 +1592,7 @@ export default function ProviderDetailPage() {
     <div className="flex min-w-0 flex-col gap-6 px-1 sm:gap-8 sm:px-0">
       {/* Back link */}
       <div className="min-w-0">
-        <Link
-          href="/dashboard/providers"
-          className="mb-4 inline-flex h-8 items-center gap-1.5 rounded-lg border border-border bg-surface pl-1.5 pr-3 text-sm font-display font-medium text-text-main transition-colors hover:border-text-subtle hover:bg-surface-2"
-        >
-          <span className="material-symbols-outlined text-[17px] text-text-muted">arrow_back</span>
-          Back to Providers
-        </Link>
+        <BackLink href="/dashboard/providers">Back to Providers</BackLink>
       </div>
 
       {/* Provider header + summary bento: 1 kiri, 4 kanan */}

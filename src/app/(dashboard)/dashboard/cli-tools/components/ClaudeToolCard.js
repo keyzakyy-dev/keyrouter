@@ -362,10 +362,10 @@ export default function ClaudeToolCard({
 
           {!checkingClaude && claudeStatus?.installed && (
             <>
-              <div className="flex flex-col gap-2">
+              <div className="rounded-xl border border-border bg-surface-2/40 p-3 sm:p-4 flex flex-col gap-2.5">
                 {/* Endpoint (selector) */}
                 <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-[8rem_auto_1fr] sm:items-center sm:gap-2">
-                  <span className="text-xs font-semibold text-text-main sm:text-right sm:text-sm">Select Endpoint</span>
+                  <span className="text-xs font-medium text-text-muted sm:text-right sm:text-sm">Select Endpoint</span>
                   <span className="material-symbols-outlined hidden text-text-muted text-[14px] sm:inline">arrow_forward</span>
                   <BaseUrlSelect
                     value={customBaseUrl || getDisplayUrl()}
@@ -381,10 +381,10 @@ export default function ClaudeToolCard({
 
                 {/* Current configured */}
                 {claudeStatus?.settings?.env?.ANTHROPIC_BASE_URL && (
-                  <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-[8rem_auto_1fr_auto] sm:items-center sm:gap-2">
-                    <span className="text-xs font-semibold text-text-main sm:text-right sm:text-sm">Current</span>
-                    <span className="material-symbols-outlined hidden text-text-muted text-[14px] sm:inline">arrow_forward</span>
-                    <span className="min-w-0 truncate rounded bg-surface/40 px-2 py-2 text-xs text-text-muted sm:py-1.5">
+                  <div className="flex items-center gap-2 pl-7 sm:pl-[8.75rem] -mt-1 sm:-mt-1">
+                    <span className="material-symbols-outlined text-[13px] text-text-subtle">subdirectory_arrow_right</span>
+                    <span className="text-[11px] text-text-subtle">Current:</span>
+                    <span className="min-w-0 truncate text-[11px] font-mono text-text-muted">
                       {claudeStatus.settings.env.ANTHROPIC_BASE_URL}
                     </span>
                   </div>
@@ -392,7 +392,7 @@ export default function ClaudeToolCard({
 
                 {/* API Key */}
                 <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-[8rem_auto_1fr_auto] sm:items-center sm:gap-2">
-                  <span className="text-xs font-semibold text-text-main sm:text-right sm:text-sm">API Key</span>
+                  <span className="text-xs font-medium text-text-muted sm:text-right sm:text-sm">API Key</span>
                   <span className="material-symbols-outlined hidden text-text-muted text-[14px] sm:inline">arrow_forward</span>
                   <ApiKeySelect value={selectedApiKey} onChange={setSelectedApiKey} apiKeys={apiKeys} cloudEnabled={cloudEnabled} />
                 </div>
@@ -400,7 +400,7 @@ export default function ClaudeToolCard({
                 {/* Model Mappings */}
                 {tool.defaultModels.map((model) => (
                   <div key={model.alias} className="grid grid-cols-1 gap-1.5 sm:grid-cols-[8rem_auto_1fr] sm:items-center sm:gap-2">
-                    <span className="text-xs font-semibold text-text-main sm:text-right sm:text-sm">{model.name}</span>
+                    <span className="text-xs font-medium text-text-muted sm:text-right sm:text-sm">{model.name}</span>
                     <span className="material-symbols-outlined hidden text-text-muted text-[14px] sm:inline">arrow_forward</span>
                     <div className="flex items-center gap-2 min-w-0">
                       <div className="relative flex-1 min-w-0">
@@ -438,7 +438,7 @@ export default function ClaudeToolCard({
 
                 {/* Auto-compact window */}
                 <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-[8rem_auto_1fr] sm:items-center sm:gap-2">
-                  <span className="text-xs font-semibold text-text-main sm:text-right sm:text-sm">Auto-compact</span>
+                  <span className="text-xs font-medium text-text-muted sm:text-right sm:text-sm">Auto-compact</span>
                   <span className="material-symbols-outlined hidden text-text-muted text-[14px] sm:inline">arrow_forward</span>
                   <Dropdown
                     value={autoCompactWindow}
@@ -451,7 +451,7 @@ export default function ClaudeToolCard({
 
                 {/* 1M context */}
                 <div className="flex flex-wrap items-center justify-between gap-1.5 sm:grid sm:grid-cols-[8rem_auto_1fr] sm:items-center sm:gap-2">
-                  <span className="text-xs font-semibold text-text-main sm:text-right sm:text-sm">1M context</span>
+                  <span className="text-xs font-medium text-text-muted sm:text-right sm:text-sm">1M context</span>
                   <span className="material-symbols-outlined hidden text-text-muted text-[14px] sm:inline">arrow_forward</span>
                   <label className="flex items-center gap-1.5 cursor-pointer select-none">
                     <Checkbox size="sm" checked={oneMContext} onChange={(v) => handleOneMContextToggle(v)} />
@@ -464,7 +464,7 @@ export default function ClaudeToolCard({
 
                 {/* CC Filter Naming */}
                 <div className="flex flex-wrap items-center justify-between gap-1.5 sm:grid sm:grid-cols-[8rem_auto_1fr] sm:items-center sm:gap-2">
-                  <span className="text-xs font-semibold text-text-main sm:text-right sm:text-sm">Filter naming</span>
+                  <span className="text-xs font-medium text-text-muted sm:text-right sm:text-sm">Filter naming</span>
                   <span className="material-symbols-outlined hidden text-text-muted text-[14px] sm:inline">arrow_forward</span>
                   <label className="flex items-center gap-1.5 cursor-pointer select-none">
                     <Checkbox size="sm" checked={ccFilterNaming} onChange={handleCcFilterNamingToggle} />
@@ -477,7 +477,7 @@ export default function ClaudeToolCard({
 
                 {/* Exa MCP — ~/.claude.json mcpServers (not settings.json) */}
                 <div className="flex flex-wrap items-center justify-between gap-1.5 sm:grid sm:grid-cols-[8rem_auto_1fr] sm:items-center sm:gap-2">
-                  <span className="text-xs font-semibold text-text-main sm:text-right sm:text-sm">Web Search</span>
+                  <span className="text-xs font-medium text-text-muted sm:text-right sm:text-sm">Web Search</span>
                   <span className="material-symbols-outlined hidden text-text-muted text-[14px] sm:inline">arrow_forward</span>
                   <label className="flex items-center gap-1.5 cursor-pointer select-none">
                     <Checkbox size="sm" checked={exaMcpEnabled} onChange={setExaMcpEnabled} />
@@ -496,16 +496,20 @@ export default function ClaudeToolCard({
                 </div>
               )}
 
-              <div className="flex flex-wrap items-center gap-2">
+              <div className="flex items-center justify-end gap-2 border-t border-border pt-3 mt-1">
                 <Button variant="primary" size="sm" onClick={handleApplySettings} disabled={!hasActiveProviders} loading={applying}>
-                  <span className="material-symbols-outlined text-[14px] mr-1">save</span>Apply
+                  Apply
                 </Button>
-                <Button variant="outline" size="sm" onClick={handleResetSettings} disabled={!claudeStatus?.hasKeyRouter} loading={restoring} className="font-mono uppercase text-[10px] tracking-wide">
-                  <span className="material-symbols-outlined text-[14px] mr-1">restore</span>Reset
-                </Button>
-                <Button variant="ghost" size="sm" onClick={() => setShowManualConfigModal(true)} className="font-mono uppercase text-[10px] tracking-wide">
-                  <span className="material-symbols-outlined text-[14px] mr-1">content_copy</span>Manual Config
-                </Button>
+                <Tooltip text="Restore Claude CLI settings to KeyRouter defaults">
+                  <Button variant="ghost" size="sm" aria-label="Reset" onClick={handleResetSettings} disabled={!claudeStatus?.hasKeyRouter} loading={restoring}>
+                    <span className="material-symbols-outlined text-[18px]">restore</span>
+                  </Button>
+                </Tooltip>
+                <Tooltip text="View the raw config file written for this tool">
+                  <Button variant="ghost" size="sm" aria-label="Manual Config" onClick={() => setShowManualConfigModal(true)}>
+                    <span className="material-symbols-outlined text-[18px]">content_copy</span>
+                  </Button>
+                </Tooltip>
               </div>
             </>
           )}

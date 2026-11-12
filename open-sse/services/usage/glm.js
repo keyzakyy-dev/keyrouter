@@ -60,12 +60,25 @@ export function parseGlmQuotaResponse(json) {
 }
 
 /**
- * GLM Coding Plan usage (international + China regions)
+ * GLM Coding Plan usage (international + China regions).
+ *
+ * OAuth connections carry a ZCode JWT: the balance gateway (zcode.z.ai)
+ * reports both the plan validity and the Start Plan windows and — unlike the
+ * coding-plan monitor endpoint — also answers for free accounts. Try it
+ * first; the monitor endpoint stays as the fallback for pasted API keys.
  */
 export async function getGlmUsage(apiKey, provider, proxyOptions = null, providerSpecificData = null) {
+  const jwt = providerSpecificData?.zcodeJwtToken;
+  let startPlanError = null;
+
+  if (jwt) {
+    const start = await getZcodeStartPlanUsage(jwt, providerSpecificData, proxyOptions);
+    if (start.usage) return start.usage;
+    startPlanError = start.error;
+  }
+
   if (!apiKey) {
-    return await startPlanFallback(providerSpecificData, proxyOptions)
-      || { message: "GLM API key not available." };
+    return { message: startPlanError || "GLM API key not available." };
   }
 
   const region = provider === "glm-cn" ? "china" : "international";
@@ -84,11 +97,6 @@ export async function getGlmUsage(apiKey, provider, proxyOptions = null, provide
     );
 
     if (!response.ok) {
-      if (response.status === 401) {
-        // API key invalid — try Start Plan balance if we have a JWT.
-        return await startPlanFallback(providerSpecificData, proxyOptions)
-          || { message: "GLM API key invalid or expired." };
-      }
       return { message: `GLM quota API error (${response.status}).` };
     }
 
@@ -96,15 +104,13 @@ export async function getGlmUsage(apiKey, provider, proxyOptions = null, provide
 
     // Coding-plan endpoint returns 200 with code 500 when no plan exists.
     if (json?.code && json.code !== 0 && json.code !== 200) {
-      return await startPlanFallback(providerSpecificData, proxyOptions)
-        || { message: json.msg || `GLM quota unavailable (code ${json.code}).` };
+      return { message: json.msg || `GLM quota unavailable (code ${json.code}).` };
     }
 
     const { plan, quotas } = parseGlmQuotaResponse(json);
     return { plan, quotas };
   } catch (error) {
-    return await startPlanFallback(providerSpecificData, proxyOptions)
-      || { message: `GLM error: ${error.message}` };
+    return { message: startPlanError || `GLM error: ${error.message}` };
   }
 }
 
@@ -113,7 +119,7 @@ export async function getGlmUsage(apiKey, provider, proxyOptions = null, provide
 // ---------------------------------------------------------------------------
 
 const ZCODE_BALANCE_URL = "https://zcode.z.ai/api/v1/zcode-plan/billing/balance";
-const ZCODE_APP_VERSION = "3.16.3";
+const ZCODE_APP_VERSION = "3.17.1";
 
 function stableDeviceMid(providerSpecificData) {
   const seed = String(providerSpecificData?.userId || "zcode");
@@ -132,11 +138,34 @@ export function parseZcodeStartPlanBalance(json) {
   const data = json?.data && typeof json.data === "object" ? json.data : {};
   const plans = Array.isArray(data.plans) ? data.plans : [];
   const balances = Array.isArray(data.balances) ? data.balances : [];
+
+  // Empty response = nothing known about this account; the caller surfaces a
+  // message instead of inventing quota rows.
+  if (plans.length === 0 && balances.length === 0) return null;
+
   const quotas = {};
 
-  const activePlan = plans.find((p) => String(p?.status || "").toLowerCase() === "active") || plans[0];
-  if (!activePlan && balances.length === 0) return { plan: "No Plan", quotas: {} };
+  // Active plan → one validity row: a hard expiry (recurring:false), so the UI
+  // words it "expires in …". used/total stay 0/∞ — the row is about time left,
+  // not consumption (remaining 100 keeps the row green while it's valid).
+  const activePlan = plans.find((p) => String(p?.status || "").toLowerCase() === "active");
+  if (activePlan) {
+    const endsAt = Number(activePlan?.ends_at);
+    quotas[activePlan?.name || "Plan"] = {
+      used: 0,
+      total: 0,
+      remaining: 100,
+      remainingPercentage: 100,
+      resetAt: endsAt > 0 ? new Date(endsAt * 1000).toISOString() : null,
+      unlimited: false,
+      recurring: false,
+    };
+  }
 
+  // Balance windows recur each period; resetAt is period_end (expires_at is
+  // the grant's own shelf life, not the refresh point). Multiple grants can
+  // share a show_name — sum their units.
+  const grouped = new Map();
   for (const balance of balances) {
     const total = Number(balance?.total_units);
     const used = Number(balance?.used_units);
@@ -148,29 +177,34 @@ export function parseZcodeStartPlanBalance(json) {
       .map((c) => c.slice(6).trim());
     const name = balance?.show_name || models.join(", ") || "Quota";
 
-    const remaining = Number.isFinite(total) && Number.isFinite(used)
-      ? Math.max(0, total - used) : 0;
-    const remainingPct = total > 0 ? Math.round((remaining / total) * 100) : 0;
+    const entry = grouped.get(name) || { total: 0, used: 0, periodEnd: 0 };
+    entry.total += Number.isFinite(total) ? total : 0;
+    entry.used += Number.isFinite(used) ? used : 0;
+    const periodEnd = Number(balance?.period_end);
+    if (Number.isFinite(periodEnd) && periodEnd > entry.periodEnd) entry.periodEnd = periodEnd;
+    grouped.set(name, entry);
+  }
 
-    const expiresAt = Number(balance?.expires_at);
-
+  for (const [name, g] of grouped) {
+    const remainingPct = g.total > 0 ? Math.round((Math.max(0, g.total - g.used) / g.total) * 100) : 0;
     quotas[name] = {
-      used: Number.isFinite(used) ? used : 0,
-      total: Number.isFinite(total) ? total : 0,
-      remaining,
+      used: g.used,
+      total: g.total,
+      remaining: remainingPct,
       remainingPercentage: remainingPct,
-      resetAt: Number.isFinite(expiresAt) && expiresAt > 0
-        ? new Date(expiresAt * 1000).toISOString() : null,
+      resetAt: g.periodEnd > 0 ? new Date(g.periodEnd * 1000).toISOString() : null,
       unlimited: false,
+      recurring: true,
     };
   }
 
-  const planName = activePlan?.name || "ZCode Start Plan";
-  return { plan: planName, quotas };
+  if (Object.keys(quotas).length === 0) return null;
+
+  return { plan: activePlan?.name || "ZCode Start Plan", quotas };
 }
 
 async function getZcodeStartPlanUsage(zcodeJwtToken, providerSpecificData, proxyOptions = null) {
-  if (!zcodeJwtToken) return null;
+  if (!zcodeJwtToken) return { usage: null, error: null };
   const mid = stableDeviceMid(providerSpecificData);
   try {
     const response = await proxyAwareFetch(
@@ -179,23 +213,20 @@ async function getZcodeStartPlanUsage(zcodeJwtToken, providerSpecificData, proxy
         headers: {
           Authorization: `Bearer ${zcodeJwtToken}`,
           "X-Device-Mid": mid,
+          "X-Platform": "win32-x64",
+          "X-ZCode-App-Version": ZCODE_APP_VERSION,
           Accept: "application/json",
         },
       },
       proxyOptions,
     );
-    if (!response.ok) return null;
+    if (!response.ok) return { usage: null, error: `ZCode balance API error (${response.status}).` };
     const json = await response.json();
-    if (json?.code && json.code !== 0) return null;
-    return parseZcodeStartPlanBalance(json);
-  } catch {
-    return null;
+    if (json?.code && json.code !== 0 && json.code !== 200) {
+      return { usage: null, error: json.msg || `ZCode balance unavailable (code ${json.code}).` };
+    }
+    return { usage: parseZcodeStartPlanBalance(json), error: null };
+  } catch (error) {
+    return { usage: null, error: `ZCode balance error: ${error.message}` };
   }
-}
-
-/** Try the Start Plan balance when the coding-plan endpoint fails. */
-async function startPlanFallback(providerSpecificData, proxyOptions) {
-  const jwt = providerSpecificData?.zcodeJwtToken;
-  if (!jwt) return null;
-  return getZcodeStartPlanUsage(jwt, providerSpecificData, proxyOptions);
 }

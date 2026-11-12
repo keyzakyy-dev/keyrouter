@@ -157,23 +157,23 @@ export default function LanguageSwitcher({ className = "", isOpen: controlledOpe
           {/* Modal content */}
           <div
             ref={modalRef}
-            className="relative w-full bg-surface border border-border-subtle rounded-[14px] shadow-[var(--shadow-elev)] fade-in max-w-2xl flex flex-col max-h-[80vh]"
+            className="relative w-full bg-surface border border-border-subtle rounded-xl shadow-[var(--shadow-elev)] fade-in max-w-xl flex flex-col max-h-[70vh]"
           >
             {/* Modal header */}
-            <div className="flex items-center justify-between p-3 border-b border-border-subtle">
-              <h2 className="font-display text-lg font-semibold text-text-main">Select Language</h2>
+            <div className="flex items-center justify-between px-4 py-3 border-b border-border-subtle">
+              <h2 className="font-display text-sm font-semibold text-text-main">Select Language</h2>
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-1.5 rounded-[10px] text-text-muted hover:bg-surface-2 hover:text-text-main transition-colors"
+                className="flex h-7 w-7 items-center justify-center rounded-lg text-text-muted hover:bg-surface-2 hover:text-text-main transition-colors"
                 aria-label="Close"
               >
-                <span className="material-symbols-outlined text-[20px]">close</span>
+                <span className="material-symbols-outlined text-[18px]">close</span>
               </button>
             </div>
 
-            {/* Modal body - fixed grid columns, equal sizing */}
-            <div className="p-6 overflow-y-auto flex-1">
-              <div className="grid grid-cols-[repeat(auto-fill,minmax(100px,1fr))] gap-2">
+            {/* Modal body - compact rows in auto-fill columns */}
+            <div className="p-3 overflow-y-auto flex-1">
+              <div className="grid grid-cols-[repeat(auto-fill,minmax(190px,1fr))] gap-1">
                 {LOCALES.map((item) => {
                   const active = locale === item;
                   const info = getLocaleInfo(item);
@@ -182,17 +182,16 @@ export default function LanguageSwitcher({ className = "", isOpen: controlledOpe
                       key={item}
                       onClick={() => handleSetLocale(item)}
                       disabled={isPending}
-                      className={`flex flex-col items-center justify-start gap-1 px-2 py-3 rounded-lg text-xs font-medium transition-colors w-full ${
+                      className={`group flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-left transition-colors w-full ${
                         active
-                          ? "bg-primary/10 text-primary dark:text-primary ring-2 ring-primary/40"
-                          : "text-text-main hover:text-primary dark:hover:text-primary"
+                          ? "bg-surface-2 text-text-main"
+                          : "text-text-muted hover:bg-surface-2/60 hover:text-text-main"
                       } ${isPending ? "opacity-70 cursor-wait" : ""}`}
                       title={info.name}
                     >
-                      <span className="text-2xl">{info.flag}</span>
-                      {/* Fixed 2-line height so all cards are uniform */}
+                      <span className="text-base shrink-0">{info.flag}</span>
                       <span
-                        className="text-center leading-tight line-clamp-2 h-8 flex items-center"
+                        className="min-w-0 flex-1 truncate text-[13px] font-medium leading-tight"
                         style={{
                           fontFamily:
                             LOCALE_FONT[item] ||
@@ -202,7 +201,7 @@ export default function LanguageSwitcher({ className = "", isOpen: controlledOpe
                         {info.name}
                       </span>
                       {active && (
-                        <span className="material-symbols-outlined text-sm">check</span>
+                        <span className="material-symbols-outlined text-[16px] shrink-0 text-primary">check</span>
                       )}
                     </button>
                   );

@@ -321,27 +321,28 @@ export default function AntigravityToolCard({
           {/* When running: API Key + Model Mappings */}
           {isRunning && (
             <>
-              <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-[8rem_auto_1fr_auto] sm:items-center sm:gap-2">
-                <span className="text-xs font-semibold text-text-main sm:text-right sm:text-sm">API Key</span>
-                <span className="material-symbols-outlined hidden text-text-muted text-[14px] sm:inline">arrow_forward</span>
-                {apiKeys.length > 0 ? (
-                  <Dropdown
-                    value={selectedApiKey}
-                    onChange={setSelectedApiKey}
-                    options={apiKeys.map((key) => ({ value: key.key, label: key.key }))}
-                    buttonClassName="min-w-0 px-2 py-2 rounded text-xs sm:py-1.5"
-                    className="w-full min-w-0"
-                  />
-                ) : (
-                  <span className="min-w-0 rounded bg-surface/40 px-2 py-2 text-xs text-text-muted sm:py-1.5">
-                    {cloudEnabled ? "No API keys - Create one in Keys page" : "sk_keyrouter (default)"}
-                  </span>
-                )}
-              </div>
+              <div className="rounded-xl border border-border bg-surface-2/40 p-3 sm:p-4 flex flex-col gap-2.5">
+                <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-[8rem_auto_1fr_auto] sm:items-center sm:gap-2">
+                  <span className="text-xs font-medium text-text-muted sm:text-right sm:text-sm">API Key</span>
+                  <span className="material-symbols-outlined hidden text-text-muted text-[14px] sm:inline">arrow_forward</span>
+                  {apiKeys.length > 0 ? (
+                    <Dropdown
+                      value={selectedApiKey}
+                      onChange={setSelectedApiKey}
+                      options={apiKeys.map((key) => ({ value: key.key, label: key.key }))}
+                      buttonClassName="min-w-0 px-2 py-2 rounded text-xs sm:py-1.5"
+                      className="w-full min-w-0"
+                    />
+                  ) : (
+                    <span className="min-w-0 rounded bg-surface/40 px-2 py-2 text-xs text-text-muted sm:py-1.5">
+                      {cloudEnabled ? "No API keys - Create one in Keys page" : "sk_keyrouter (default)"}
+                    </span>
+                  )}
+                </div>
 
-              {tool.defaultModels.map((model) => (
-                <div key={model.alias} className="grid grid-cols-1 gap-1.5 sm:grid-cols-[8rem_auto_1fr_auto] sm:items-center sm:gap-2">
-                  <span className="text-xs font-semibold text-text-main sm:text-right sm:text-sm">{model.name}</span>
+                {tool.defaultModels.map((model) => (
+                  <div key={model.alias} className="grid grid-cols-1 gap-1.5 sm:grid-cols-[8rem_auto_1fr_auto] sm:items-center sm:gap-2">
+                    <span className="text-xs font-medium text-text-muted sm:text-right sm:text-sm">{model.name}</span>
                   <span className="material-symbols-outlined hidden text-text-muted text-[14px] sm:inline">arrow_forward</span>
                   <div className="relative w-full min-w-0">
                     <input
@@ -371,16 +372,16 @@ export default function AntigravityToolCard({
                 </div>
               ))}
 
-              <div className="grid grid-cols-1 gap-2 sm:flex sm:items-center">
+              <div className="flex items-center justify-end gap-2 border-t border-border pt-3 mt-1">
                 <Button
                   variant="primary"
                   size="sm"
                   onClick={handleSaveMappings}
                   disabled={loading || Object.keys(modelMappings).length === 0}
                 >
-                  <span className="material-symbols-outlined text-[14px] mr-1">save</span>
                   Save Mappings
                 </Button>
+              </div>
               </div>
             </>
           )}

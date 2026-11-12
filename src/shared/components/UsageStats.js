@@ -44,7 +44,7 @@ function TimeAgo({ timestamp }) {
 
 function RecentRequests({ requests = [], providerLabels = {} }) {
   return (
-    <Card className="flex min-w-0 flex-col overflow-hidden" padding="sm" style={{ height: 480 }}>
+    <Card className="flex h-[360px] min-w-0 flex-col overflow-hidden sm:h-[480px]" padding="sm">
       {/* Header */}
       <div className="flex items-center justify-between gap-2 px-2 py-3">
         <span className="font-display text-sm font-semibold text-text-main">Recent Requests</span>

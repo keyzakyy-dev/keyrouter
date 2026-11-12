@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Card, Button, ModelSelectModal, ManualConfigModal } from "@/shared/components";
+import { Card, Button, ModelSelectModal, ManualConfigModal, Tooltip } from "@/shared/components";
 import { useModelCaps } from "@/shared/hooks/useModelCaps";
 import Image from "next/image";
 import BaseUrlSelect from "./BaseUrlSelect";
@@ -300,7 +300,7 @@ export default function GrokBuildToolCard({
 
           {!checking && grokStatus?.installed && (
             <>
-              <div className="flex flex-col gap-2">
+              <div className="rounded-xl border border-border bg-surface-2/40 p-3 sm:p-4 flex flex-col gap-2.5">
                 {tool.notes?.length > 0 && (
                   <div className="mb-2 flex flex-col gap-2">
                     {tool.notes.map((note, index) => (
@@ -312,21 +312,21 @@ export default function GrokBuildToolCard({
                   </div>
                 )}
                 <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-[8rem_auto_1fr] sm:items-center sm:gap-2">
-                  <span className="text-xs font-semibold text-text-main sm:text-right sm:text-sm">Select Endpoint</span>
+                  <span className="text-xs font-medium text-text-muted sm:text-right sm:text-sm">Select Endpoint</span>
                   <span className="material-symbols-outlined hidden text-text-muted text-[14px] sm:inline">arrow_forward</span>
                   <BaseUrlSelect value={customBaseUrl || getEffectiveBaseUrl()} onChange={setCustomBaseUrl} requiresExternalUrl={tool.requiresExternalUrl} tunnelEnabled={tunnelEnabled} tunnelPublicUrl={tunnelPublicUrl} tailscaleEnabled={tailscaleEnabled} tailscaleUrl={tailscaleUrl} currentUrl={currentBaseUrl} />
                 </div>
 
                 {configuredModel?.base_url && (
-                  <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-[8rem_auto_1fr] sm:items-center sm:gap-2">
-                    <span className="text-xs font-semibold text-text-main sm:text-right sm:text-sm">Current</span>
-                    <span className="material-symbols-outlined hidden text-text-muted text-[14px] sm:inline">arrow_forward</span>
-                    <span className="min-w-0 truncate rounded bg-surface/40 px-2 py-2 text-xs text-text-muted sm:py-1.5">{configuredModel.base_url} · {configuredModel.model}{configuredModel.context_window ? ` · ${(configuredModel.context_window / 1000).toLocaleString()}K ctx` : ""}</span>
+                  <div className="flex items-center gap-2 pl-7 sm:pl-[8.75rem] -mt-1 sm:-mt-1">
+                    <span className="material-symbols-outlined text-[13px] text-text-subtle">subdirectory_arrow_right</span>
+                    <span className="text-[11px] text-text-subtle">Current:</span>
+                    <span className="min-w-0 truncate text-[11px] font-mono text-text-muted">{configuredModel.base_url} · {configuredModel.model}{configuredModel.context_window ? ` · ${(configuredModel.context_window / 1000).toLocaleString()}K ctx` : ""}</span>
                   </div>
                 )}
 
                 <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-[8rem_auto_1fr] sm:items-center sm:gap-2">
-                  <span className="text-xs font-semibold text-text-main sm:text-right sm:text-sm">API Key</span>
+                  <span className="text-xs font-medium text-text-muted sm:text-right sm:text-sm">API Key</span>
                   <span className="material-symbols-outlined hidden text-text-muted text-[14px] sm:inline">arrow_forward</span>
                   <ApiKeySelect value={selectedApiKey} onChange={setSelectedApiKey} apiKeys={apiKeys} cloudEnabled={cloudEnabled} />
                 </div>
@@ -359,10 +359,20 @@ export default function GrokBuildToolCard({
 
               {message && <div className={`flex items-center gap-2 px-2 py-1.5 rounded text-xs ${message.type === "success" ? "bg-success/10 text-success" : "bg-danger/10 text-danger"}`}><span className="material-symbols-outlined text-[14px]">{message.type === "success" ? "check_circle" : "error"}</span><span>{message.text}</span></div>}
 
-              <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                <Button variant="primary" size="sm" onClick={handleApply} disabled={!selectedModel} loading={applying} className="w-full sm:w-auto"><span className="material-symbols-outlined text-[14px] mr-1">save</span>Apply</Button>
-                <Button variant="outline" size="sm" onClick={handleReset} disabled={!grokStatus?.hasKeyRouter} loading={restoring} className="w-full sm:w-auto"><span className="material-symbols-outlined text-[14px] mr-1">restore</span>Reset</Button>
-                <Button variant="ghost" size="sm" onClick={() => setShowManualConfigModal(true)} className="w-full sm:w-auto"><span className="material-symbols-outlined text-[14px] mr-1">content_copy</span>Manual Config</Button>
+              <div className="flex items-center justify-end gap-2 border-t border-border pt-3 mt-1">
+                <Button variant="primary" size="sm" onClick={handleApply} disabled={!selectedModel} loading={applying}>
+                  Apply
+                </Button>
+                <Tooltip text="Restore GrokBuild settings to KeyRouter defaults">
+                  <Button variant="ghost" size="sm" aria-label="Reset" onClick={handleReset} disabled={!grokStatus?.hasKeyRouter} loading={restoring}>
+                    <span className="material-symbols-outlined text-[18px]">restore</span>
+                  </Button>
+                </Tooltip>
+                <Tooltip text="View the raw config file written for this tool">
+                  <Button variant="ghost" size="sm" aria-label="Manual Config" onClick={() => setShowManualConfigModal(true)}>
+                    <span className="material-symbols-outlined text-[18px]">content_copy</span>
+                  </Button>
+                </Tooltip>
               </div>
             </>
           )}

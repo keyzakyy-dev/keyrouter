@@ -1,5 +1,6 @@
 // Shared Components - Export all
 export { default as Button } from "./Button";
+export { default as BackLink } from "./BackLink";
 export { default as Input } from "./Input";
 export { default as Select } from "./Select";
 export { default as Card } from "./Card";

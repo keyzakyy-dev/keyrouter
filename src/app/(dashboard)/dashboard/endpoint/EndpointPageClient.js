@@ -836,17 +836,18 @@ export default function APIPageClient({ machineId }) {
                   · {tunnelActive ? "Active" : "Off"}
                 </span>
               </div>
-              <span
-                className={cn(
-                  "material-symbols-outlined shrink-0 text-[20px] text-text-muted transition-transform duration-150 sm:hidden",
-                  remoteOpen ? "rotate-180" : ""
-                )}
-                aria-hidden="true"
-              >
-                expand_more
+              <span className="shrink-0 sm:hidden" aria-hidden="true">
+                <span
+                  className={cn(
+                    "material-symbols-outlined text-[20px] text-text-muted transition-transform duration-150",
+                    remoteOpen ? "rotate-180" : ""
+                  )}
+                >
+                  expand_more
+                </span>
               </span>
             </div>
-            <div className={cn("flex flex-col gap-2", !remoteOpen && "hidden sm:block")}>
+            <div className={cn("flex flex-col gap-3", !remoteOpen && "hidden sm:flex")}>
                 <RouteRow
                   icon="cloud_upload"
                   label="Cloudflare Tunnel"
@@ -1076,9 +1077,11 @@ export default function APIPageClient({ machineId }) {
               Keys authenticate clients against this gateway.
             </p>
           </div>
-          <Button icon="add" className="font-display" onClick={() => setShowAddModal(true)}>
-            Create key
-          </Button>
+          {otherKeys.length > 0 && (
+            <Button icon="add" className="font-display" onClick={() => setShowAddModal(true)}>
+              Create key
+            </Button>
+          )}
         </div>
 
         <div className="mt-4 flex items-center justify-between gap-3 rounded-xl bg-surface p-4">
@@ -1158,7 +1161,7 @@ export default function APIPageClient({ machineId }) {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+          <div className={`grid grid-cols-1 gap-3 ${defaultKeys.length > 1 ? "lg:grid-cols-2" : ""}`}>
             {defaultKeys.map((key) => (
               <KeyRow
                 key={key.id}

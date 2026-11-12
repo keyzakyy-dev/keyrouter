@@ -125,24 +125,31 @@ export default function HeaderNav() {
     MEDIA_PROVIDER_KINDS_VISIBLE.includes(k.id)
   );
 
-  const items = [
-    ...managementNavItems,
-    ...monitoringNavItems,
-    ...kinds.map((kind) => ({
+  const groups = [
+    managementNavItems,
+    monitoringNavItems,
+    kinds.map((kind) => ({
       href: `/dashboard/media-providers/${kind.id}`,
       label: kind.label,
       icon: kind.icon,
     })),
-    ...systemNavItems,
-    ...debugNavItems,
-  ];
+    systemNavItems,
+    debugNavItems,
+  ].filter((group) => group.length > 0);
 
   return (
     <>
       <nav ref={navRef} className="scrollbar-hide flex w-full items-center overflow-x-auto">
         <div className="flex items-center gap-0.5">
-          {items.map((item) => (
-            <NavLinkItem key={item.href} item={item} active={isActive(item.href)} />
+          {groups.map((group, gi) => (
+            <div key={gi} className="flex items-center gap-0.5">
+              {gi > 0 && (
+                <span className="mx-1.5 h-5 w-px shrink-0 bg-border" aria-hidden="true" />
+              )}
+              {group.map((item) => (
+                <NavLinkItem key={item.href} item={item} active={isActive(item.href)} />
+              ))}
+            </div>
           ))}
         </div>
       </nav>

@@ -25,7 +25,9 @@ export default function OverviewCards({ stats }) {
           <span className="text-xs text-text-subtle">
             Est. Cost
           </span>
-          <span className="material-symbols-outlined text-[22px] shrink-0 text-text-subtle sm:hidden">payments</span>
+          <span className="shrink-0 sm:hidden">
+            <span className="material-symbols-outlined text-[22px] text-text-subtle">payments</span>
+          </span>
         </div>
         <div className="flex items-center gap-3">
           <div className="font-display text-3xl font-bold tracking-tight text-text-main sm:text-4xl">
@@ -38,7 +40,7 @@ export default function OverviewCards({ stats }) {
       </Card>
 
       {/* Metric cards */}
-      <div className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
+      <div className="grid min-w-0 grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
         {METRICS.map((m) => (
           <Card key={m.valueKey} className="flex min-w-0 items-center justify-between gap-3 px-4 py-3.5">
             <div className="min-w-0">
@@ -47,7 +49,7 @@ export default function OverviewCards({ stats }) {
                 {fmt(stats[m.valueKey])}
               </div>
             </div>
-            <span className="material-symbols-outlined text-[22px] shrink-0 text-text-subtle">{m.icon}</span>
+            <span className="material-symbols-outlined text-[22px] shrink-0 text-text-subtle sm:hidden lg:block">{m.icon}</span>
           </Card>
         ))}
       </div>

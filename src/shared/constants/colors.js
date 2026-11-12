@@ -50,6 +50,15 @@ export const COLORS = {
   },
 };
 
+// Chart palette — dark dashboard: stone ramp, clay as the single accent.
+export const CHART_SERIES = {
+  tokens: "#e0e0e0",
+  requests: "#a5a49a",
+  cost: "#d97757",
+};
+
+export const CHART_RAMP = ["#e0e0e0", "#a5a49a", "#898781", "#6d6b67", "#d97757"];
+
 // CSS Variables mapping for Tailwind
 export const CSS_VARIABLES = {
   light: {

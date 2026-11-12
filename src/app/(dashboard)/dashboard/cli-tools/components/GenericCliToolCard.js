@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Card, Button, ModelSelectModal, ManualConfigModal } from "@/shared/components";
+import { Card, Button, ModelSelectModal, ManualConfigModal, Tooltip } from "@/shared/components";
 import Dropdown from "@/shared/components/Dropdown";
 import Image from "next/image";
 import BaseUrlSelect from "./BaseUrlSelect";
@@ -487,10 +487,10 @@ export default function GenericCliToolCard({
 
           {!checking && status?.installed && (
             <>
-              <div className="flex flex-col gap-2">
+              <div className="rounded-xl border border-border bg-surface-2/40 p-3 sm:p-4 flex flex-col gap-2.5">
                 {/* Endpoint (selector) */}
                 <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-[8rem_auto_1fr] sm:items-center sm:gap-2">
-                  <span className="text-xs font-semibold text-text-main sm:text-right sm:text-sm">Select Endpoint</span>
+                  <span className="text-xs font-medium text-text-muted sm:text-right sm:text-sm">Select Endpoint</span>
                   <span className="material-symbols-outlined hidden text-text-muted text-[14px] sm:inline">arrow_forward</span>
                   <BaseUrlSelect
                     value={customBaseUrl || getEffectiveBaseUrl()}
@@ -505,19 +505,19 @@ export default function GenericCliToolCard({
                 </div>
 
                 {/* Current configured */}
-                {currentBaseUrl ? (
-                  <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-[8rem_auto_1fr_auto] sm:items-center sm:gap-2">
-                    <span className="text-xs font-semibold text-text-main sm:text-right sm:text-sm">Current</span>
-                    <span className="material-symbols-outlined hidden text-text-muted text-[14px] sm:inline">arrow_forward</span>
-                    <span className="min-w-0 truncate rounded bg-surface/40 px-2 py-2 text-xs text-text-muted sm:py-1.5">
+                {currentBaseUrl && (
+                  <div className="flex items-center gap-2 pl-7 sm:pl-[8.75rem] -mt-1 sm:-mt-1">
+                    <span className="material-symbols-outlined text-[13px] text-text-subtle">subdirectory_arrow_right</span>
+                    <span className="text-[11px] text-text-subtle">Current:</span>
+                    <span className="min-w-0 truncate text-[11px] font-mono text-text-muted">
                       {currentBaseUrl}
                     </span>
                   </div>
-                ) : null}
+                )}
 
                 {/* API Key */}
                 <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-[8rem_auto_1fr_auto] sm:items-center sm:gap-2">
-                  <span className="text-xs font-semibold text-text-main sm:text-right sm:text-sm">API Key</span>
+                  <span className="text-xs font-medium text-text-muted sm:text-right sm:text-sm">API Key</span>
                   <span className="material-symbols-outlined hidden text-text-muted text-[14px] sm:inline">arrow_forward</span>
                   <ApiKeySelect value={selectedApiKey} onChange={setSelectedApiKey} apiKeys={apiKeys} cloudEnabled={cloudEnabled} />
                 </div>
@@ -525,7 +525,7 @@ export default function GenericCliToolCard({
                 {/* Models selector cho Pi (multi-models) */}
                 {tool.id === "pi" && (
                   <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-[8rem_auto_1fr] sm:items-start sm:gap-2">
-                    <span className="text-xs font-semibold text-text-main sm:text-right sm:text-sm mt-1">Models</span>
+                    <span className="text-xs font-medium text-text-muted sm:text-right sm:text-sm mt-1">Models</span>
                     <span className="material-symbols-outlined hidden text-text-muted text-[14px] sm:inline mt-1.5">arrow_forward</span>
                     <div className="flex-1 flex flex-col gap-2">
                       <div className="flex flex-wrap gap-1.5 min-h-[36px] p-2 bg-surface rounded border border-border">
@@ -605,7 +605,7 @@ export default function GenericCliToolCard({
                 {/* Model (1 model cho các tool khác, trừ omp) */}
                 {tool.id !== "omp" && tool.id !== "pi" && (
                   <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-[8rem_auto_1fr_auto] sm:items-center sm:gap-2">
-                    <span className="text-xs font-semibold text-text-main sm:text-right sm:text-sm">Model</span>
+                    <span className="text-xs font-medium text-text-muted sm:text-right sm:text-sm">Model</span>
                     <span className="material-symbols-outlined hidden text-text-muted text-[14px] sm:inline">arrow_forward</span>
                     <div className="relative w-full min-w-0">
                       <input
@@ -654,36 +654,39 @@ export default function GenericCliToolCard({
               )}
 
               {/* Action Buttons */}
-              <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    onClick={handleApply}
-                    disabled={applying || checking}
-                  >
-                    {applying ? "Applying..." : "Apply Settings"}
-                  </Button>
-                  {status?.hasKeyRouter && (
+              <div className="flex items-center justify-end gap-2 border-t border-border pt-3 mt-1">
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={handleApply}
+                  disabled={applying || checking}
+                >
+                  {applying ? "Applying..." : "Apply Settings"}
+                </Button>
+                {status?.hasKeyRouter && (
+                  <Tooltip text="Remove KeyRouter configuration from this tool">
                     <Button
-                      variant="outline"
+                      variant="ghost"
                       size="sm"
+                      aria-label="Remove from Tool"
                       onClick={handleRestore}
                       disabled={restoring || checking}
-                      className="text-danger hover:text-danger hover:border-danger"
+                      className="text-danger hover:text-danger"
                     >
-                      {restoring ? "Removing..." : "Remove from Tool"}
+                      <span className="material-symbols-outlined text-[18px]">delete</span>
                     </Button>
-                  )}
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setShowManualConfigModal(true)}
-                >
-                  <span className="material-symbols-outlined text-[18px] mr-1">code</span>
-                  Manual Config
-                </Button>
+                  </Tooltip>
+                )}
+                <Tooltip text="View the raw config file written for this tool">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    aria-label="Manual Config"
+                    onClick={() => setShowManualConfigModal(true)}
+                  >
+                    <span className="material-symbols-outlined text-[18px]">code</span>
+                  </Button>
+                </Tooltip>
               </div>
             </>
           )}

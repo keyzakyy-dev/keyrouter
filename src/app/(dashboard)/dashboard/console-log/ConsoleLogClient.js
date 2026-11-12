@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState, useEffect, useRef } from "react";
-import { Card } from "@/shared/components";
 import { CONSOLE_LOG_CONFIG } from "@/shared/constants/config";
 import { translate } from "@/i18n/runtime";
 import { cn } from "@/shared/utils/cn";
@@ -197,15 +196,15 @@ export default function ConsoleLogClient() {
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <div className="flex overflow-hidden rounded-lg border border-border text-xs">
+          <div className="inline-flex items-center gap-1 rounded-full bg-surface-2 p-1">
             {FILTER_PRESETS.map((p) => (
               <button
                 key={p.id}
                 type="button"
                 onClick={() => setFilterId(p.id)}
                 className={cn(
-                  "px-3 py-1.5 font-display font-medium transition-colors",
-                  filterId === p.id ? "bg-surface-2 text-text-main" : "bg-surface text-text-muted hover:text-text-main"
+                  "rounded-full px-3 py-1 font-display text-xs font-medium transition-colors",
+                  filterId === p.id ? "bg-surface text-text-main" : "text-text-muted hover:text-text-main"
                 )}
               >
                 {p.label}
@@ -223,8 +222,8 @@ export default function ConsoleLogClient() {
             type="button"
             onClick={() => setPaused((v) => !v)}
             className={cn(
-              "inline-flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-display font-medium transition-colors",
-              paused ? "border-text-subtle bg-surface-2 text-text-main" : "border-border bg-surface text-text-main hover:bg-surface-2"
+              "inline-flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-xs font-display font-medium transition-colors",
+              paused ? "bg-surface-2 text-text-main" : "text-text-muted hover:bg-surface-2 hover:text-text-main"
             )}
             title={translate(paused ? "Resume live streaming" : "Pause live streaming")}
           >
@@ -235,45 +234,46 @@ export default function ConsoleLogClient() {
             type="button"
             onClick={() => setAutoScroll((v) => !v)}
             className={cn(
-              "inline-flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-display font-medium transition-colors",
-              autoScroll ? "border-border bg-surface text-text-main hover:bg-surface-2" : "border-text-subtle bg-surface-2 text-text-main"
+              "inline-flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-xs font-display font-medium transition-colors",
+              autoScroll ? "text-text-main" : "text-text-muted hover:bg-surface-2 hover:text-text-main"
             )}
             title={translate("Auto-scroll to newest logs")}
           >
             <span className="material-symbols-outlined text-[16px]">vertical_align_bottom</span>
             Auto
           </button>
+          <span className="h-5 w-px bg-border" aria-hidden="true" />
           <button
             onClick={handleClear}
-            className="inline-flex h-8 items-center justify-center gap-1.5 rounded-lg border border-border bg-surface px-3.5 text-sm font-display font-medium text-text-main transition-colors hover:border-text-subtle hover:bg-surface-2"
+            className="inline-flex h-8 items-center justify-center gap-1.5 rounded-lg px-2.5 text-xs font-display font-medium text-danger/80 transition-colors hover:bg-danger/10 hover:text-danger"
           >
-            <span className="material-symbols-outlined text-[17px] text-text-muted">delete</span>
+            <span className="material-symbols-outlined text-[16px]">delete</span>
             Clear
           </button>
         </div>
       </div>
 
-      <Card padding="none">
-        <div
-          ref={logRef}
-          className="h-[calc(100vh-220px)] overflow-y-auto rounded-lg border border-border bg-bg p-4 font-mono text-xs leading-relaxed"
-        >
-          {visibleLogs.length === 0 ? (
-            <div className="flex h-full flex-col items-center justify-center gap-3 text-center">
-              <span className="material-symbols-outlined text-2xl text-text-subtle">terminal</span>
-              <span className="text-xs text-text-subtle">
-                {logs.length === 0 ? "No console logs yet." : "No matching lines."}
-              </span>
-            </div>
-          ) : (
-            <div className="space-y-1.5">
-              {visibleLogs.map((entry, i) => (
-                <div key={i}>{renderLine(entry)}</div>
-              ))}
-            </div>
-          )}
-        </div>
-      </Card>
+      <div
+        ref={logRef}
+        className="h-[calc(100vh-220px)] overflow-y-auto rounded-xl border border-border bg-bg p-3 font-mono text-xs leading-relaxed"
+      >
+        {visibleLogs.length === 0 ? (
+          <div className="flex h-full flex-col items-center justify-center gap-3 text-center">
+            <span className="material-symbols-outlined text-2xl text-text-subtle">terminal</span>
+            <span className="text-xs text-text-subtle">
+              {logs.length === 0 ? "No console logs yet." : "No matching lines."}
+            </span>
+          </div>
+        ) : (
+          <div className="space-y-px">
+            {visibleLogs.map((entry, i) => (
+              <div key={i} className="rounded-md px-1.5 transition-colors hover:bg-surface-2/40">
+                {renderLine(entry)}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

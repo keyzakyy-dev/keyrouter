@@ -15,8 +15,9 @@ import {
 import Card from "@/shared/components/Card";
 import { cn } from "@/shared/utils/cn";
 import { AI_PROVIDERS } from "@/shared/constants/providers";
+import { CHART_RAMP } from "@/shared/constants/colors";
 
-const FALLBACK_COLORS = ["#d97757", "#898781", "#c6613f", "#6d6b67", "#a5a49a", "#52514e", "#c3c2b7", "#383835"];
+const FALLBACK_COLORS = CHART_RAMP;
 
 const fmtTokens = (n) => {
   if (n >= 1000000) return `${(n / 1000000).toFixed(1)}M`;

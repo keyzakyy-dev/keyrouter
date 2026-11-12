@@ -556,8 +556,8 @@ function ProvidersContent() {
     <div className="flex min-w-0 flex-col gap-6 px-1 sm:px-0">
       {/* Status strip: healthy count + clickable error chips (filter shortcuts) */}
       <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5">
-        <p className="text-sm text-text-muted">
-          <span className="font-display font-semibold text-text-main">{summary.connected}</span>
+        <p className="font-geist-sans text-sm tracking-tight text-text-muted">
+          <span className="font-semibold text-text-main">{summary.connected}</span>
           {" "}of {summary.total} connections healthy
           {summary.errors > 0 ? ` · ${summary.errors} down` : ""}
         </p>

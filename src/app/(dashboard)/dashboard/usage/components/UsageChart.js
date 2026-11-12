@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import Card from "@/shared/components/Card";
 import { cn } from "@/shared/utils/cn";
+import { CHART_SERIES } from "@/shared/constants/colors";
 
 const fmtTokens = (n) => {
   if (n >= 1000000) return `${(n / 1000000).toFixed(1)}M`;
@@ -32,9 +33,9 @@ const VIEW_MODES = [
 ];
 
 const VIEW_CONFIG = {
-  tokens: { dataKey: "tokens", color: "#d97757", gradId: "gradTokens", formatter: fmtTokens, formatterFull: fmtTokensFull, label: "Tokens" },
-  requests: { dataKey: "requests", color: "#257de0", gradId: "gradRequests", formatter: fmtRequests, formatterFull: fmtRequests, label: "Requests" },
-  cost: { dataKey: "cost", color: "#b7791f", gradId: "gradCost", formatter: fmtCost, formatterFull: fmtCostFull, label: "Cost" },
+  tokens: { dataKey: "tokens", color: CHART_SERIES.tokens, gradId: "gradTokens", formatter: fmtTokens, formatterFull: fmtTokensFull, label: "Tokens" },
+  requests: { dataKey: "requests", color: CHART_SERIES.requests, gradId: "gradRequests", formatter: fmtRequests, formatterFull: fmtRequests, label: "Requests" },
+  cost: { dataKey: "cost", color: CHART_SERIES.cost, gradId: "gradCost", formatter: fmtCost, formatterFull: fmtCostFull, label: "Cost" },
 };
 
 export default function UsageChart({ period = "7d", bare = false }) {
@@ -132,18 +133,12 @@ export default function UsageChart({ period = "7d", bare = false }) {
         <ResponsiveContainer width="100%" height={220}>
           <AreaChart data={data} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
             <defs>
-              <linearGradient id="gradTokens" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#d97757" stopOpacity={0.28} />
-                <stop offset="95%" stopColor="#d97757" stopOpacity={0} />
-              </linearGradient>
-              <linearGradient id="gradRequests" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#257de0" stopOpacity={0.28} />
-                <stop offset="95%" stopColor="#257de0" stopOpacity={0} />
-              </linearGradient>
-              <linearGradient id="gradCost" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#b7791f" stopOpacity={0.28} />
-                <stop offset="95%" stopColor="#b7791f" stopOpacity={0} />
-              </linearGradient>
+              {Object.values(VIEW_CONFIG).map((c) => (
+                <linearGradient key={c.gradId} id={c.gradId} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor={c.color} stopOpacity={0.28} />
+                  <stop offset="95%" stopColor={c.color} stopOpacity={0} />
+                </linearGradient>
+              ))}
             </defs>
             <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.1} />
             <XAxis

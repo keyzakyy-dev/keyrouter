@@ -1025,7 +1025,7 @@ export default function ProviderLimits() {
             type="button"
             onClick={() => setExpiringFirst((prev) => !prev)}
             aria-pressed={expiringFirst}
-            className={`flex h-8 shrink-0 items-center gap-1 rounded-lg border px-2 font-display text-xs font-medium transition-colors ${expiringFirst ? "border-text-subtle bg-surface-2 text-text-main" : "border-border text-text-main hover:bg-surface-2"}`}
+            className={`flex h-8 shrink-0 items-center gap-1 rounded-lg px-2 font-display text-xs font-medium transition-colors ${expiringFirst ? "bg-surface-2 text-text-main" : "text-text-main hover:bg-surface-2"}`}
             title="Sort accounts by earliest quota reset time"
           >
             <span className="material-symbols-outlined text-[14px]">
@@ -1041,7 +1041,7 @@ export default function ProviderLimits() {
             type="button"
             onClick={handleDisableDepleted}
             disabled={bulkToggling}
-            className="flex h-8 shrink-0 items-center gap-1 rounded-lg border border-border bg-surface px-2 font-display text-xs font-medium text-text-main transition-colors hover:border-text-subtle hover:bg-surface-2 disabled:opacity-50"
+            className="flex h-8 shrink-0 items-center gap-1 rounded-lg px-2 font-display text-xs font-medium text-text-main transition-colors hover:bg-surface-2 disabled:opacity-50"
             title="Disable connections with depleted quota on the current page"
           >
             <span className="material-symbols-outlined text-[14px] text-text-muted">block</span>
@@ -1053,7 +1053,7 @@ export default function ProviderLimits() {
             type="button"
             onClick={handleEnableAvailable}
             disabled={bulkToggling}
-            className="flex h-8 shrink-0 items-center gap-1 rounded-lg border border-border bg-surface px-2 font-display text-xs font-medium text-text-main transition-colors hover:border-text-subtle hover:bg-surface-2 disabled:opacity-50"
+            className="flex h-8 shrink-0 items-center gap-1 rounded-lg px-2 font-display text-xs font-medium text-text-main transition-colors hover:bg-surface-2 disabled:opacity-50"
             title="Enable connections that still have quota on the current page"
           >
             <span className="material-symbols-outlined text-[14px] text-text-muted">
@@ -1065,7 +1065,7 @@ export default function ProviderLimits() {
           {/* Auto-refresh toggle */}
           <button
             onClick={() => setAutoRefresh((prev) => !prev)}
-            className="flex h-8 shrink-0 items-center gap-1 rounded-lg border border-border bg-surface px-2 font-display text-xs font-medium text-text-main transition-colors hover:border-text-subtle hover:bg-surface-2"
+            className={`flex h-8 shrink-0 items-center gap-1 rounded-lg px-2 font-display text-xs font-medium transition-colors ${autoRefresh ? "text-text-main" : "text-text-muted"} hover:bg-surface-2`}
             title={autoRefresh ? "Disable auto-refresh" : "Enable auto-refresh"}
           >
             <span
@@ -1091,7 +1091,7 @@ export default function ProviderLimits() {
             type="button"
             onClick={() => refreshAll(true)}
             disabled={refreshingAll}
-            className="flex h-8 shrink-0 items-center gap-1 rounded-lg border border-border bg-surface px-2 font-display text-xs font-medium text-text-main transition-colors hover:border-text-subtle hover:bg-surface-2 disabled:opacity-50"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-text-main transition-colors hover:bg-surface-2 disabled:opacity-50"
             title="Refresh all"
           >
             <span
@@ -1227,10 +1227,10 @@ export default function ProviderLimits() {
                                 ? `Use one ${resetLabel}. ${resetCreditCount} available.`
                                 : `No ${resetLabel}s available`
                             }
-                            className={`flex h-8 min-w-10 items-center justify-center gap-1 rounded-lg border px-2 font-display text-[11px] font-medium tabular-nums transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/60 disabled:cursor-not-allowed disabled:opacity-60 ${
+                            className={`flex h-8 min-w-10 items-center justify-center gap-1 rounded-lg px-2 font-display text-[11px] font-medium tabular-nums transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/60 disabled:cursor-not-allowed disabled:opacity-60 ${
                               resetCreditCount > 0
-                                ? "border-text-subtle bg-surface-2 text-text-main hover:bg-surface-3"
-                                : "border-border bg-surface text-text-muted"
+                                ? "bg-surface-2 text-text-main hover:bg-surface-3"
+                                : "text-text-muted"
                             }`}
                           >
                             <span className={`material-symbols-outlined text-[15px] ${isResettingLimit ? "animate-spin" : ""}`}>
@@ -1245,7 +1245,7 @@ export default function ProviderLimits() {
                             onClick={() => (isCodex ? handleViewCodexResetCredits(conn) : handleViewClaudeResets(conn, claudeReset))}
                             disabled={isLoading || rowBusy}
                             aria-label={isCodex ? "View Codex reset credit expiry" : "View Claude Code reset expiry"}
-                            className="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-surface text-text-muted transition-colors hover:border-text-subtle hover:bg-surface-2 hover:text-text-main disabled:cursor-not-allowed disabled:opacity-50"
+                            className="flex h-8 w-8 items-center justify-center rounded-lg text-text-muted transition-colors hover:bg-surface-2 hover:text-text-main disabled:cursor-not-allowed disabled:opacity-50"
                           >
                             <span className="material-symbols-outlined text-[17px]">schedule</span>
                           </button>
@@ -1277,7 +1277,7 @@ export default function ProviderLimits() {
                             type="button"
                             onClick={() => setScheduleConnection(conn)}
                             aria-label="Configure auto-ping"
-                            className={`flex h-8 w-8 items-center justify-center rounded-lg border transition-colors hover:border-text-subtle hover:bg-surface-2 ${isActive ? "border-text-subtle bg-surface-2 text-text-main" : "border-border bg-surface text-text-muted"}`}
+                            className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors hover:bg-surface-2 ${isActive ? "bg-surface-2 text-text-main" : "text-text-muted hover:text-text-main"}`}
                           >
                             <span className="material-symbols-outlined text-[18px]">bolt</span>
                           </button>
@@ -1290,7 +1290,7 @@ export default function ProviderLimits() {
                         onClick={() => refreshProvider(conn.id, conn.provider)}
                         disabled={isLoading || rowBusy}
                         aria-label="Refresh quota"
-                        className="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-surface transition-colors hover:border-text-subtle hover:bg-surface-2 disabled:opacity-50"
+                        className="flex h-8 w-8 items-center justify-center rounded-lg transition-colors hover:bg-surface-2 disabled:opacity-50"
                       >
                         <span
                           className={`material-symbols-outlined text-[18px] text-text-muted ${isLoading ? "animate-spin" : ""}`}
@@ -1308,7 +1308,7 @@ export default function ProviderLimits() {
                         }}
                         disabled={rowBusy}
                         aria-label="Edit connection"
-                        className="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-surface text-text-muted transition-colors hover:border-text-subtle hover:bg-surface-2 hover:text-text-main disabled:opacity-50"
+                        className="flex h-8 w-8 items-center justify-center rounded-lg text-text-muted transition-colors hover:bg-surface-2 hover:text-text-main disabled:opacity-50"
                       >
                         <span className="material-symbols-outlined text-[18px]">
                           edit
@@ -1321,7 +1321,7 @@ export default function ProviderLimits() {
                         onClick={() => handleDeleteConnection(conn.id)}
                         disabled={rowBusy}
                         aria-label="Delete connection"
-                        className="flex h-8 w-8 items-center justify-center rounded-lg hover:bg-danger/10 text-danger transition-colors disabled:opacity-50"
+                        className="flex h-8 w-8 items-center justify-center rounded-lg text-danger/80 transition-colors hover:bg-danger/10 hover:text-danger disabled:opacity-50"
                       >
                         <span
                           className={`material-symbols-outlined text-[18px] ${deletingId === conn.id ? "animate-pulse" : ""}`}

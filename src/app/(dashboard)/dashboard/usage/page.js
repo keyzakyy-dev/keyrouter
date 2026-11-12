@@ -70,8 +70,7 @@ function UsageContent() {
             value={period}
             onChange={setPeriod}
             size="sm"
-            wrap
-            className="w-full sm:w-auto sm:justify-end"
+            className="grid w-full grid-cols-3 sm:inline-flex sm:w-auto sm:justify-end"
           />
         )}
       </div>

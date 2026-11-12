@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Card, Button, ModelSelectModal, ManualConfigModal } from "@/shared/components";
+import { Card, Button, ModelSelectModal, ManualConfigModal, Tooltip } from "@/shared/components";
 import Image from "next/image";
 import BaseUrlSelect from "./BaseUrlSelect";
 import { rememberEndpoint } from "./cliEndpointPresets";
@@ -283,10 +283,10 @@ export default function OpenClawToolCard({
 
           {!checkingOpenclaw && openclawStatus?.installed && (
             <>
-              <div className="flex flex-col gap-2">
+              <div className="rounded-xl border border-border bg-surface-2/40 p-3 sm:p-4 flex flex-col gap-2.5">
                 {/* Endpoint (selector) */}
                 <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-[8rem_auto_1fr] sm:items-center sm:gap-2">
-                  <span className="text-xs font-semibold text-text-main sm:text-right sm:text-sm">Select Endpoint</span>
+                  <span className="text-xs font-medium text-text-muted sm:text-right sm:text-sm">Select Endpoint</span>
                   <span className="material-symbols-outlined hidden text-text-muted text-[14px] sm:inline">arrow_forward</span>
                   <BaseUrlSelect
                     value={customBaseUrl || getDisplayUrl()}
@@ -302,10 +302,10 @@ export default function OpenClawToolCard({
 
                 {/* Current configured */}
                 {openclawStatus?.settings?.models?.providers?.["keyrouter"]?.baseUrl && (
-                  <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-[8rem_auto_1fr_auto] sm:items-center sm:gap-2">
-                    <span className="text-xs font-semibold text-text-main sm:text-right sm:text-sm">Current</span>
-                    <span className="material-symbols-outlined hidden text-text-muted text-[14px] sm:inline">arrow_forward</span>
-                    <span className="min-w-0 truncate rounded bg-surface/40 px-2 py-2 text-xs text-text-muted sm:py-1.5">
+                  <div className="flex items-center gap-2 pl-7 sm:pl-[8.75rem] -mt-1 sm:-mt-1">
+                    <span className="material-symbols-outlined text-[13px] text-text-subtle">subdirectory_arrow_right</span>
+                    <span className="text-[11px] text-text-subtle">Current:</span>
+                    <span className="min-w-0 truncate text-[11px] font-mono text-text-muted">
                       {openclawStatus.settings.models.providers["keyrouter"].baseUrl}
                     </span>
                   </div>
@@ -313,14 +313,14 @@ export default function OpenClawToolCard({
 
                 {/* API Key */}
                 <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-[8rem_auto_1fr_auto] sm:items-center sm:gap-2">
-                  <span className="text-xs font-semibold text-text-main sm:text-right sm:text-sm">API Key</span>
+                  <span className="text-xs font-medium text-text-muted sm:text-right sm:text-sm">API Key</span>
                   <span className="material-symbols-outlined hidden text-text-muted text-[14px] sm:inline">arrow_forward</span>
                   <ApiKeySelect value={selectedApiKey} onChange={setSelectedApiKey} apiKeys={apiKeys} cloudEnabled={cloudEnabled} />
                 </div>
 
                 {/* Default Model */}
                 <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-[8rem_auto_1fr_auto] sm:items-center sm:gap-2">
-                  <span className="text-xs font-semibold text-text-main sm:text-right sm:text-sm">Default Model</span>
+                  <span className="text-xs font-medium text-text-muted sm:text-right sm:text-sm">Default Model</span>
                   <span className="material-symbols-outlined hidden text-text-muted text-[14px] sm:inline">arrow_forward</span>
                   <div className="relative w-full min-w-0">
                     <input type="text" value={selectedModel} onChange={(e) => setSelectedModel(e.target.value)} placeholder="provider/model-id" className="w-full min-w-0 pl-2 pr-7 py-2 bg-surface rounded border border-border text-xs sm:py-1.5" />
@@ -356,16 +356,20 @@ export default function OpenClawToolCard({
                 </div>
               )}
 
-              <div className="grid grid-cols-1 gap-2 sm:flex sm:items-center">
+                            <div className="flex items-center justify-end gap-2 border-t border-border pt-3 mt-1">
                 <Button variant="primary" size="sm" onClick={handleApplySettings} disabled={!selectedModel} loading={applying}>
-                  <span className="material-symbols-outlined text-[14px] mr-1">save</span>Apply
+                  Apply
                 </Button>
-                <Button variant="outline" size="sm" onClick={handleResetSettings} disabled={!openclawStatus?.hasKeyRouter} loading={restoring}>
-                  <span className="material-symbols-outlined text-[14px] mr-1">restore</span>Reset
-                </Button>
-                <Button variant="ghost" size="sm" onClick={() => setShowManualConfigModal(true)}>
-                  <span className="material-symbols-outlined text-[14px] mr-1">content_copy</span>Manual Config
-                </Button>
+                <Tooltip text="Restore OpenClaw settings to KeyRouter defaults">
+                  <Button variant="ghost" size="sm" aria-label="Reset" onClick={handleResetSettings} disabled={!openclawStatus?.hasKeyRouter} loading={restoring}>
+                    <span className="material-symbols-outlined text-[18px]">restore</span>
+                  </Button>
+                </Tooltip>
+                <Tooltip text="View the raw config file written for this tool">
+                  <Button variant="ghost" size="sm" aria-label="Manual Config" onClick={() => setShowManualConfigModal(true)}>
+                    <span className="material-symbols-outlined text-[18px]">content_copy</span>
+                  </Button>
+                </Tooltip>
               </div>
             </>
           )}

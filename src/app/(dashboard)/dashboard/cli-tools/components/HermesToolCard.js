@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Card, Button, ModelSelectModal, ManualConfigModal } from "@/shared/components";
+import { Card, Button, ModelSelectModal, ManualConfigModal, Tooltip } from "@/shared/components";
 import Image from "next/image";
 import BaseUrlSelect from "./BaseUrlSelect";
 import { rememberEndpoint, readPresets } from "./cliEndpointPresets";
@@ -468,9 +468,9 @@ export default function HermesToolCard({
                 </div>
               )}
 
-              <div className="flex flex-col gap-2">
+              <div className="rounded-xl border border-border bg-surface-2/40 p-3 sm:p-4 flex flex-col gap-2.5">
                 <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-[8rem_auto_1fr] sm:items-center sm:gap-2">
-                  <span className="text-xs font-semibold text-text-main sm:text-right sm:text-sm">Select Endpoint</span>
+                  <span className="text-xs font-medium text-text-muted sm:text-right sm:text-sm">Select Endpoint</span>
                   <span className="material-symbols-outlined hidden text-text-muted text-[14px] sm:inline">arrow_forward</span>
                   <BaseUrlSelect
                     value={customBaseUrl || getEffectiveBaseUrl()}
@@ -485,23 +485,23 @@ export default function HermesToolCard({
                 </div>
 
                 {hermesStatus?.settings?.model?.base_url && (
-                  <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-[8rem_auto_1fr_auto] sm:items-center sm:gap-2">
-                    <span className="text-xs font-semibold text-text-main sm:text-right sm:text-sm">Current</span>
-                    <span className="material-symbols-outlined hidden text-text-muted text-[14px] sm:inline">arrow_forward</span>
-                    <span className="min-w-0 truncate rounded bg-surface/40 px-2 py-2 text-xs text-text-muted sm:py-1.5">
+                  <div className="flex items-center gap-2 pl-7 sm:pl-[8.75rem] -mt-1 sm:-mt-1">
+                    <span className="material-symbols-outlined text-[13px] text-text-subtle">subdirectory_arrow_right</span>
+                    <span className="text-[11px] text-text-subtle">Current:</span>
+                    <span className="min-w-0 truncate text-[11px] font-mono text-text-muted">
                       {hermesStatus.settings.model.base_url}
                     </span>
                   </div>
                 )}
 
                 <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-[8rem_auto_1fr_auto] sm:items-center sm:gap-2">
-                  <span className="text-xs font-semibold text-text-main sm:text-right sm:text-sm">API Key</span>
+                  <span className="text-xs font-medium text-text-muted sm:text-right sm:text-sm">API Key</span>
                   <span className="material-symbols-outlined hidden text-text-muted text-[14px] sm:inline">arrow_forward</span>
                   <ApiKeySelect value={selectedApiKey} onChange={setSelectedApiKey} apiKeys={apiKeys} cloudEnabled={cloudEnabled} />
                 </div>
 
                 <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-[8rem_auto_1fr_auto] sm:items-center sm:gap-2">
-                  <span className="text-xs font-semibold text-text-main sm:text-right sm:text-sm">Default Model</span>
+                  <span className="text-xs font-medium text-text-muted sm:text-right sm:text-sm">Default Model</span>
                   <span className="material-symbols-outlined hidden text-text-muted text-[14px] sm:inline">arrow_forward</span>
                   <div className="relative w-full min-w-0">
                     <input type="text" value={selectedModel} onChange={(e) => setSelectedModel(e.target.value)} placeholder="provider/model-id" className="w-full min-w-0 pl-2 pr-7 py-2 bg-surface rounded border border-border text-xs sm:py-1.5" />
@@ -511,7 +511,7 @@ export default function HermesToolCard({
                 </div>
 
                 <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-[8rem_auto_1fr_auto] sm:items-center sm:gap-2">
-                  <span className="text-xs font-semibold text-text-main sm:text-right sm:text-sm">Audio STT</span>
+                  <span className="text-xs font-medium text-text-muted sm:text-right sm:text-sm">Audio STT</span>
                   <span className="material-symbols-outlined hidden text-text-muted text-[14px] sm:inline">arrow_forward</span>
                   <label className="flex items-center gap-2 text-xs text-text-muted cursor-pointer" title="Route Hermes voice & audio transcription through keyrouter's /v1/audio/transcriptions - usage is tracked on this instance">
                     <input type="checkbox" checked={audioEnabled} onChange={(e) => setAudioEnabled(e.target.checked)} className="w-3.5 h-3.5 accent-primary cursor-pointer shrink-0" />
@@ -522,7 +522,7 @@ export default function HermesToolCard({
 
                 {audioEnabled && (
                   <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-[8rem_auto_1fr_auto] sm:items-center sm:gap-2">
-                    <span className="text-xs font-semibold text-text-main sm:text-right sm:text-sm">STT Model</span>
+                    <span className="text-xs font-medium text-text-muted sm:text-right sm:text-sm">STT Model</span>
                     <span className="material-symbols-outlined hidden text-text-muted text-[14px] sm:inline">arrow_forward</span>
                     <div className="relative w-full min-w-0">
                       <input type="text" value={sttModel} onChange={(e) => setSttModel(e.target.value)} placeholder="provider/whisper-model-id" className="w-full min-w-0 pl-2 pr-7 py-2 bg-surface rounded border border-border text-xs sm:py-1.5" />
@@ -532,15 +532,16 @@ export default function HermesToolCard({
                   </div>
                 )}
 
-                <details className="group">
-                  <summary className="cursor-pointer select-none text-xs font-semibold text-text-main hover:text-primary transition-colors">
-                    <span className="material-symbols-outlined align-middle text-[16px] text-text-muted group-open:rotate-90 transition-transform">chevron_right</span>
+                <details className="group rounded-lg border border-border bg-surface open:bg-surface" open>
+                  <summary className="cursor-pointer select-none list-none flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-text-main hover:text-primary transition-colors rounded-lg">
+                    <span className="material-symbols-outlined text-[16px] text-text-muted group-open:rotate-90 transition-transform">chevron_right</span>
                     Model Roles (optional)
+                    <span className="ml-auto font-normal text-[10px] text-text-subtle">{Object.values(roleModels).filter(m => m?.trim()).length}/{HERMES_ROLES.length} set</span>
                   </summary>
-                  <div className="mt-2 flex flex-col gap-1.5">
+                  <div className="px-3 pb-3 pt-1 flex flex-col gap-1.5 border-t border-border">
                     {HERMES_ROLES.map((role) => (
-                      <div key={role.id} className="grid grid-cols-1 gap-1.5 sm:grid-cols-[8rem_auto_1fr_auto] sm:items-center sm:gap-2">
-                        <span className="truncate text-xs font-semibold text-text-main sm:text-right sm:text-sm" title={role.label}>{role.label}</span>
+                      <div key={role.id} className="grid grid-cols-1 gap-1.5 sm:grid-cols-[10.5rem_auto_1fr_auto] sm:items-center sm:gap-2">
+                        <span className="truncate text-xs font-medium text-text-muted sm:text-right" title={role.label}>{role.label}</span>
                         <span className="material-symbols-outlined hidden text-text-muted text-[14px] sm:inline">arrow_forward</span>
                         <div className="relative w-full min-w-0">
                           <input
@@ -581,9 +582,9 @@ export default function HermesToolCard({
                 </div>
               )}
 
-              <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                <Button variant="primary" size="sm" onClick={handleApply} disabled={!selectedModel || (audioEnabled && !sttModel.trim())} title={audioEnabled && !sttModel.trim() ? "Select an STT model first" : undefined} loading={applying} className="w-full sm:w-auto">
-                  <span className="material-symbols-outlined text-[14px] mr-1">save</span>Apply
+              <div className="flex items-center justify-end gap-2 border-t border-border pt-3 mt-1">
+                <Button variant="primary" size="sm" onClick={handleApply} disabled={!selectedModel || (audioEnabled && !sttModel.trim())} title={audioEnabled && !sttModel.trim() ? "Select an STT model first" : undefined} loading={applying}>
+                  Apply
                 </Button>
                 {profiles.length > 1 && (
                   <Button
@@ -592,17 +593,20 @@ export default function HermesToolCard({
                     onClick={handleApplyAll}
                     loading={applyingAll}
                     title="Set the endpoint and API key on every profile that routes through keyrouter. Each profile keeps its own model."
-                    className="w-full sm:w-auto"
                   >
                     <span className="material-symbols-outlined text-[14px] mr-1">groups</span>Apply to All Profiles
                   </Button>
                 )}
-                <Button variant="outline" size="sm" onClick={handleReset} disabled={!hermesStatus?.hasKeyRouter && !hermesStatus?.hasKeyRouterStt} loading={restoring} className="w-full sm:w-auto">
-                  <span className="material-symbols-outlined text-[14px] mr-1">restore</span>Reset
-                </Button>
-                <Button variant="ghost" size="sm" onClick={() => setShowManualConfigModal(true)} className="w-full sm:w-auto">
-                  <span className="material-symbols-outlined text-[14px] mr-1">content_copy</span>Manual Config
-                </Button>
+                <Tooltip text="Restore Hermes settings to KeyRouter defaults">
+                  <Button variant="ghost" size="sm" aria-label="Reset" onClick={handleReset} disabled={!hermesStatus?.hasKeyRouter && !hermesStatus?.hasKeyRouterStt} loading={restoring}>
+                    <span className="material-symbols-outlined text-[18px]">restore</span>
+                  </Button>
+                </Tooltip>
+                <Tooltip text="View the raw config file written for this tool">
+                  <Button variant="ghost" size="sm" aria-label="Manual Config" onClick={() => setShowManualConfigModal(true)}>
+                    <span className="material-symbols-outlined text-[18px]">content_copy</span>
+                  </Button>
+                </Tooltip>
               </div>
             </>
           )}

@@ -1,4 +1,7 @@
 /* source() sets scan base to src/ for both webpack + Turbopack; auto-detection still skips binaries + gitignore */
+/* Material Symbols — imported into base layer so Tailwind utilities (hidden, text-*)
+   win; the package CSS is unlayered and would otherwise beat every utility. */
+@import "material-symbols/outlined.css" layer(base);
 @import "tailwindcss" source("../../");
 
 @custom-variant dark (&:where(.dark, .dark *));
@@ -263,6 +266,8 @@ select option {
   --font-serif: var(--font-serif-custom), 'Source Serif 4', Georgia, 'Times New Roman', serif;
   /* Endpoint URL font: Geist Mono */
   --font-geist: var(--font-geist-mono), 'Geist Mono', ui-monospace, monospace;
+  /* Geist Sans — body-face alternative to Inter */
+  --font-geist-sans: var(--font-geist-sans-face), 'Geist', system-ui, sans-serif;
   /* No mono face by design (client call): data text rides the sans.
      The font-mono utility (394 usages) maps to the sans stack. */
   --font-mono: var(--font-sans);
@@ -390,26 +395,28 @@ input, textarea {
 .traffic-light.yellow { background: #FFBD2E; }
 .traffic-light.green { background: #27C93F; }
 
-/* Material Symbols */
-.material-symbols-outlined {
-  font-family: 'Material Symbols Outlined', sans-serif;
-  font-weight: normal;
-  font-style: normal;
-  font-size: 24px;
-  line-height: 1;
-  letter-spacing: normal;
-  text-transform: none;
-  display: inline-block;
-  white-space: nowrap;
-  word-wrap: normal;
-  direction: ltr;
-  font-feature-settings: 'liga';
-  -webkit-font-feature-settings: 'liga';
-  -webkit-font-smoothing: antialiased;
-  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-}
-.material-symbols-outlined.fill-1 {
-  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+/* Material Symbols — layered so Tailwind utilities (hidden, text-*) win */
+@layer base {
+  .material-symbols-outlined {
+    font-family: 'Material Symbols Outlined', sans-serif;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    font-feature-settings: 'liga';
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+  .material-symbols-outlined.fill-1 {
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
 }
 
 /* Disable text selection on buttons */

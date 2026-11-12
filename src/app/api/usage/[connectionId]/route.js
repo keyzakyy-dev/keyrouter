@@ -8,6 +8,75 @@ import { getExecutor } from "open-sse/executors/index.js";
 import { resolveConnectionProxyConfig } from "@/lib/network/connectionProxy";
 import { USAGE_APIKEY_PROVIDERS } from "@/shared/constants/providers";
 
+// ponytail: dummy demo quotas for seeded placeholder connections (providerSpecificData.dummy).
+// Ceiling: static payloads matching parseQuotaData shapes; remove flag + builder once real accounts land.
+function buildDummyUsage(provider) {
+  const inHours = (h) => new Date(Date.now() + h * 3600000).toISOString();
+  switch (provider) {
+    case "claude":
+      return {
+        plan: "Pro",
+        quotas: {
+          "session (5h)": { used: 23, total: 100, remaining: 77, remainingPercentage: 77, resetAt: inHours(2.5), unlimited: false },
+          "weekly (7d)": { used: 41, total: 100, remaining: 59, remainingPercentage: 59, resetAt: inHours(96), unlimited: false },
+        },
+      };
+    case "codex":
+      return {
+        plan: "Plus",
+        quotas: {
+          session: { used: 12, total: 100, remaining: 88, resetAt: inHours(3), unlimited: false },
+          weekly: { used: 34, total: 100, remaining: 66, resetAt: inHours(120), unlimited: false },
+        },
+      };
+    case "gemini-cli":
+      return {
+        plan: "Pro",
+        quotas: {
+          "gemini-2.5-pro": { used: 310, total: 1000, remainingPercentage: 69, resetAt: inHours(20), unlimited: false },
+          "gemini-2.5-flash": { used: 45, total: 1000, remainingPercentage: 95.5, resetAt: inHours(20), unlimited: false },
+        },
+      };
+    case "cursor":
+      return {
+        plan: "Pro",
+        quotas: {
+          "Monthly spend": { used: 12.4, total: 20, remainingPercentage: 38, resetAt: null, currency: "USD" },
+        },
+      };
+    case "kimi":
+      return {
+        plan: "Kimi Coding",
+        quotas: {
+          "Weekly requests": { used: 148, total: 300, remainingPercentage: 51, resetAt: inHours(72), unlimited: false },
+          "Ratelimit (5h)": { used: 20, total: 100, remainingPercentage: 80, resetAt: inHours(4), unlimited: false },
+        },
+      };
+    case "deepseek":
+      return {
+        plan: "DeepSeek",
+        quotas: {
+          "Balance (USD)": { used: 0, total: 42.5, remainingPercentage: 100, resetAt: null, unlimited: false, isCreditBalance: true, currency: "USD" },
+        },
+      };
+    case "qoder":
+      return {
+        plan: "Qoder Pro",
+        quotas: {
+          user: { used: 210, total: 600, unit: "credits", resetAt: inHours(60), neverExpires: false },
+          organization: { used: 90, total: 400, unit: "credits", resetAt: inHours(60), neverExpires: false },
+        },
+      };
+    default:
+      return {
+        plan: "Demo",
+        quotas: {
+          Session: { used: 25, total: 100, remainingPercentage: 75, resetAt: inHours(5), unlimited: false },
+        },
+      };
+  }
+}
+
 // Detect auth-expired messages returned by usage providers instead of throwing
 const AUTH_EXPIRED_PATTERNS = ["expired", "authentication", "unauthorized", "401", "re-authorize"];
 function isAuthExpiredMessage(usage) {
@@ -165,6 +234,11 @@ export async function GET(request, { params }) {
       vercelRelayUrl: proxyConfig.vercelRelayUrl || "",
       strictProxy: false,
     };
+
+    // Dummy connections (seeded demo rows): return stable fake payload without touching upstream
+    if (connection.dummy === true || connection.providerSpecificData?.dummy === true) {
+      return Response.json(buildDummyUsage(connection.provider));
+    }
 
     // Refresh credentials only for OAuth connections (apikey has no token refresh)
     if (isOAuth) {
