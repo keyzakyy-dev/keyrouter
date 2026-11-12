@@ -1,3 +1,8 @@
+# v1.3.1 (2026-11-12)
+
+## Features
+- **usage**: GLM quota from ZCode plan balance with hard plan expiry
+
 # v1.3.0 (2026-11-09)
 
 ## Features
