@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getAdapter } from "@/lib/db/driver.js";
 import { getApiKeys } from "@/lib/db/repos/apiKeysRepo.js";
+import { getUsageScope } from "@/lib/db/repos/usageRepo.js";
 
 export const dynamic = "force-dynamic";
 
@@ -8,9 +9,11 @@ export const dynamic = "force-dynamic";
 // and per-model breakdown from usageHistory. Quota columns (tokenLimit etc.)
 // don't exist in this schema yet, so the report is activity-only until the
 // quota feature lands; the shape mirrors it so the page won't need rework.
+// API-key dashboard sessions only ever see their own row.
 export async function GET() {
   try {
     const [db, keys] = await Promise.all([getAdapter(), getApiKeys()]);
+    const scopeApiKey = await getUsageScope();
 
     const totalsRaw = db.all(
       `SELECT apiKey, COUNT(*) AS requests,
@@ -18,7 +21,8 @@ export async function GET() {
               COALESCE(SUM(completionTokens), 0) AS completionTokens,
               COALESCE(SUM(cost), 0) AS cost,
               MAX(timestamp) AS lastUsed
-         FROM usageHistory GROUP BY apiKey`
+         FROM usageHistory ${scopeApiKey ? "WHERE apiKey = ?" : ""} GROUP BY apiKey`,
+      scopeApiKey ? [scopeApiKey] : []
     );
     const totals = {};
     for (const r of totalsRaw) totals[r.apiKey || ""] = r;

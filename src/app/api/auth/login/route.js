@@ -70,9 +70,12 @@ export async function POST(request) {
         role: "apikey",
         keyId: keyObj.id,
         keyName: keyObj.name || "API Key",
+        // The raw key rides in the JWT so usage routes can scope rows to it.
+        // httpOnly + secure cookie, never exposed to client JS.
+        apiKey: keyObj.key,
       });
       return NextResponse.json(
-        { success: true, role: "apikey", mustChangePassword: false },
+        { success: true, role: "apikey", homePath: "/dashboard/usage", mustChangePassword: false },
         { headers: NO_STORE_HEADERS }
       );
     }

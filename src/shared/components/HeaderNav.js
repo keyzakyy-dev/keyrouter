@@ -53,7 +53,17 @@ export default function HeaderNav() {
   const [shutdownCountdown, setShutdownCountdown] = useState(0);
   const [isDisconnected, setIsDisconnected] = useState(false);
   const [updateInfo, setUpdateInfo] = useState(null);
+  const [apiKeySession, setApiKeySession] = useState(false);
   const { copied, copy } = useCopyToClipboard(2000);
+
+  // API-key login: read-only session that only owns its usage numbers, so the
+  // nav shrinks to the two monitoring pages it can open.
+  useEffect(() => {
+    fetch("/api/auth/status")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => { if (data?.apiKeySession) setApiKeySession(true); })
+      .catch(() => {});
+  }, []);
 
   const INSTALL_CMD = UPDATER_CONFIG.installCmdLatest;
 
@@ -125,23 +135,26 @@ export default function HeaderNav() {
     MEDIA_PROVIDER_KINDS_VISIBLE.includes(k.id)
   );
 
-  const groups = [
-    managementNavItems,
-    monitoringNavItems,
-    kinds.map((kind) => ({
-      href: `/dashboard/media-providers/${kind.id}`,
-      label: kind.label,
-      icon: kind.icon,
-    })),
-    systemNavItems,
-    debugNavItems,
-  ].filter((group) => group.length > 0);
+  const groups = apiKeySession
+    ? [monitoringNavItems.filter((i) => i.href.startsWith("/dashboard/usage") || i.href.startsWith("/dashboard/api-key-usage"))]
+    : [
+        managementNavItems,
+        monitoringNavItems,
+        kinds.map((kind) => ({
+          href: `/dashboard/media-providers/${kind.id}`,
+          label: kind.label,
+          icon: kind.icon,
+        })),
+        systemNavItems,
+        debugNavItems,
+      ];
+  const navGroups = groups.filter((group) => group.length > 0);
 
   return (
     <>
       <nav ref={navRef} className="scrollbar-hide flex w-full items-center overflow-x-auto">
         <div className="flex items-center gap-0.5">
-          {groups.map((group, gi) => (
+          {navGroups.map((group, gi) => (
             <div key={gi} className="flex items-center gap-0.5">
               {gi > 0 && (
                 <span className="mx-1.5 h-5 w-px shrink-0 bg-border" aria-hidden="true" />

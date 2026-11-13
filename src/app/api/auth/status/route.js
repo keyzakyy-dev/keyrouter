@@ -23,9 +23,10 @@ export async function GET() {
       samlEmail ||
       oidcName ||
       oidcEmail ||
+      (session?.role === "apikey" ? (session.keyName || "API Key") : null) ||
       (session?.saml ? "SAML user" : session?.oidc ? "OIDC user" : "Password user");
 
-    const loginMethod = session?.saml ? "SAML" : session?.oidc ? "OIDC" : "Password";
+    const loginMethod = session?.saml ? "SAML" : session?.oidc ? "OIDC" : session?.role === "apikey" ? "API Key" : "Password";
 
     return NextResponse.json({
       requireLogin,
@@ -38,6 +39,9 @@ export async function GET() {
       hasPassword: !!settings.password,
       displayName,
       loginMethod,
+      // API-key sessions: read-only, scoped to their own usage. The layout uses
+      // this to trim the nav down to the usage pages.
+      apiKeySession: session?.role === "apikey" || false,
       authenticated: !!session,
       oidcName: oidcName || null,
       oidcEmail: oidcEmail || null,

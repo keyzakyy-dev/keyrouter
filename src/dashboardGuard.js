@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSettings, validateApiKey } from "@/lib/localDb";
 import { getConsistentMachineId } from "@/shared/utils/machineId";
-import { verifyDashboardAuthToken } from "@/lib/auth/dashboardSession";
+import { verifyDashboardAuthToken, getDashboardAuthSession } from "@/lib/auth/dashboardSession";
 import { hasTrustedPeerHeaders } from "@/lib/auth/trustedPeer";
 
 const CLI_TOKEN_HEADER = "x-kr-cli-token";
@@ -197,6 +197,26 @@ function isPublicApi(pathname) {
   return PUBLIC_API_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`));
 }
 
+// API-key sessions are read-only and scoped to their own usage (9router model,
+// minus per-key permissions which this schema does not carry): they may open
+// the two usage pages and read their own usage aggregates, nothing else.
+const APIKEY_ALLOWED_PAGES = ["/dashboard/usage", "/dashboard/api-key-usage"];
+const APIKEY_ALLOWED_API_PREFIXES = ["/api/usage/api-keys", "/api/usage/stats", "/api/usage/chart"];
+
+export async function isApiKeySession(request) {
+  const token = request.cookies.get("auth_token")?.value;
+  if (!token) return false;
+  const session = await getDashboardAuthSession(token);
+  return session?.role === "apikey" || false;
+}
+
+function apiKeyDeniedResponse(request, pathname) {
+  if (pathname.startsWith("/dashboard")) {
+    return NextResponse.redirect(new URL("/dashboard/usage", request.url));
+  }
+  return NextResponse.json({ error: "API key sessions are limited to usage pages" }, { status: 403 });
+}
+
 // Shared with src/proxy.js — the mimo login branch must respect dashboard auth.
 export { isAuthenticated };
 
@@ -210,6 +230,19 @@ export const __test__ = {
 
 export async function proxy(request) {
   const { pathname } = request.nextUrl;
+
+  // API-key sessions: read-only, own usage only. Checked before every other
+  // gate so no other /api route is ever reachable with an apikey cookie.
+  if (pathname.startsWith("/dashboard") || pathname.startsWith("/api/")) {
+    if (await isApiKeySession(request)) {
+      const pageOk = pathname === "/dashboard" || pathname === "/login" ||
+        APIKEY_ALLOWED_PAGES.some((p) => pathname === p || pathname.startsWith(`${p}/`));
+      const apiOk = pathname === "/api/auth/logout" || pathname === "/api/auth/status" ||
+        APIKEY_ALLOWED_API_PREFIXES.some((p) => pathname.startsWith(p));
+      if (!pageOk && !apiOk) return apiKeyDeniedResponse(request, pathname);
+      return NextResponse.next();
+    }
+  }
 
   // Local-only gate for spawn-capable / host-secret routes.
   if (LOCAL_ONLY_PATHS.some((p) => pathname.startsWith(p))) {

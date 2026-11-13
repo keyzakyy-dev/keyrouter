@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { RequestLogger, CardSkeleton, SegmentedControl } from "@/shared/components";
 import UsageStats from "@/shared/components/UsageStats";
@@ -28,9 +28,18 @@ function UsageContent() {
   const router = useRouter();
 
   const [period, setPeriod] = useState("today");
+  const [apiKeySession, setApiKeySession] = useState(false);
+
+  // API-key session: request details/logs are not key-scopable, hide the tabs.
+  useEffect(() => {
+    fetch("/api/auth/status")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => { if (data?.apiKeySession) setApiKeySession(true); })
+      .catch(() => {});
+  }, []);
 
   const tabFromUrl = searchParams.get("tab");
-  const activeTab = tabFromUrl && ["overview", "logs", "details"].includes(tabFromUrl)
+  const activeTab = !apiKeySession && tabFromUrl && ["overview", "logs", "details"].includes(tabFromUrl)
     ? tabFromUrl
     : "overview";
 
@@ -58,7 +67,7 @@ function UsageContent() {
         <SegmentedControl
           options={[
             { value: "overview", label: "Overview", icon: "monitoring" },
-            { value: "details", label: "Details", icon: "table_rows" },
+            ...(!apiKeySession ? [{ value: "details", label: "Details", icon: "table_rows" }] : []),
           ]}
           value={activeTab}
           onChange={handleTabChange}

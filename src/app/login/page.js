@@ -87,7 +87,7 @@ export default function LoginPage() {
           setMustChange(true);
           return;
         }
-        window.location.assign("/dashboard");
+        window.location.assign(data.homePath || "/dashboard");
       } else {
         const data = await res.json();
         setError(data.error || (loginMethod === "apikey" ? "Invalid API key" : "Invalid password"));
