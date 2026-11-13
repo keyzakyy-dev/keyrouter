@@ -338,7 +338,7 @@ export default function LoginPage() {
                   onClick={() => { setLoginMethod("password"); setError(""); }}
                   className={cn(
                     "flex-1 py-1.5 font-mono text-[11px] uppercase tracking-wider rounded-md transition-colors",
-                    loginMethod === "password" ? "bg-primary text-white" : "text-text-muted hover:text-text-main"
+                    loginMethod === "password" ? "bg-primary text-black" : "text-text-muted hover:text-text-main"
                   )}
                 >
                   Password
@@ -348,7 +348,7 @@ export default function LoginPage() {
                   onClick={() => { setLoginMethod("apikey"); setError(""); }}
                   className={cn(
                     "flex-1 py-1.5 font-mono text-[11px] uppercase tracking-wider rounded-md transition-colors",
-                    loginMethod === "apikey" ? "bg-primary text-white" : "text-text-muted hover:text-text-main"
+                    loginMethod === "apikey" ? "bg-primary text-black" : "text-text-muted hover:text-text-main"
                   )}
                 >
                   API Key
