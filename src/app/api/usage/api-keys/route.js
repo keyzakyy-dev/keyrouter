@@ -66,7 +66,11 @@ export async function GET() {
     const nameByKey = {};
     for (const k of keys) nameByKey[k.key] = k.name;
 
-    const result = keys.map((k) => {
+    // Scoped session: only its own key is listed. Filter before mapping so
+    // other keys' names/masks never reach the response.
+    const visibleKeys = scopeApiKey ? keys.filter((k) => k.key === scopeApiKey) : keys;
+
+    const result = visibleKeys.map((k) => {
       const t = totals[k.key] || {};
       const st = errorsByKey[k.key] || { ok: 0, errors: 0 };
       return {
@@ -88,9 +92,10 @@ export async function GET() {
       };
     });
 
-    // Orphan usage: history rows for keys no longer registered.
+    // Orphan usage: history rows for keys no longer registered. Skipped for
+    // scoped sessions — a deleted-key aggregate would mix other keys' usage.
     const known = new Set(keys.map((k) => k.key));
-    const orphans = Object.keys(totals).filter((raw) => raw && !known.has(raw));
+    const orphans = scopeApiKey ? [] : Object.keys(totals).filter((raw) => raw && !known.has(raw));
     if (orphans.length > 0) {
       let requests = 0, promptTokens = 0, completionTokens = 0, cost = 0, lastUsed = null, ok = 0, errors = 0;
       const modelsMap = new Map();
