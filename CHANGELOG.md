@@ -1,3 +1,13 @@
+# v1.4.0 (2026-11-13)
+
+## Features
+- **dashboard**: merged single-page usage for API-key sessions + harden scope
+- **auth**: restrict API-key dashboard sessions to their own usage
+- **auth**: dashboard login via API key
+
+## Fixes
+- **usage**: scope api-key listing to the session's own key
+
 # v1.3.3 (2026-11-13)
 
 ## Features
