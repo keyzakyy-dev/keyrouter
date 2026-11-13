@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Card, Badge, Toggle, CardSkeleton } from "@/shared/components";
+import { Card } from "@/shared/components";
 
 function formatNumber(n) {
   const v = Number(n) || 0;
@@ -38,77 +38,100 @@ function relativeTime(iso) {
 
 function KeyCard({ k, expanded, onToggle }) {
   const disabled = !k.isActive;
+  const healthy = (k.errorRate || 0) <= 0.1;
   return (
     <Card className={disabled ? "opacity-60" : ""}>
-      <div className="flex items-start justify-between gap-3 mb-3">
-        <div className="min-w-0">
-          <div className="flex items-center gap-2">
-            <h3 className="font-semibold text-sm truncate text-text-main">{k.name}</h3>
-            {!k.isActive && k.id !== "deleted" && <Badge variant="default" size="sm">off</Badge>}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+        {/* Identity block — accent stripe on hover targets */}
+        <div className="flex min-w-0 flex-1 items-center gap-3.5">
+          <span className="relative flex size-11 shrink-0 items-center justify-center rounded-xl border border-border-subtle bg-surface-2/60">
+            <span className="material-symbols-outlined text-[22px] text-primary">key_vertical</span>
+            <span
+              aria-hidden="true"
+              className={`absolute -right-1 -top-1 size-3 rounded-full border-2 border-surface ${k.isActive ? "bg-success" : "bg-text-subtle"}`}
+              title={k.isActive ? "active" : "off"}
+            />
+          </span>
+          <div className="min-w-0">
+            <h3 className="truncate font-display text-base font-semibold text-text-main">{k.name}</h3>
+            <p className="mt-0.5 truncate font-mono text-[11px] tracking-wide text-text-muted">
+              {k.keyMasked || "no key"}
+              <span className="mx-1.5 text-border-subtle">·</span>
+              <span className="text-text-subtle">last used {relativeTime(k.lastUsed)}</span>
+            </p>
           </div>
-          <p className="text-[11px] text-text-muted font-mono mt-0.5">{k.keyMasked || "no key"}</p>
         </div>
-        <button
-          type="button"
-          onClick={onToggle}
-          className="text-xs text-primary hover:underline shrink-0 cursor-pointer"
-        >
-          {expanded ? "Hide detail" : "Detail"}
-        </button>
+
+        {/* Metrics — 4 tiles, no dividers, right-aligned cluster */}
+        <div className="grid shrink-0 grid-cols-2 gap-2 sm:grid-cols-4">
+          <div className="rounded-lg bg-surface-2/50 px-3.5 py-2">
+            <p className="text-[10px] uppercase tracking-[0.14em] text-text-muted">Requests</p>
+            <p className="mt-0.5 font-display text-lg font-bold leading-tight text-text-main">
+              {formatNumber(k.requests)}
+            </p>
+          </div>
+          <div className="rounded-lg bg-surface-2/50 px-3.5 py-2">
+            <p className="text-[10px] uppercase tracking-[0.14em] text-text-muted">Tokens</p>
+            <p className="mt-0.5 font-display text-lg font-bold leading-tight text-text-main">
+              {formatNumber(k.totalTokens)}
+            </p>
+          </div>
+          <div className="rounded-lg bg-surface-2/50 px-3.5 py-2">
+            <p className="text-[10px] uppercase tracking-[0.14em] text-text-muted">Cost</p>
+            <p className="mt-0.5 font-display text-lg font-bold leading-tight text-text-main">
+              {formatCost(k.cost)}
+            </p>
+          </div>
+          <div className={`rounded-lg px-3.5 py-2 ${healthy ? "bg-surface-2/50" : "bg-danger/10"}`}>
+            <p className="text-[10px] uppercase tracking-[0.14em] text-text-muted">Errors</p>
+            <p className={`mt-0.5 font-display text-lg font-bold leading-tight ${healthy ? "text-text-main" : "text-danger"}`}>
+              {(k.errorRate * 100).toFixed(1)}%
+            </p>
+          </div>
+        </div>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-4 text-center">
-        <div className="rounded-lg bg-surface-2/50 p-2">
-          <p className="text-[10px] uppercase tracking-wider text-text-muted">Requests</p>
-          <p className="text-sm font-semibold text-text-main">{formatNumber(k.requests)}</p>
-        </div>
-        <div className="rounded-lg bg-surface-2/50 p-2">
-          <p className="text-[10px] uppercase tracking-wider text-text-muted">Tokens</p>
-          <p className="text-sm font-semibold text-text-main">{formatNumber(k.totalTokens)}</p>
-        </div>
-        <div className="rounded-lg bg-surface-2/50 p-2">
-          <p className="text-[10px] uppercase tracking-wider text-text-muted">Cost</p>
-          <p className="text-sm font-semibold text-text-main">{formatCost(k.cost)}</p>
-        </div>
-        <div className="rounded-lg bg-surface-2/50 p-2">
-          <p className="text-[10px] uppercase tracking-wider text-text-muted">Errors</p>
-          <p className={`text-sm font-semibold ${k.errorRate > 0.1 ? "text-danger" : "text-text-main"}`}>
-            {(k.errorRate * 100).toFixed(1)}%
-          </p>
-        </div>
-      </div>
-
-      <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-[11px] text-text-muted">
-        <span>Last used: {relativeTime(k.lastUsed)}</span>
-        {k.createdAt && <span>Created: {formatDate(k.createdAt)}</span>}
+      {/* Footer: meta + toggle on one line */}
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-border-subtle pt-2.5">
+        <p className="text-[11px] text-text-subtle">
+          {k.createdAt ? `created ${formatDate(k.createdAt)}` : "no creation date"}
+        </p>
+        {k.models?.length > 0 && (
+          <button
+            type="button"
+            onClick={onToggle}
+            aria-expanded={expanded}
+            className="flex cursor-pointer items-center gap-1 text-xs text-primary hover:underline"
+          >
+            <span className="material-symbols-outlined text-[14px] transition-transform" style={{ transform: expanded ? "rotate(180deg)" : "" }}>
+              expand_more
+            </span>
+            {expanded ? "Hide models" : `Top models (${k.models.length})`}
+          </button>
+        )}
       </div>
 
       {expanded && k.models?.length > 0 && (
-        <div className="mt-4 pt-3 border-t border-border-subtle">
-          <p className="text-[10px] uppercase tracking-wider text-text-muted mb-2">Top models</p>
-          <div className="space-y-1.5">
-            {k.models.map((m) => (
-              <div key={m.model} className="flex items-center justify-between text-xs">
-                <span className="truncate font-mono text-text-main">{m.model}</span>
-                <span className="text-text-muted shrink-0 ml-3">
-                  {formatNumber(m.requests)} req · {formatNumber(m.tokens)} tok · {formatCost(m.cost)}
-                </span>
-              </div>
-            ))}
-          </div>
+        <div className="mt-2.5 grid gap-1.5 sm:grid-cols-2">
+          {k.models.map((m) => (
+            <div key={m.model} className="flex items-center justify-between gap-3 rounded-md bg-surface-2/40 px-3 py-1.5 text-xs">
+              <span className="truncate font-mono text-text-main">{m.model}</span>
+              <span className="shrink-0 text-text-muted">
+                {formatNumber(m.requests)} req · {formatNumber(m.tokens)} tok · {formatCost(m.cost)}
+              </span>
+            </div>
+          ))}
         </div>
       )}
     </Card>
   );
 }
 
-export default function ApiKeyUsagePage() {
+export function MyKeyUsage() {
   const [keys, setKeys] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [expandedId, setExpandedId] = useState(null);
-  const [autoRefresh, setAutoRefresh] = useState(false);
-  const [updatedAt, setUpdatedAt] = useState(null);
 
   const load = useCallback(async () => {
     try {
@@ -116,7 +139,6 @@ export default function ApiKeyUsagePage() {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       setKeys(data.keys || []);
-      setUpdatedAt(data.generatedAt || new Date().toISOString());
       setError("");
     } catch (e) {
       setError(e.message || "Failed to load");
@@ -130,48 +152,17 @@ export default function ApiKeyUsagePage() {
     load();
   }, [load]);
 
-  useEffect(() => {
-    if (!autoRefresh) return undefined;
-    const t = setInterval(load, 10000);
-    return () => clearInterval(t);
-  }, [autoRefresh, load]);
-
   return (
-    <div className="flex min-w-0 flex-col gap-6 px-1 sm:px-0">
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
-        <div>
-          <h1 className="font-display text-2xl font-semibold tracking-tight text-text-main">API Key Usage</h1>
-          <p className="text-xs text-text-subtle mt-1">
-            Quota and activity per generated key
-            {updatedAt ? `, updated ${relativeTime(updatedAt)}` : ""}
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="text-xs text-text-muted">Auto refresh 10s</span>
-          <Toggle checked={autoRefresh} onChange={setAutoRefresh} />
-        </div>
-      </div>
-
+    <div className="flex min-w-0 flex-col gap-4">
       {error && (
         <Card className="border-danger/30 bg-danger/5">
           <p className="text-sm text-danger">{error}</p>
         </Card>
       )}
-
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {[0, 1, 2, 3].map((i) => (
-            <Card key={i} className="h-40 animate-pulse bg-surface-2/40" />
-          ))}
-        </div>
-      ) : keys.length === 0 ? (
-        <Card>
-          <p className="text-sm text-text-muted text-center py-6">
-            No API keys yet. Create one under Endpoint.
-          </p>
-        </Card>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Card className="h-24 animate-pulse bg-surface-2/40" />
+      ) : keys.length > 0 && (
+        <div className="flex flex-col gap-4">
           {keys.map((k) => (
             <KeyCard
               key={k.id}
@@ -182,6 +173,24 @@ export default function ApiKeyUsagePage() {
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+// Direct visits land here only for admins; apikey sessions are redirected to
+// /dashboard/usage by the guard. Same content, one menu entry.
+export default function ApiKeyUsagePage() {
+  return (
+    <div className="flex min-w-0 flex-col gap-6 px-1 sm:px-0">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+        <div>
+          <h1 className="font-display text-2xl font-semibold tracking-tight text-text-main">API Key Usage</h1>
+          <p className="mt-1 text-xs text-text-subtle">
+            Quota and activity per generated key
+          </p>
+        </div>
+      </div>
+      <MyKeyUsage />
     </div>
   );
 }

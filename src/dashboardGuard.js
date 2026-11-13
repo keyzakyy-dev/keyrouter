@@ -201,7 +201,7 @@ function isPublicApi(pathname) {
 // minus per-key permissions which this schema does not carry): they may open
 // the two usage pages and read their own usage aggregates, nothing else.
 const APIKEY_ALLOWED_PAGES = ["/dashboard/usage", "/dashboard/api-key-usage"];
-const APIKEY_ALLOWED_API_PREFIXES = ["/api/usage/api-keys", "/api/usage/stats", "/api/usage/chart"];
+const APIKEY_ALLOWED_API_PREFIXES = ["/api/usage/api-keys", "/api/usage/stats", "/api/usage/chart", "/api/usage/stream"];
 
 export async function isApiKeySession(request) {
   const token = request.cookies.get("auth_token")?.value;
@@ -240,6 +240,11 @@ export async function proxy(request) {
       const apiOk = pathname === "/api/auth/logout" || pathname === "/api/auth/status" ||
         APIKEY_ALLOWED_API_PREFIXES.some((p) => pathname.startsWith(p));
       if (!pageOk && !apiOk) return apiKeyDeniedResponse(request, pathname);
+      // Single merged menu: the old key-usage page now lives on the Usage page
+      // (stats + the session's own key card, no tabs).
+      if (pathname === "/dashboard/api-key-usage") {
+        return NextResponse.redirect(new URL("/dashboard/usage", request.url));
+      }
       return NextResponse.next();
     }
   }

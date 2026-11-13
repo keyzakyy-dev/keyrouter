@@ -3,7 +3,7 @@ import { getSettings } from "@/lib/localDb";
 import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
 import { setDashboardAuthCookie } from "@/lib/auth/dashboardSession";
-import { validateApiKey, getApiKeyByKey } from "@/lib/localDb";
+import { getApiKeyByKey } from "@/lib/localDb";
 import { isOidcConfigured } from "@/lib/auth/oidc";
 import { isSamlConfigured } from "@/lib/auth/saml.js";
 import { checkLock, recordFail, recordSuccess, getClientIp } from "@/lib/auth/loginLimiter";
@@ -40,11 +40,12 @@ export async function POST(request) {
 
     // Login via API key (ported from 9router): validates against the same
     // apiKeys table the /v1 LLM API uses. KeyRouter keys carry no per-key
-    // permissions yet, so an apikey session gets the full dashboard.
+    // permissions, so an apikey session is read-only usage-scoped (enforced
+    // in dashboardGuard).
     if (apiKey && typeof apiKey === "string" && apiKey.trim()) {
       const keyStr = apiKey.trim();
-      const valid = await validateApiKey(keyStr);
-      if (valid !== true) {
+      const keyObj = await getApiKeyByKey(keyStr);
+      if (!keyObj || keyObj.isActive !== true) {
         // Wrong keys burn the same attempt counter as a wrong password, so
         // guessing costs the same either way.
         const { remainingBeforeLock } = recordFail(ip);
@@ -59,10 +60,6 @@ export async function POST(request) {
           { error: `Invalid API key. ${remainingBeforeLock} attempt(s) left before lockout.`, remainingBeforeLock },
           { status: 401 }
         );
-      }
-      const keyObj = await getApiKeyByKey(keyStr);
-      if (!keyObj) {
-        return NextResponse.json({ error: "API key not found" }, { status: 401 });
       }
       recordSuccess(ip);
       const cookieStore = await cookies();

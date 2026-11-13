@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { RequestLogger, CardSkeleton, SegmentedControl } from "@/shared/components";
 import UsageStats from "@/shared/components/UsageStats";
 import RequestDetailsTab from "./components/RequestDetailsTab";
+import { MyKeyUsage } from "../api-key-usage/page";
 
 const PERIODS = [
   { value: "today", label: "Today" },
@@ -39,7 +40,10 @@ function UsageContent() {
   }, []);
 
   const tabFromUrl = searchParams.get("tab");
-  const activeTab = !apiKeySession && tabFromUrl && ["overview", "logs", "details"].includes(tabFromUrl)
+  const adminTabs = ["overview", "logs", "details"];
+  // API-key session gets a single merged page (stats + its own key card),
+  // so the tab switcher only exists for admins.
+  const activeTab = !apiKeySession && tabFromUrl && adminTabs.includes(tabFromUrl)
     ? tabFromUrl
     : "overview";
 
@@ -64,16 +68,18 @@ function UsageContent() {
 
       {/* Tabs + period selector on same row */}
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <SegmentedControl
-          options={[
-            { value: "overview", label: "Overview", icon: "monitoring" },
-            ...(!apiKeySession ? [{ value: "details", label: "Details", icon: "table_rows" }] : []),
-          ]}
-          value={activeTab}
-          onChange={handleTabChange}
-          className="w-full sm:w-auto"
-        />
-        {activeTab === "overview" && (
+        {!apiKeySession && (
+          <SegmentedControl
+            options={[
+              { value: "overview", label: "Overview", icon: "monitoring" },
+              { value: "details", label: "Details", icon: "table_rows" },
+            ]}
+            value={activeTab}
+            onChange={handleTabChange}
+            className="w-full sm:w-auto"
+          />
+        )}
+        {(!apiKeySession && activeTab === "overview") && (
           <SegmentedControl
             options={PERIODS}
             value={period}
@@ -84,13 +90,24 @@ function UsageContent() {
         )}
       </div>
 
-      {activeTab === "overview" && (
-        <Suspense fallback={<CardSkeleton />}>
+      {/* API-key session: one merged page — its own key banner first, then usage
+          stats (Est. Cost sits inside UsageStats, below the key banner). */}
+      {apiKeySession ? (
+        <>
+          <MyKeyUsage />
           <UsageStats period={period} setPeriod={setPeriod} hidePeriodSelector />
-        </Suspense>
+        </>
+      ) : (
+        <>
+          {activeTab === "overview" && (
+            <Suspense fallback={<CardSkeleton />}>
+              <UsageStats period={period} setPeriod={setPeriod} hidePeriodSelector />
+            </Suspense>
+          )}
+          {activeTab === "logs" && <RequestLogger />}
+          {activeTab === "details" && <RequestDetailsTab />}
+        </>
       )}
-      {activeTab === "logs" && <RequestLogger />}
-      {activeTab === "details" && <RequestDetailsTab />}
     </div>
   );
 }

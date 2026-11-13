@@ -136,7 +136,7 @@ export default function HeaderNav() {
   );
 
   const groups = apiKeySession
-    ? [monitoringNavItems.filter((i) => i.href.startsWith("/dashboard/usage") || i.href.startsWith("/dashboard/api-key-usage"))]
+    ? [[{ href: "/dashboard/usage", label: "Usage", icon: "bar_chart" }]]
     : [
         managementNavItems,
         monitoringNavItems,
