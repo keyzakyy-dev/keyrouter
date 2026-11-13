@@ -7,6 +7,8 @@ import { cn } from "@/shared/utils/cn";
 
 export default function LoginPage() {
   const [password, setPassword] = useState("");
+  const [apiKey, setApiKey] = useState("");
+  const [loginMethod, setLoginMethod] = useState("password");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [resetHint, setResetHint] = useState("");
@@ -72,10 +74,11 @@ export default function LoginPage() {
     setResetHint("");
 
     try {
+      const payload = loginMethod === "apikey" ? { apiKey } : { password };
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify(payload),
       });
 
       if (res.ok) {
@@ -87,7 +90,7 @@ export default function LoginPage() {
         window.location.assign("/dashboard");
       } else {
         const data = await res.json();
-        setError(data.error || "Invalid password");
+        setError(data.error || (loginMethod === "apikey" ? "Invalid API key" : "Invalid password"));
         if (data.resetHint) setResetHint(data.resetHint);
         if (data.retryAfter) setRetryAfter(Number(data.retryAfter));
       }
@@ -328,6 +331,59 @@ export default function LoginPage() {
                 </p>
               )}
 
+              {/* Login method toggle */}
+              <div className="flex rounded-lg border border-border bg-bg p-1">
+                <button
+                  type="button"
+                  onClick={() => { setLoginMethod("password"); setError(""); }}
+                  className={cn(
+                    "flex-1 py-1.5 font-mono text-[11px] uppercase tracking-wider rounded-md transition-colors",
+                    loginMethod === "password" ? "bg-primary text-white" : "text-text-muted hover:text-text-main"
+                  )}
+                >
+                  Password
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setLoginMethod("apikey"); setError(""); }}
+                  className={cn(
+                    "flex-1 py-1.5 font-mono text-[11px] uppercase tracking-wider rounded-md transition-colors",
+                    loginMethod === "apikey" ? "bg-primary text-white" : "text-text-muted hover:text-text-main"
+                  )}
+                >
+                  API Key
+                </button>
+              </div>
+
+              {loginMethod === "apikey" ? (
+                <div>
+                  <label
+                    htmlFor="login-apikey"
+                    className="mb-2 block font-mono text-[11px] uppercase tracking-[0.2em] text-text-main"
+                  >
+                    API Key
+                  </label>
+                  <input
+                    id="login-apikey"
+                    name="apiKey"
+                    type="password"
+                    autoComplete="off"
+                    placeholder="sk-…"
+                    value={apiKey}
+                    onChange={(e) => setApiKey(e.target.value)}
+                    disabled={retryAfter > 0}
+                    autoFocus
+                    className={cn(
+                      "w-full rounded-lg border border-border bg-bg px-3.5 py-3 font-mono text-sm",
+                      "focus:outline-none focus:border-text-main focus:ring-1 focus:ring-text-main",
+                      "disabled:opacity-50 transition-colors placeholder:text-text-subtle"
+                    )}
+                  />
+                  <p className="mt-2 font-mono text-[10px] uppercase tracking-wider text-text-subtle">
+                    sign in with an API key from the keys page
+                  </p>
+                </div>
+              ) : (
               <div>
                 <label
                   htmlFor="login-password"
@@ -365,6 +421,7 @@ export default function LoginPage() {
                   default password 123456
                 </p>
               </div>
+              )}
 
               {error && <p className="font-mono text-[11px] text-danger">{error}</p>}
               {retryAfter > 0 && (
@@ -382,7 +439,7 @@ export default function LoginPage() {
                 disabled={retryAfter > 0}
                 className="group rounded-xl font-mono uppercase tracking-[0.18em] shadow-sm hover:shadow-md"
               >
-                {retryAfter > 0 ? `Wait ${retryAfter}s` : "Connect"}
+                {retryAfter > 0 ? `Wait ${retryAfter}s` : loginMethod === "apikey" ? "Sign in" : "Connect"}
                 {!loading && (
                   <span className="material-symbols-outlined transition-transform duration-200 group-hover:translate-x-1">
                     arrow_forward
