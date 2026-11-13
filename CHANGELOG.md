@@ -1,3 +1,15 @@
+# v1.3.3 (2026-11-13)
+
+## Features
+- **providers**: add DeepAI Free + LLMTR (port from 9router)
+
+## Fixes
+- **open-sse**: reclassify inline <think> reasoning into reasoning_content
+
+## Changes
+- 1.3.2
+- Add API key usage dashboard page
+
 # v1.3.1 (2026-11-12)
 
 ## Features
