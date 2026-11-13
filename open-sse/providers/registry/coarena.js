@@ -1,0 +1,51 @@
+export default {
+  id: "coarena",
+  priority: 120,
+  alias: "coarena",
+  aliases: [
+    "coarena-ai",
+  ],
+  uiAlias: "coarena",
+  display: {
+    name: "Coarena",
+    icon: "stadium",
+    color: "#7C3AED",
+    textIcon: "CA",
+    website: "https://coarena.ai",
+    notice: {
+      text: "FreeModel API by Coasty Systems - every listed model is free (pricing 0). OpenAI- and Anthropic-compatible. Keys are created in the web dashboard after sign-in.",
+      apiKeyUrl: "https://coarena.ai/account/api",
+    },
+  },
+  category: "apikey",
+  authType: "apikey",
+  authModes: ["apikey"],
+  transport: {
+    baseUrl: "https://coarena.ai/api/v1/chat/completions",
+    validateUrl: "https://coarena.ai/api/v1/models",
+  },
+  // The catalogue is public (no auth), so modelsFetcher works without a key
+  // and the ids below are a seed snapshot, not an exhaustive list.
+  models: [
+    { id: "claude-opus-5-5", name: "Claude Opus 5.5" },
+    { id: "claude-sonnet-5-5", name: "Claude Sonnet 5.5" },
+    { id: "claude-haiku-5-5", name: "Claude Haiku 5.5" },
+    { id: "claude-fable-5-2", name: "Claude Fable 5.2" },
+    { id: "gpt-6-1-sol", name: "GPT-6.1 Sol" },
+    { id: "gpt-6-1-terra", name: "GPT-6.1 Terra" },
+    { id: "gpt-6-astra", name: "GPT-6 Astra" },
+    { id: "gpt-6-luna", name: "GPT-6 Luna" },
+    { id: "gemini-4-argon", name: "Gemini 4 Argon" },
+    { id: "gemini-4-carbon", name: "Gemini 4 Carbon" },
+    { id: "gemini-3-8-flash", name: "Gemini 3.8 Flash" },
+    { id: "grok-4-7", name: "Grok 4.7" },
+    { id: "deepseek-v4-1-flash-1017", name: "DeepSeek V4.1 Flash" },
+    { id: "kimi-k3-1-pro", name: "Kimi K3.1 Pro" },
+    { id: "glm-5-3-flash", name: "GLM 5.3 Flash" },
+    { id: "minimax-m3-1-flash", name: "MiniMax M3.1 Flash" },
+    { id: "mimo-v2-6-pro", name: "Mimo V2.6 Pro" },
+    { id: "qwen3-8-2-4t-a95b", name: "Qwen3 8.2" },
+  ],
+  modelsFetcher: { url: "https://coarena.ai/api/v1/models", type: "openai" },
+  passthroughModels: true,
+};

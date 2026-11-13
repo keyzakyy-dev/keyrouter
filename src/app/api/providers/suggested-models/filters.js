@@ -57,4 +57,15 @@ export const FILTERS = {
       .sort((a, b) => String(a.id).localeCompare(String(b.id))),
 
   "nous-free": normalizeNousFreeModels,
+
+  // Generic OpenAI-style /v1/models payload (data[].id). Used by coarena, dahl,
+  // and any openai-compatible provider with a public catalogue.
+  "openai": (payload) => {
+    const models = Array.isArray(payload) ? payload : payload?.data;
+    if (!Array.isArray(models)) return [];
+    return models
+      .filter((m) => typeof m?.id === "string" && m.id.trim() !== "" && m.lifecycle !== "deprecated")
+      .map((m) => ({ id: m.id, name: m.display_name || m.name || m.id, contextLength: m.context_length || m.max_input_tokens }))
+      .sort((a, b) => String(a.id).localeCompare(String(b.id)));
+  },
 };
