@@ -30,7 +30,6 @@ const DARK_ONLY_IDS = new Set([
   "ollama-local",
   "elevenlabs",
   "chutes",
-  "coarena",
   "novita",
   "featherless",
   "windsurf",
