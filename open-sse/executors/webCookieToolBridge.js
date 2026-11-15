@@ -317,6 +317,11 @@ export function parseToolCallReply(text) {
       // DeepAI answers with no fence at all: just "tool_call" on its own line
       // above the JSON payload, which the JSON fallback still recovers.
       .replace(/^[ \t]*tool_call[ \t]*\r?\n?/gm, "")
+      // DeepAI also emits 1-2 backticks instead of a full fence: "`tool_call {…}`".
+      // The fence patterns need exactly 3, so this shape leaked into content.
+      // Removal spans to the closing backtick (or end) — the JSON inside has
+      // nested braces a non-greedy \} match would stop on prematurely.
+      .replace(/`{1,2}\s*tool_call\s*[\s\S]*?(`{1,2}|$)/g, "")
       .replace(/\{\s*"name"\s*:\s*"[^"]*"[\s\S]*?\}\s*$/g, "")
       .trim();
   }
