@@ -1,3 +1,14 @@
+# v1.5.0 (2026-11-15)
+
+## Features
+- **providers**: ship Coarena logo mark
+- **providers**: add Coarena (FreeModel API by Coasty)
+
+## Fixes
+- **deepai**: strip single-backtick tool_call blocks from content
+- **providers**: keep Coarena logo with white background
+- **login**: toggle text invisible on white primary
+
 # v1.4.0 (2026-11-13)
 
 ## Features
