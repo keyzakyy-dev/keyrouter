@@ -275,13 +275,13 @@ const COMMAND_ARG_KEYS = ["command", "cmd", "script", "input", "code", "shell"];
 const SHELL_TOOL_RE = /(?:^|[-_])(bash|shell|sh|exec|command|run|terminal|cmd|powershell|pty|process)(?:$|[-_])/i;
 
 // One per line, optional backticks, payload that is NOT a JSON object.
-const BARE_COMMAND_LINE = /^[ \t]*`{0,3}[ \t]*tool_call[ \t]+(?!\{)[^\n]*$/gim;
+const BARE_COMMAND_LINE = /^[ \t]*`{0,3}[ \t]*tool_call[ \t]*:?[ \t]+(?!\{)[^\n]*$/gim;
 
 function bareCommandLines(text) {
   const out = [];
   for (const line of String(text ?? "").matchAll(BARE_COMMAND_LINE)) {
     const command = line[0]
-      .replace(/^[ \t]*`{0,3}[ \t]*tool_call[ \t]+/i, "")
+      .replace(/^[ \t]*`{0,3}[ \t]*tool_call[ \t]*:?[ \t]+/i, "")
       .replace(/[ \t]*`{0,3}[ \t]*$/, "")
       .trim();
     if (command) out.push(command);
@@ -369,17 +369,18 @@ export function parseToolCallReply(text, body = null) {
       // Same newline tolerance as the candidate scan: the block the parser
       // found must be the block the cleanup removes, or the word "tool_call"
       // leaks into the visible answer.
-      .replace(/```\s*tool_call\s*[\s\S]*?```/g, "")
+      .replace(/```\s*tool_call\s*:?[\s\S]*?```/g, "")
       // A plain ```json fence carrying the same payload (no "tool_call" word).
       .replace(/```\s*(?:json)?\s*\{\s*"name"[\s\S]*?```/g, "")
       // DeepAI answers with no fence at all: just "tool_call" on its own line
       // above the JSON payload, which the JSON fallback still recovers.
-      .replace(/^[ \t]*tool_call[ \t]*\r?\n?/gm, "")
+      // A colon is common too: "tool_call: {...}".
+      .replace(/^[ \t]*tool_call[ \t]*:?[ \t]*\r?\n?/gm, "")
       // DeepAI also emits 1-2 backticks instead of a full fence: "`tool_call {…}`".
       // The fence patterns need exactly 3, so this shape leaked into content.
       // Removal spans to the closing backtick (or end) — the JSON inside has
       // nested braces a non-greedy \} match would stop on prematurely.
-      .replace(/`{1,2}\s*tool_call\s*[\s\S]*?(`{1,2}|$)/g, "")
+      .replace(/`{1,2}\s*tool_call\s*:?[\s\S]*?(`{1,2}|$)/g, "")
       .replace(/\{\s*"name"\s*:\s*"[^"]*"[\s\S]*?\}\s*$/g, "")
       // Fences that wrapped a bare command leave an empty ``` pair behind.
       .replace(/```\s*```/g, "")
