@@ -1,3 +1,8 @@
+# v1.5.3 (2026-11-17)
+
+## Fixes
+- **deepai**: make tool calling robust end to end
+
 # v1.5.2 (2026-11-17)
 
 ## Fixes
