@@ -1,3 +1,8 @@
+# v1.5.2 (2026-11-17)
+
+## Fixes
+- **deepai**: accept 'tool_call: <command>' with a colon
+
 # v1.5.1 (2026-11-17)
 
 ## Fixes
