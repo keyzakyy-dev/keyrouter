@@ -266,6 +266,48 @@ function markerCandidates(text) {
   return out;
 }
 
+// ------------------------------------------------- bare-command tool_calls
+// Small web models (DeepAI's free tier) often skip the JSON protocol entirely
+// and answer with the shell command after the word: "tool_call ls -l /tmp".
+// Recover that as a call to the client's shell tool instead of leaking it.
+
+const COMMAND_ARG_KEYS = ["command", "cmd", "script", "input", "code", "shell"];
+const SHELL_TOOL_RE = /(?:^|[-_])(bash|shell|sh|exec|command|run|terminal|cmd|powershell|pty|process)(?:$|[-_])/i;
+
+// One per line, optional backticks, payload that is NOT a JSON object.
+const BARE_COMMAND_LINE = /^[ \t]*`{0,3}[ \t]*tool_call[ \t]+(?!\{)[^\n]*$/gim;
+
+function bareCommandLines(text) {
+  const out = [];
+  for (const line of String(text ?? "").matchAll(BARE_COMMAND_LINE)) {
+    const command = line[0]
+      .replace(/^[ \t]*`{0,3}[ \t]*tool_call[ \t]+/i, "")
+      .replace(/[ \t]*`{0,3}[ \t]*$/, "")
+      .trim();
+    if (command) out.push(command);
+  }
+  return out;
+}
+
+/** Pick the client's shell-ish tool and the argument key its schema uses. */
+function pickCommandTool(body) {
+  const { defs } = selectableTools(body);
+  if (!defs.length) return null;
+  const ranked = defs.map((def) => {
+    const properties = def.parameters?.properties || {};
+    const key = COMMAND_ARG_KEYS.find((name) => name in properties);
+    let score = 0;
+    if (SHELL_TOOL_RE.test(def.name)) score += 2;
+    if (key) score += 1;
+    return { name: def.name, key, score };
+  });
+  ranked.sort((a, b) => b.score - a.score);
+  const best = ranked[0];
+  // No guessing: a tool must look shell-ish or expose a command argument.
+  // Falling back to "the only tool" would route "edit"/"read" commands wrongly.
+  return best.score > 0 ? best : null;
+}
+
 function fenceCandidates(text) {
   const out = [];
   // Models often break the line between the fence and the word: "```\ntool_call"
@@ -285,7 +327,7 @@ function fenceCandidates(text) {
  * Returns { content, calls } where content is the visible text with the fence
  * lines removed, and calls is an array of { name, arguments }.
  */
-export function parseToolCallReply(text) {
+export function parseToolCallReply(text, body = null) {
   const raw = String(text ?? "");
   const candidates = [...fenceCandidates(raw), ...markerCandidates(raw)];
   if (!candidates.length) {
@@ -294,6 +336,7 @@ export function parseToolCallReply(text) {
   }
 
   const calls = [];
+  let bareUsed = false;
   for (const cand of candidates) {
     let obj = null;
     try { obj = parseCallObject(JSON.parse(cand.trim())); } catch {}
@@ -303,9 +346,24 @@ export function parseToolCallReply(text) {
       break;
     }
   }
+  if (!calls.length && body) {
+    // No JSON protocol at all: "tool_call <command>" prose shape.
+    const commands = bareCommandLines(raw);
+    const target = commands.length ? pickCommandTool(body) : null;
+    if (target) {
+      const key = target.key || "command";
+      for (const command of commands) {
+        calls.push({ name: target.name, arguments: { [key]: command } });
+      }
+      bareUsed = true;
+    }
+  }
 
   let content = raw;
   if (calls.length) {
+    // Bare-command lines first: the generic "tool_call" prefix strip below
+    // would remove the word and leave the command text behind.
+    if (bareUsed) content = content.replace(BARE_COMMAND_LINE, "").trim();
     content = content
       .split(MARKER).join("\n")
       // Same newline tolerance as the candidate scan: the block the parser
@@ -323,6 +381,8 @@ export function parseToolCallReply(text) {
       // nested braces a non-greedy \} match would stop on prematurely.
       .replace(/`{1,2}\s*tool_call\s*[\s\S]*?(`{1,2}|$)/g, "")
       .replace(/\{\s*"name"\s*:\s*"[^"]*"[\s\S]*?\}\s*$/g, "")
+      // Fences that wrapped a bare command leave an empty ``` pair behind.
+      .replace(/```\s*```/g, "")
       .trim();
   }
   const answer = content.match(/<answer>([\s\S]*?)<\/answer>/i);

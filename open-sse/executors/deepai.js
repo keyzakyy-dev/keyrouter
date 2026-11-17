@@ -140,7 +140,7 @@ function streamResponse(text, model, id, options = {}) {
   const chunk = (payload) => encoder.encode(`data: ${JSON.stringify(payload)}\n\n`);
   const base = { id, object: "chat.completion.chunk", created, model };
   const { content, calls } = options.toolMode
-    ? parseToolCallReply(text)
+    ? parseToolCallReply(text, options.body)
     : { content: text, calls: [] };
   const usage = usageOf(options.body, content, calls);
   const stream = new ReadableStream({
@@ -176,7 +176,7 @@ function streamResponse(text, model, id, options = {}) {
 function jsonResponse(text, model, id, options = {}) {
   const created = Math.floor(Date.now() / 1000);
   const { content, calls } = options.toolMode
-    ? parseToolCallReply(text)
+    ? parseToolCallReply(text, options.body)
     : { content: text, calls: [] };
   const message = { role: "assistant", content: content || null };
   if (calls.length) {
