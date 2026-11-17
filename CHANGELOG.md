@@ -1,3 +1,8 @@
+# v1.5.1 (2026-11-17)
+
+## Fixes
+- **deepai**: recover bare 'tool_call <command>' replies as tool calls
+
 # v1.5.0 (2026-11-15)
 
 ## Features
