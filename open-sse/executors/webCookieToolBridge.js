@@ -104,16 +104,21 @@ export function pickFenceStyle(explicit) {
 
 function instructionLine(mode, forced) {
   if (forced) {
-    return `You MUST call the tool "${forced}". Reply with the tool_call block and nothing else - do not answer the question yourself, even if you know the answer.`;
+    return `Call the tool "${forced}" now: reply with the tool_call block and nothing else, even if you know the answer.`;
   }
   if (mode === "required") {
-    return "You MUST call one of the tools above. Reply with the tool_call block and nothing else - do not answer the question yourself, even if you know the answer.";
+    return "Call one of the tools now: reply with the tool_call block and nothing else, even if you know the answer.";
   }
-  return "Only use tool_call blocks when needed.";
+  return "Call a tool only when the request needs one.";
 }
 
-function exampleBlock(style) {
-  const json = '{\n  "name": "run_command",\n  "arguments": {\n    "command": "ls -la"\n  }\n}';
+function exampleBlock(style, defs = [], forced = "") {
+  const pick = defs.find((def) => def.name === forced) || defs[0];
+  const name = pick?.name || "func_name";
+  const keys = Object.keys(pick?.parameters?.properties || {});
+  const key = COMMAND_ARG_KEYS.find((candidate) => keys.includes(candidate)) || keys[0] || "argument";
+  const value = COMMAND_ARG_KEYS.includes(key) ? "ls -la" : "<value>";
+  const json = `{"name": ${JSON.stringify(name)}, "arguments": {${JSON.stringify(key)}: ${JSON.stringify(value)}}}`;
   if (style === "fenced") return `${FENCE_OPEN}\n${json}\n${FENCE_CLOSE}`;
   return `${MARKER} ${json} ${MARKER}`;
 }
@@ -121,53 +126,43 @@ function exampleBlock(style) {
 /**
  * The leading system instruction carrying the schema and the choice rule.
  * Returns "" when the request asks for no tools at all.
+ *
+ * Kept deliberately short: DeepAI's small free models drop the whole tool
+ * protocol when the instruction grows into paragraphs (measured 0/4 calls with
+ * the long form, 4/4 with this one), so every rule here has to earn its line.
  */
 export function buildToolInstructions(body, style = "marker") {
   const { defs, mode, forced } = selectableTools(body);
-  if (!defs.length) return "";
-  const rule = instructionLine(mode, forced);
-  const defsJson = JSON.stringify(defs, null, 2);
-  if (style === "fenced") {
-    return [
-      "[System instruction]: You have access to tools. To call a tool, respond with:",
-      FENCE_OPEN,
-      '{"name": "func_name", "arguments": {...}}',
-      FENCE_CLOSE,
-      rule,
-      "",
-      "Available tools:",
-      defsJson,
-    ].join("\n");
-  }
+  if (!defs.length || mode === "none") return "";
+  const opener = style === "fenced"
+    ? `[Tool protocol] You have tools. To call one, reply with exactly:\n${FENCE_OPEN}\n{"name": "<tool>", "arguments": {...}}\n${FENCE_CLOSE}`
+    : `[Tool protocol] You have tools. To call one, reply with exactly:\n${MARKER} {"name": "<tool>", "arguments": {...}} ${MARKER}`;
   return [
-    "[System instruction]: You have access to tools. To call a tool, respond with:",
-    `${MARKER} {"name": "func_name", "arguments": {...}} ${MARKER}`,
-    rule,
+    opener,
+    "The block is JSON: a real tool name from the list and its exact argument names. Never write a bare command such as tool_call: ls -la, and never just describe the call.",
+    instructionLine(mode, forced),
     "",
     "Available tools:",
-    defsJson,
+    JSON.stringify(defs, null, 2),
   ].join("\n");
 }
 
 /**
- * The trailing highest-priority reminder. Re-anchors the fence format after a
- * long agent system prompt, and states plainly that a shell code block is not
- * an execution channel.
+ * The trailing highest-priority reminder. Re-anchors the format after a long
+ * agent system prompt without turning into a wall of rules: a long reminder
+ * makes the free models answer conversationally instead of calling (measured).
  */
 export function buildToolReminder(style = "marker", options = {}) {
-  const { forced = "", mode = "auto" } = options || {};
+  const { forced = "", mode = "auto", defs = [] } = options || {};
   const forcedLine = forced
-    ? `This turn is FORCED: the client set tool_choice to the tool "${forced}". Emit exactly one tool_call block calling "${forced}" with valid arguments and nothing else - answering in prose is a protocol violation, even if you already know the answer.`
+    ? `This turn is FORCED: call "${forced}" and nothing else.`
     : mode === "required"
-      ? "This turn is FORCED: the client set tool_choice to require a tool. Emit one tool_call block and nothing else - answering in prose is a protocol violation."
+      ? "This turn is FORCED: call a tool and nothing else."
       : "";
   const lines = [
-    "[System instruction - highest priority]: To run a command or read a file you MUST output a tool_call block - this is the ONLY execution channel. A code block is NOT executed, it is only shown to the user; never use one to run anything, and never claim you lack tools.",
-    "Act, do not explain: when the request needs a tool, your reply is ONE tool_call block and nothing else - do not list the commands you 'would' run, do not add prose. Emit several blocks only when the user asks for several independent things at once (one block per call, nothing else); when the steps depend on each other, do the FIRST one now and you will be called again with its result.",
-    "Know when to STOP: once a tool result shows a step succeeded (for example it exited with code 0, even with no printed output), that step is DONE - do not run it again and do not retry the same thing a different way. When the whole request is accomplished, stop calling tools and reply with a short final answer instead of another tool_call.",
-    "Example of a correct turn - user asks \"list the files here and tell me the size of README.md\", you reply with exactly one block and nothing else:",
-    exampleBlock(style),
-    "(In your block use one of the real tool names listed above with its own arguments.) When the request needs a tool, emit the tool_call block now.",
+    "[Tool protocol - highest priority] Reply with ONE tool_call block and nothing else:",
+    exampleBlock(style, defs, forced),
+    "A code block is not executed and prose cannot act; never claim you lack tools. Use the real tool names and argument names above. After a tool result, stop and answer briefly.",
   ];
   if (forcedLine) lines.push(forcedLine);
   return lines.join("\n");
@@ -229,6 +224,11 @@ function parseCallObject(obj) {
   if (!obj || typeof obj !== "object" || Array.isArray(obj)) return null;
   const name = typeof obj.name === "string" ? obj.name.trim() : "";
   if (!name) return null;
+  // A model sometimes echoes the tool schema instead of a call. A definition
+  // has description+parameters and no arguments field; treating it as a call
+  // would run the wrong function with the schema as arguments.
+  if (typeof obj.description === "string" && obj.parameters &&
+    obj.arguments === undefined && obj.args === undefined && obj.input === undefined) return null;
   let args = obj.arguments ?? obj.args ?? obj.parameters ?? obj.input ?? {};
   if (typeof args === "string") {
     try { args = JSON.parse(args); } catch { args = {}; }
@@ -263,6 +263,39 @@ function markerCandidates(text) {
   const out = [];
   const parts = text.split(MARKER);
   for (let i = 1; i < parts.length; i += 2) out.push(parts[i]);
+  return out;
+}
+
+/** Every balanced {...} region, so nested arguments survive the scan. */
+function balancedObjects(text) {
+  const out = [];
+  let from = 0;
+  while (from < text.length) {
+    const start = text.indexOf("{", from);
+    if (start < 0) break;
+    let depth = 0;
+    let inString = false;
+    let escaped = false;
+    let end = -1;
+    for (let i = start; i < text.length; i += 1) {
+      const char = text[i];
+      if (inString) {
+        if (escaped) escaped = false;
+        else if (char === "\\") escaped = true;
+        else if (char === '"') inString = false;
+        continue;
+      }
+      if (char === '"') inString = true;
+      else if (char === "{") depth += 1;
+      else if (char === "}") {
+        depth -= 1;
+        if (depth === 0) { end = i; break; }
+      }
+    }
+    if (end < 0) break; // unbalanced tail: nothing more to recover
+    out.push(text.slice(start, end + 1));
+    from = end + 1;
+  }
   return out;
 }
 
@@ -312,7 +345,7 @@ function fenceCandidates(text) {
   const out = [];
   // Models often break the line between the fence and the word: "```\ntool_call"
   // instead of "```tool_call". Both shapes are the same block.
-  const re = /```\s*tool_call\s*([\s\S]*?)```/g;
+  const re = /```\s*tool_call\s*:?([\s\S]*?)```/g;
   for (const m of text.matchAll(re)) out.push(m[1]);
   const loose = text.match(/```(?:json)?\s*([\s\S]*?"name"[\s\S]*?)```/g) || [];
   for (const block of loose) {
@@ -322,6 +355,75 @@ function fenceCandidates(text) {
   return out;
 }
 
+// ------------------------------------------------- function-call syntax
+// Some models skip the JSON object but still name the function:
+//   tool_call: read({"filePath": "/a"})
+//   tool_call read(filePath="/a")
+
+/** Parse `key: value, key2="text"` (or JSON) into an arguments object. */
+function parseParenArgs(rawArgs) {
+  const text = String(rawArgs ?? "").trim();
+  if (!text) return {};
+  // Arguments already wrapped in braces: read them as the object itself.
+  if (/^[{[]/.test(text)) {
+    try {
+      const parsed = JSON.parse(text);
+      if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) return parsed;
+    } catch {}
+  }
+  try {
+    const wrapped = JSON.parse(`{${text}}`);
+    if (wrapped && typeof wrapped === "object" && !Array.isArray(wrapped)) return wrapped;
+  } catch {}
+  const parts = [];
+  let depth = 0;
+  let inString = false;
+  let escaped = false;
+  let current = "";
+  for (const char of text) {
+    if (inString) {
+      current += char;
+      if (escaped) escaped = false;
+      else if (char === "\\") escaped = true;
+      else if (char === '"') inString = false;
+      continue;
+    }
+    if (char === '"') { inString = true; current += char; continue; }
+    if (char === "{" || char === "[") depth += 1;
+    if (char === "}" || char === "]") depth -= 1;
+    if (char === "," && depth === 0) { parts.push(current); current = ""; continue; }
+    current += char;
+  }
+  if (current.trim()) parts.push(current);
+  const args = {};
+  for (const part of parts) {
+    const match = part.match(/^\s*([A-Za-z_][\w-]*)\s*[:=]\s*([\s\S]*?)\s*$/);
+    if (!match) continue;
+    const key = match[1];
+    const rawValue = match[2];
+    let value = rawValue;
+    try {
+      value = JSON.parse(rawValue);
+    } catch {
+      value = rawValue.replace(/^["']|["']$/g, "");
+      if (/^-?\d+(\.\d+)?$/.test(value)) value = Number(value);
+      else if (value === "true" || value === "false") value = value === "true";
+      else if (value === "null") value = null;
+    }
+    args[key] = value;
+  }
+  return args;
+}
+
+function functionCallCandidates(text) {
+  const out = [];
+  const re = /(?:^|\n)[ \t]*`{0,3}[ \t]*tool_call[ \t]*:?[ \t]*([A-Za-z_][\w.-]*)\s*\(([\s\S]*?)\)[ \t]*`{0,3}[ \t]*(?=\n|$)/g;
+  for (const match of text.matchAll(re)) {
+    out.push(parseCallObject({ name: match[1], arguments: parseParenArgs(match[2]) }));
+  }
+  return out.filter(Boolean);
+}
+
 /**
  * Recover tool calls from a model reply.
  * Returns { content, calls } where content is the visible text with the fence
@@ -329,31 +431,44 @@ function fenceCandidates(text) {
  */
 export function parseToolCallReply(text, body = null) {
   const raw = String(text ?? "");
-  const candidates = [...fenceCandidates(raw), ...markerCandidates(raw)];
-  if (!candidates.length) {
-    const brace = raw.match(/\{\s*"name"\s*:[\s\S]*\}/);
-    if (brace) candidates.push(brace[0]);
-  }
+  // tool_choice "none" is a hard client opt-out: recovering a call would run a
+  // tool the caller explicitly disabled.
+  if (body && selectableTools(body).mode === "none") return { content: raw, calls: [] };
+  const jsonCandidates = [
+    ...fenceCandidates(raw),
+    ...markerCandidates(raw),
+    ...balancedObjects(raw),
+  ];
 
   const calls = [];
-  let bareUsed = false;
-  for (const cand of candidates) {
+  const seen = new Set();
+  const pushCall = (obj) => {
+    if (!obj) return;
+    const key = `${obj.name}\u0000${JSON.stringify(obj.arguments)}`;
+    if (seen.has(key)) return;
+    seen.add(key);
+    calls.push(obj);
+  };
+
+  for (const cand of jsonCandidates) {
     let obj = null;
     try { obj = parseCallObject(JSON.parse(cand.trim())); } catch {}
     if (!obj) obj = parseCallObject(tolerantJsonParse(cand));
-    if (obj) {
-      calls.push(obj);
-      break;
-    }
+    pushCall(obj);
   }
+  if (!calls.length) {
+    for (const obj of functionCallCandidates(raw)) pushCall(obj);
+  }
+
+  let bareUsed = false;
   if (!calls.length && body) {
-    // No JSON protocol at all: "tool_call <command>" prose shape.
+    // No structured protocol at all: "tool_call <command>" prose shape.
     const commands = bareCommandLines(raw);
     const target = commands.length ? pickCommandTool(body) : null;
     if (target) {
       const key = target.key || "command";
       for (const command of commands) {
-        calls.push({ name: target.name, arguments: { [key]: command } });
+        pushCall({ name: target.name, arguments: { [key]: command } });
       }
       bareUsed = true;
     }
@@ -361,29 +476,24 @@ export function parseToolCallReply(text, body = null) {
 
   let content = raw;
   if (calls.length) {
-    // Bare-command lines first: the generic "tool_call" prefix strip below
-    // would remove the word and leave the command text behind.
-    if (bareUsed) content = content.replace(BARE_COMMAND_LINE, "").trim();
+    // Strip in a fixed order: payloads first, then the wrappers that carried
+    // them, then fences left empty. Every line that still names tool_call in a
+    // reply we parsed is protocol noise, so it goes regardless of shape.
+    if (bareUsed) content = content.replace(BARE_COMMAND_LINE, "");
+    for (const cand of jsonCandidates) {
+      const trimmed = cand.trim();
+      if (trimmed.length > 2) content = content.split(trimmed).join(" ");
+    }
     content = content
       .split(MARKER).join("\n")
-      // Same newline tolerance as the candidate scan: the block the parser
-      // found must be the block the cleanup removes, or the word "tool_call"
-      // leaks into the visible answer.
-      .replace(/```\s*tool_call\s*:?[\s\S]*?```/g, "")
-      // A plain ```json fence carrying the same payload (no "tool_call" word).
-      .replace(/```\s*(?:json)?\s*\{\s*"name"[\s\S]*?```/g, "")
-      // DeepAI answers with no fence at all: just "tool_call" on its own line
-      // above the JSON payload, which the JSON fallback still recovers.
-      // A colon is common too: "tool_call: {...}".
-      .replace(/^[ \t]*tool_call[ \t]*:?[ \t]*\r?\n?/gm, "")
-      // DeepAI also emits 1-2 backticks instead of a full fence: "`tool_call {…}`".
-      // The fence patterns need exactly 3, so this shape leaked into content.
-      // Removal spans to the closing backtick (or end) — the JSON inside has
-      // nested braces a non-greedy \} match would stop on prematurely.
-      .replace(/`{1,2}\s*tool_call\s*:?[\s\S]*?(`{1,2}|$)/g, "")
+      .replace(/```[^\n]*\n?[\s\S]*?```/g, (block) => (/tool_call|"name"\s*:/i.test(block) ? "" : block))
+      .replace(/^[ \t]*`{0,3}[ \t]*tool_call\b[^\n]*$/gim, "")
+      .replace(/`{1,2}[^`\n]*`{1,2}/g, (span) => (/tool_call/i.test(span) ? "" : span))
+      // Fences left empty once their payload was removed ("```json\n\n```").
+      .replace(/```[^\n]*\n?\s*```/g, "")
+      .replace(/^[ \t]*`{1,3}[ \t]*$/gm, "")
+      .replace(/^[ \t]*[(){}[\],;]+[ \t]*$/gm, "")
       .replace(/\{\s*"name"\s*:\s*"[^"]*"[\s\S]*?\}\s*$/g, "")
-      // Fences that wrapped a bare command leave an empty ``` pair behind.
-      .replace(/```\s*```/g, "")
       .trim();
   }
   const answer = content.match(/<answer>([\s\S]*?)<\/answer>/i);

@@ -299,14 +299,21 @@ export async function handleChatCore({ body, modelInfo, credentials, log, onCred
 
   if (rtkStats?.hits?.length) xf.push(`RTK:${rtkStats.hits.length}`);
 
-  // Caveman: inject terse-style system prompt
-  if (tokenSaverEnabled && cavemanEnabled && cavemanLevel) {
+  // Caveman: inject terse-style system prompt.
+  // DeepAI (text-bridge tool calling) must be skipped: the caveman persona
+  // overrides the tool protocol and the model answers conversationally instead
+  // of emitting a call, so the request would silently lose its tools.
+  const textBridgeTools = provider === "deepai" &&
+    Array.isArray(translatedBody?.tools) && translatedBody.tools.length > 0;
+  if (tokenSaverEnabled && cavemanEnabled && cavemanLevel && !textBridgeTools) {
     injectCaveman(translatedBody, finalFormat, cavemanLevel);
     xf.push(`CAVEMAN:${cavemanLevel}`);
+  } else if (textBridgeTools) {
+    xf.push("CAVEMAN:skip-tools");
   }
 
-  // Ponytail: inject lazy-senior-dev system prompt
-  if (tokenSaverEnabled && ponytailEnabled && ponytailLevel) {
+  // Ponytail: inject lazy-senior-dev system prompt (same conflict as caveman).
+  if (tokenSaverEnabled && ponytailEnabled && ponytailLevel && !textBridgeTools) {
     injectPonytail(translatedBody, finalFormat, ponytailLevel);
     xf.push(`PONYTAIL:${ponytailLevel}`);
   }

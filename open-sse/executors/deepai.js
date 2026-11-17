@@ -58,8 +58,8 @@ function buildChatHistory(body) {
   let reminder = "";
   if (toolMode) {
     instructions = buildToolInstructions(body, "fenced");
-    const { mode, forced } = selectableTools(body);
-    reminder = buildToolReminder("fenced", { mode, forced });
+    const { mode, forced, defs } = selectableTools(body);
+    reminder = buildToolReminder("fenced", { mode, forced, defs });
   }
   const history = [];
   const systemParts = [];
@@ -237,19 +237,27 @@ export class DeepAIExecutor extends BaseExecutor {
     const payload = form.toString();
 
     let response;
-    try {
-      response = await proxyAwareFetch(
-        ENDPOINT,
-        { method: "POST", headers, body: payload, signal },
-        proxyOptions
-      );
-    } catch (error) {
-      return {
-        response: errorResponse(502, error?.message || "DeepAI connect failed"),
-        url: ENDPOINT,
-        headers,
-        transformedBody: payload,
-      };
+    const MAX_ATTEMPTS = 2;
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
+      try {
+        response = await proxyAwareFetch(
+          ENDPOINT,
+          { method: "POST", headers, body: payload, signal },
+          proxyOptions
+        );
+        // Upstream throws transient 5xx/502 pages; retry once before surfacing.
+        if (!response.ok && response.status >= 500 && attempt < MAX_ATTEMPTS) continue;
+        break;
+      } catch (error) {
+        if (attempt >= MAX_ATTEMPTS) {
+          return {
+            response: errorResponse(502, error?.message || "DeepAI connect failed"),
+            url: ENDPOINT,
+            headers,
+            transformedBody: payload,
+          };
+        }
+      }
     }
 
     const text = (await response.text()).trim();
